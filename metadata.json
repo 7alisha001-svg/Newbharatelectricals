@@ -1,0 +1,6 @@
+{
+  "name": "New Bharat Electricals",
+  "description": "Corporate electrical products website with product catalog and dealer inquiry system for New Bharat Electricals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
