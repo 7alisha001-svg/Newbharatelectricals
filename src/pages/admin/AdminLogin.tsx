@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, User, AlertCircle } from 'lucide-react';
+import { Lock, User, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -9,8 +9,9 @@ export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [adminExists, setAdminExists] = useState(true); // Assume exists until checked
+  const [adminExists, setAdminExists] = useState(true);
 
   useEffect(() => {
     checkAdminExists();
@@ -18,7 +19,6 @@ export default function AdminLogin() {
 
   const checkAdminExists = async () => {
     try {
-      // Use the secure RPC function to check if any admin exists
       const { data, error } = await supabase.rpc('check_if_admin_exists');
       
       if (error) {
@@ -40,27 +40,46 @@ export default function AdminLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
     setLoading(true);
 
     try {
       if (!isLogin && !adminExists) {
-        // Create the first admin
+        // Create the first admin in Supabase Auth
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email,
           password,
         });
 
-        if (authError) throw authError;
+        if (authError) {
+          throw new Error(authError.message || 'Signup failed in Supabase Auth.');
+        }
 
         if (authData.user) {
-          // Insert into admin_users
+          // Insert into admin_users (RLS policy allows this only if table is empty)
           const { error: insertError } = await supabase
             .from('admin_users')
             .insert([{ id: authData.user.id, email }]);
             
-          if (insertError) throw insertError;
-          
-          navigate('/admin/dashboard');
+          if (insertError) {
+             // Clean up the auth user if insert fails
+             await supabase.auth.signOut();
+             throw new Error('Failed to create admin record. An admin might already exist.');
+          }
+
+          if (authData.session) {
+             setSuccessMessage('Admin account created successfully. Redirecting...');
+             setTimeout(() => {
+                navigate('/admin/dashboard');
+             }, 1000);
+          } else {
+             setSuccessMessage('Admin account created successfully. Please log in.');
+             setAdminExists(true);
+             setIsLogin(true);
+             setPassword(''); // Clear password for login
+          }
+        } else {
+           throw new Error('Failed to create authentication user.');
         }
       } else {
         // Regular login
@@ -69,7 +88,12 @@ export default function AdminLogin() {
           password,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            throw new Error('Invalid email or password.');
+          }
+          throw error;
+        }
         
         // Verify they are an admin
         const { data: adminData, error: adminError } = await supabase
@@ -80,13 +104,13 @@ export default function AdminLogin() {
           
         if (adminError || !adminData) {
           await supabase.auth.signOut();
-          throw new Error('Unauthorized. Not an admin.');
+          throw new Error('Unauthorized. You do not have administrator access.');
         }
 
         navigate('/admin/dashboard');
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+      setError(err.message || 'Authentication failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -109,6 +133,13 @@ export default function AdminLogin() {
             <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-xl border border-red-200 flex items-start text-sm">
               <AlertCircle size={18} className="mr-2 mt-0.5 flex-shrink-0" />
               <span>{error}</span>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="mb-6 bg-green-50 text-green-700 p-4 rounded-xl border border-green-200 flex items-start text-sm">
+              <CheckCircle2 size={18} className="mr-2 mt-0.5 flex-shrink-0" />
+              <span>{successMessage}</span>
             </div>
           )}
 
@@ -151,9 +182,14 @@ export default function AdminLogin() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full mt-8 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-3.5 rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full mt-8 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-3.5 rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            {loading ? 'Processing...' : (isLogin ? 'Login to Dashboard' : 'Create Admin Account')}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Processing...
+              </span>
+            ) : (isLogin ? 'Login to Dashboard' : 'Create Admin Account')}
           </button>
         </form>
       </div>

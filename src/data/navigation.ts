@@ -1,25 +1,18 @@
 export const categoryNav: Record<string, {name: string, slug: string}[]> = {
   'power-solutions': [
-    { name: 'UPS Systems', slug: 'ups-systems' },
-    { name: 'Home Inverters', slug: 'home-inverters' },
-    { name: 'Industrial Inverters', slug: 'industrial-inverters' },
-    { name: 'Battery Backup Systems', slug: 'battery-backup-systems' },
-    { name: 'Power Backup Solutions', slug: 'power-backup-solutions' },
+    { name: 'Inverters', slug: 'inverters' },
+    { name: 'Batteries', slug: 'batteries' },
+    { name: '3-Phase Inverters', slug: '3-phase-inverters' },
+    { name: 'Lift Inverters', slug: 'lift-inverters' },
+    { name: 'Combo Products', slug: 'combo-products' },
   ],
   'solar-solutions': [
-    { name: 'Residential Solar Panels', slug: 'residential-solar-panels' },
-    { name: 'Commercial Solar Panels', slug: 'commercial-solar-panels' },
-    { name: 'Industrial Solar Projects', slug: 'industrial-solar-projects' },
-    { name: 'Solar Inverters', slug: 'solar-inverters' },
-    { name: 'Solar Battery Storage', slug: 'solar-battery-storage' },
-    { name: 'Solar Installation Services', slug: 'solar-installation-services' },
-    { name: 'Rooftop Solar Solutions', slug: 'rooftop-solar-solutions' },
-  ],
-  'mobility-solutions': [
-    { name: 'E-Rickshaw Batteries', slug: 'e-rickshaw-batteries' },
-    { name: 'EV Battery Solutions', slug: 'ev-battery-solutions' },
-    { name: 'Charging Support', slug: 'charging-support' },
-    { name: 'Automotive Battery Solutions', slug: 'automotive-battery-solutions' },
+    { name: 'Solar On-Grid Inverters', slug: 'solar-on-grid-inverters' },
+    { name: 'Solar Off-Grid Inverters', slug: 'solar-off-grid-inverters' },
+    { name: 'Solar Hybrid Inverters', slug: 'solar-hybrid-inverters' },
+    { name: 'Solar Panels', slug: 'solar-panels' },
+    { name: 'Solar Batteries', slug: 'solar-batteries' },
+    { name: 'Solar Charge Controllers', slug: 'solar-charge-controllers' },
   ],
   'accessories': [
     { name: 'Solar Connectors', slug: 'solar-connectors' },
@@ -45,19 +38,9 @@ export const mainNavLinks = [
     hasDropdown: true,
     dropdownItems: categoryNav['solar-solutions'].map(item => ({ name: item.name, href: `/solar-solutions/${item.slug}` }))
   },
-  { 
-    name: 'Mobility Solutions', 
-    href: '/mobility-solutions',
-    hasDropdown: true,
-    dropdownItems: categoryNav['mobility-solutions'].map(item => ({ name: item.name, href: `/mobility-solutions/${item.slug}` }))
-  },
+  { name: 'Brands', href: '/brands' },
+  { name: 'Categories', href: '/categories' },
+  { name: 'Accessories', href: '/accessories' },
   { name: 'Store Locator', href: '/store-locator' },
-  { name: 'Catalogue', href: '/catalogue' },
-  { 
-    name: 'Accessories', 
-    href: '/accessories',
-    hasDropdown: true,
-    dropdownItems: categoryNav['accessories'].map(item => ({ name: item.name, href: `/accessories/${item.slug}` }))
-  },
-  { name: 'Contact', href: '/contact' }
+  { name: 'Contact Us', href: '/contact' }
 ];

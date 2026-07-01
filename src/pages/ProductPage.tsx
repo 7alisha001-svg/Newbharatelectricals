@@ -90,8 +90,8 @@ export default function ProductPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col lg:flex-row">
             
             {/* Left - Image Gallery */}
-            <div className="w-full lg:w-1/2 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col">
-              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[400px]">
+            <div className="w-full lg:w-1/2 p-4 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col">
+              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
                 <img src={product.imageUrl} alt={displayTitle} className="max-w-full max-h-full object-contain" />
               </div>
               <div className="flex gap-4">
@@ -104,8 +104,8 @@ export default function ProductPage() {
             </div>
 
             {/* Right - Product Info */}
-            <div className="w-full lg:w-1/2 p-8 lg:p-12 relative">
-              <button className="absolute top-8 right-8 text-gray-400 hover:text-gray-900 transition-colors">
+            <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 relative">
+              <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-400 hover:text-gray-900 transition-colors">
                 <Share2 size={24} />
               </button>
               
@@ -197,8 +197,8 @@ export default function ProductPage() {
           </div>
 
           {/* Product Specifications Section */}
-          <div className="mt-12 bg-white rounded-2xl shadow-sm border border-gray-200 p-8 lg:p-12">
-            <h2 className="text-2xl font-bold font-heading text-gray-900 mb-6">Product Specifications</h2>
+          <div className="mt-8 sm:mt-12 bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 lg:p-12">
+            <h2 className="text-xl sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">Product Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                {product.specifications.map((spec, idx) => (
                  <div key={idx} className="flex justify-between py-3 border-b border-gray-100 last:border-0 md:last:border-b">

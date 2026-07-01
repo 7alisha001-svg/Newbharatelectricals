@@ -46,7 +46,7 @@ export default function Catalogue() {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start hover:shadow-md transition-shadow"
               >
-                <div className="bg-brand-gray p-4 rounded-lg text-brand-green mr-6">
+                <div className="bg-brand-gray p-4 rounded-lg text-brand-green mr-4 sm:mr-6 flex-shrink-0">
                   <FileText size={32} />
                 </div>
                 <div className="flex-grow">

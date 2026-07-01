@@ -85,7 +85,7 @@ export default function Hero() {
                     className="flex items-center justify-center md:justify-start gap-4 mb-3 lg:mb-4"
                   >
                     <div className="hidden md:block h-0.5 w-16 bg-gray-900 shadow-sm"></div>
-                    <span className="text-gray-900 font-bold text-lg md:text-xl lg:text-2xl xl:text-3xl tracking-[0.15em] uppercase">
+                    <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-xl lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
                       {heroSlides[currentSlide].preTitle}
                     </span>
                     <div className="hidden lg:block h-0.5 w-24 bg-gray-900 shadow-sm"></div>
@@ -94,7 +94,7 @@ export default function Hero() {
                   {/* High Impact Title */}
                   <motion.h1 
                     initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-                    className={`text-[46px] leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-8 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
+                    className={`text-[30px] sm:text-[46px] leading-[1] sm:leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-6 sm:mb-8 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
                   >
                     {heroSlides[currentSlide].titlePart1} <span className="text-gray-900">{heroSlides[currentSlide].titlePart2}</span>
                   </motion.h1>

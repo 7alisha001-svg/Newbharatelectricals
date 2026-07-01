@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
   const { cartCount } = useCart();
 
@@ -20,7 +21,13 @@ export default function Navbar() {
 
   useEffect(() => {
     setMobileMenuOpen(false);
+    setExpandedMenus({});
   }, [location]);
+
+  const toggleMenu = (name: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setExpandedMenus(prev => ({ ...prev, [name]: !prev[name] }));
+  };
 
   return (
     <>
@@ -139,7 +146,11 @@ export default function Navbar() {
                 <li key={link.name} className="relative group">
                   <Link 
                     to={link.href} 
-                    className="flex items-center text-gray-800 hover:text-brand-green transition-colors py-3 border-b-2 border-transparent group-hover:border-brand-green"
+                    className={`flex items-center transition-colors py-3 border-b-2 group-hover:border-brand-green group-hover:text-brand-green ${
+                      (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
+                        ? 'border-brand-green text-brand-green' 
+                        : 'border-transparent text-gray-800'
+                    }`}
                   >
                     {link.name}
                     {link.hasDropdown && <ChevronDown size={14} className="ml-1.5 group-hover:rotate-180 transition-transform duration-200" />}
@@ -147,13 +158,13 @@ export default function Navbar() {
                   
                   {/* Dropdown */}
                   {link.hasDropdown && (
-                    <div className="absolute top-full left-0 w-56 bg-white shadow-xl rounded-b-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
+                    <div className="absolute top-full left-0 w-56 bg-white shadow-xl rounded-b-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
                       <div className="py-2">
                         {link.dropdownItems?.map((item) => (
                           <Link 
                             key={item.href} 
                             to={item.href} 
-                            className="block px-4 py-2.5 text-xs text-gray-700 font-bold hover:text-brand-green hover:bg-brand-gray transition-colors border-b border-gray-50 last:border-0"
+                            className={`block px-4 py-2.5 text-xs font-bold hover:text-brand-green hover:bg-brand-gray transition-colors border-b border-gray-50 last:border-0 ${location.pathname === item.href ? 'text-brand-green bg-brand-gray' : 'text-gray-700'}`}
                           >
                             {item.name}
                           </Link>
@@ -175,18 +186,24 @@ export default function Navbar() {
                 <div className="flex flex-col">
                   {link.hasDropdown ? (
                     <>
-                      <Link 
-                        to={link.href}
-                        className="block py-3 text-gray-900 font-bold hover:text-brand-green text-[15px] tracking-tight uppercase"
+                      <button 
+                        onClick={(e) => toggleMenu(link.name, e)}
+                        className={`w-full flex items-center justify-between py-3 font-bold hover:text-brand-green text-[15px] tracking-tight uppercase text-left transition-colors ${
+                          (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
+                            ? 'text-brand-green' 
+                            : 'text-gray-900'
+                        }`}
                       >
                         {link.name}
-                      </Link>
-                      <div className="pl-4 pb-4 space-y-2 border-l-2 border-brand-green-light ml-2">
+                        <ChevronDown size={18} className={`transition-transform duration-200 ${expandedMenus[link.name] ? 'rotate-180 text-brand-green' : ''}`} />
+                      </button>
+                      <div className={`pl-4 space-y-2 border-l-2 border-brand-green/30 ml-2 overflow-hidden transition-all duration-300 ${expandedMenus[link.name] ? 'max-h-[500px] pb-4 opacity-100' : 'max-h-0 pb-0 opacity-0'}`}>
                         {link.dropdownItems?.map((item) => (
                           <Link 
                             key={item.href} 
                             to={item.href} 
-                            className="block py-2 pl-4 text-gray-600 font-medium hover:text-brand-green transition-colors text-sm"
+                            className={`block py-2 pl-4 font-medium hover:text-brand-green transition-colors text-sm ${location.pathname === item.href ? 'text-brand-green' : 'text-gray-600'}`}
+                            onClick={() => setMobileMenuOpen(false)}
                           >
                             {item.name}
                           </Link>
@@ -196,7 +213,12 @@ export default function Navbar() {
                   ) : (
                     <Link 
                       to={link.href}
-                      className="block py-3 text-gray-900 font-bold hover:text-brand-green text-[15px] tracking-tight uppercase"
+                      className={`block py-3 font-bold hover:text-brand-green text-[15px] tracking-tight uppercase transition-colors ${
+                        (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
+                          ? 'text-brand-green' 
+                          : 'text-gray-900'
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.name}
                     </Link>

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "b8a975b1-b21b-4bec-bda3-976679d56966",
+    "name": "AN STAR 4375",
+    "slug": "an-star-4375",
+    "sku": "AMZ-8735",
+    "description": "4000VA / 36V Pure Sine Wave 30X36.7X42.9 CM 36 Months*",
+    "short_description": "4000VA / 36V Pure Sine Wave 30X36.7X42.9 CM 36 Months*...",
+    "regular_price": 35990,
+    "sale_price": 32391,
+    "stock_quantity": 45,
+    "manage_stock": false,
+    "stock_status": "instock",
+    "low_stock_amount": 5,
+    "weight": null,
+    "dimensions": null,
+    "category": "Home inverters",
+    "brand": "Amaze India",
+    "tags": null,
+    "image_url": "https://www.amaze-india.com/data/product/amaze/an-star-4375/an-start-4375.webp",
+    "gallery_images": [
+      "https://www.amaze-india.com/data/product/AN STAR 4375/2.jpg",
+      "https://www.amaze-india.com/data/product/Final_Card.jpg",
+      "https://www.amaze-india.com/data/product/amaze/an-star-4375/an-start-4375.webp",
+      "https://www.amaze-india.com/data/product/AN STAR 4375/2.jpg"
+    ],
+    "is_featured": false,
+    "status": "publish",
+    "created_at": "2026-06-29T08:42:49.177956+00:00",
+    "updated_at": "2026-07-01T05:54:21.264583+00:00"
+  }
+]

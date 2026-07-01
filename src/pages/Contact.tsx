@@ -77,7 +77,7 @@ export default function Contact() {
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="lg:col-span-7 bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-gray-100 relative"
+              className="lg:col-span-7 bg-white p-6 sm:p-8 md:p-12 rounded-3xl shadow-xl border border-gray-100 relative"
             >
               <h2 className="text-3xl font-heading font-bold text-gray-900 mb-8">Send an Inquiry</h2>
               
@@ -143,7 +143,7 @@ export default function Contact() {
             <motion.div 
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="lg:col-span-5 bg-brand-gray p-8 md:p-12 rounded-3xl"
+              className="lg:col-span-5 bg-brand-gray p-6 sm:p-8 md:p-12 rounded-3xl"
             >
               <h3 className="text-2xl font-heading font-bold text-gray-900 mb-8">Reach Out Directly</h3>
               

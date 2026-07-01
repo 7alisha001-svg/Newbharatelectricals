@@ -9,8 +9,8 @@ export default function Footer() {
         
         {/* Social Bar & Partner Call */}
         <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-800 pb-8 mb-12">
-            <div className="flex items-center mb-6 md:mb-0">
-               <span className="text-white font-heading font-bold text-xl mr-6 tracking-tight">Connect With Us</span>
+            <div className="flex flex-col sm:flex-row items-center mb-6 md:mb-0 text-center sm:text-left">
+               <span className="text-white font-heading font-bold text-xl mb-4 sm:mb-0 sm:mr-6 tracking-tight">Connect With Us</span>
                <div className="flex gap-3">
                  <a href="https://www.facebook.com/newbharatelectricalsbdn?mibextid=" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-brand-green text-white p-2.5 rounded-full transition-colors"><Facebook size={18} /></a>
                  <a href="#" className="bg-white/10 hover:bg-brand-green text-white p-2.5 rounded-full transition-colors"><Twitter size={18} /></a>

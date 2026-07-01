@@ -52,16 +52,16 @@ export default function CartPage() {
                   
                   <div className="divide-y divide-gray-100">
                     {cart.map((item) => (
-                      <div key={item.id} className="p-8 flex flex-col md:flex-row items-center gap-6 hover:bg-gray-50/30 transition-colors">
-                        <div className="w-full md:w-1/2 flex items-center gap-6">
+                      <div key={item.id} className="p-4 sm:p-6 md:p-8 flex flex-col md:flex-row items-center gap-4 sm:gap-6 hover:bg-gray-50/30 transition-colors">
+                        <div className="w-full md:w-1/2 flex items-center gap-4 sm:gap-6 relative">
                           <button 
                             onClick={() => removeFromCart(item.id)}
-                            className="text-gray-300 hover:text-red-500 transition-colors bg-white hover:bg-red-50 p-2 rounded-full"
+                            className="absolute sm:relative -top-2 sm:top-0 -right-2 sm:right-0 text-gray-300 hover:text-red-500 transition-colors bg-white hover:bg-red-50 p-2 rounded-full shadow-sm sm:shadow-none z-10"
                           >
                             <Trash2 size={18} />
                           </button>
-                          <div className="w-24 h-24 bg-gray-50 rounded-xl border border-gray-100 bg-center bg-contain bg-no-repeat shadow-sm" style={{ backgroundImage: `url(${item.imageUrl})` }}></div>
-                          <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-lg line-clamp-2">{item.name}</Link>
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border border-gray-100 bg-center bg-contain bg-no-repeat shadow-sm" style={{ backgroundImage: `url(${item.imageUrl})` }}></div>
+                          <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-base sm:text-lg line-clamp-2 pr-6 sm:pr-0">{item.name}</Link>
                         </div>
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-600 font-medium">

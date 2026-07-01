@@ -21,7 +21,7 @@ export default function StoreLocator() {
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-gray-100"
+            className="bg-white p-6 sm:p-8 md:p-12 rounded-2xl shadow-xl border border-gray-100"
           >
             <div className="inline-flex items-center text-xs font-bold tracking-widest uppercase bg-brand-green/10 text-brand-green px-3 py-1 rounded-full mb-6">
               Head Office & Showroom

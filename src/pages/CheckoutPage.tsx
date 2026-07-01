@@ -107,7 +107,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Customer Info */}
-              <div className="bg-white rounded-3xl border border-gray-100 p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+              <div className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <h2 className="text-xl md:text-2xl font-heading font-extrabold text-gray-900 mb-8 flex items-center tracking-tight">
                   <span className="w-8 h-8 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center text-sm mr-4 font-black">1</span>
                   Customer Information
@@ -134,7 +134,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Shipping Address */}
-              <div className="bg-white rounded-3xl border border-gray-100 p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+              <div className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <h2 className="text-xl md:text-2xl font-heading font-extrabold text-gray-900 mb-8 flex items-center tracking-tight">
                   <span className="w-8 h-8 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center text-sm mr-4 font-black">2</span>
                   Shipping Address
@@ -163,7 +163,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Payment Method */}
-              <div className="bg-white rounded-3xl border border-gray-100 p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+              <div className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <h2 className="text-xl md:text-2xl font-heading font-extrabold text-gray-900 mb-8 flex items-center tracking-tight">
                   <span className="w-8 h-8 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center text-sm mr-4 font-black">3</span>
                   Payment Gateway
@@ -225,7 +225,7 @@ export default function CheckoutPage() {
               transition={{ delay: 0.1 }}
               className="w-full lg:w-1/3"
             >
-              <div className="bg-white border text-gray-900 border-gray-100 rounded-3xl p-8 sticky top-32 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+              <div className="bg-white border text-gray-900 border-gray-100 rounded-3xl p-6 sm:p-8 sticky top-32 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <h2 className="text-xl font-heading font-extrabold mb-6 pb-4 border-b border-gray-100 tracking-tight">Order Summary</h2>
                 
                 <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
