@@ -57,7 +57,9 @@ export default function Footer() {
            {/* Column 3: Contact Info */}
            <div className="lg:col-span-2">
               <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Contact Info</h4>
-              <p className="text-gray-300 font-bold mb-2 text-lg">New Bharat Electricals</p>
+              <div className="mb-4">
+                <img src="/logo-dark.png" alt="New Bharat Electricals" className="w-[180px] md:w-[220px] lg:w-[250px] h-auto object-contain" />
+              </div>
               <div className="flex items-start text-gray-400 mb-6">
                  <MapPin className="text-brand-green mt-1 mr-3 flex-shrink-0" size={18} />
                  <p className="leading-relaxed">

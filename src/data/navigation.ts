@@ -39,8 +39,7 @@ export const mainNavLinks = [
     dropdownItems: categoryNav['solar-solutions'].map(item => ({ name: item.name, href: `/solar-solutions/${item.slug}` }))
   },
   { name: 'Brands', href: '/brands' },
-  { name: 'Categories', href: '/categories' },
+  { name: 'Catalog', href: '/categories' },
   { name: 'Accessories', href: '/accessories' },
-  { name: 'Store Locator', href: '/store-locator' },
   { name: 'Contact Us', href: '/contact' }
 ];

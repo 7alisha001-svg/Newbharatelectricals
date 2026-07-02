@@ -32,7 +32,7 @@ export default function Navbar() {
   return (
     <>
       {/* Top Bar - Vijay Sales Style (Red Background) */}
-      <div className="bg-brand-green text-white hidden md:block text-xs font-medium py-2">
+      <div className="bg-brand-green text-white hidden md:block text-xs font-medium py-1">
         <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8 flex justify-between items-center">
           <div className="flex items-center space-x-6">
             <a href="tel:+919457002000" className="flex items-center hover:opacity-80 transition-opacity">
@@ -52,23 +52,17 @@ export default function Navbar() {
       </div>
 
       <header className={`sticky w-full top-0 z-50 transition-all duration-300 bg-white border-b border-gray-200 ${isScrolled ? 'shadow-md' : ''}`}>
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8 pt-4 pb-0">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8 pt-2 pb-0">
           {/* Main Header / Logo / Search / Icons */}
-          <div className="flex items-center justify-between gap-4 mb-3">
+          <div className="flex items-center justify-between gap-4 mb-0">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
               <Link to="/" className="flex items-center group">
-                <div className="w-10 h-10 md:w-12 md:h-12 mr-3 bg-brand-green rounded-lg flex items-center justify-center text-white shadow-lg shadow-brand-green/20 group-hover:-translate-y-0.5 transition-transform">
-                  <Zap size={24} fill="currentColor" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xl md:text-2xl font-heading font-bold text-gray-900 leading-none tracking-tight">
-                    New Bharat <span className="text-brand-green">Electricals</span>
-                  </span>
-                  <span className="text-[10px] md:text-xs font-semibold text-gray-500 tracking-wider uppercase mt-1">
-                    Powered By Trust
-                  </span>
-                </div>
+                <img 
+                  src="/logo-light.png" 
+                  alt="New Bharat Electricals" 
+                  className="h-[100px] md:h-[130px] lg:h-[160px] w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
+                />
               </Link>
             </div>
 
@@ -146,7 +140,7 @@ export default function Navbar() {
                 <li key={link.name} className="relative group">
                   <Link 
                     to={link.href} 
-                    className={`flex items-center transition-colors py-3 border-b-2 group-hover:border-brand-green group-hover:text-brand-green ${
+                    className={`flex items-center transition-colors pt-1 pb-2 border-b-2 group-hover:border-brand-green group-hover:text-brand-green ${
                       (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
                         ? 'border-brand-green text-brand-green' 
                         : 'border-transparent text-gray-800'
