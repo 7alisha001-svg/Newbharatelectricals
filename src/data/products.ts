@@ -43,8 +43,8 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     description: 'Heavy duty inverters designed for commercial establishments and large scale operations.',
     bannerImage: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2500&auto=format&fit=crop',
     products: [
-      { id: 'ind-1', name: 'Heavy-Duty Inverter', description: 'Handles large inductive loads like motors, pumps, and heavy machinery.', features: ['DSP Based Control', 'High Overload Capability', 'Rugged Build'], imageUrl: 'https://images.unsplash.com/photo-1581092334812-78d10336214d?q=80&w=800&auto=format&fit=crop' },
-      { id: 'ind-2', name: 'Commercial Backup Inverter', description: 'Ideal for shopping malls, hospitals, and educational institutions.', features: ['3-Phase Output', 'LCD Monitoring Panel', 'Modular Design'], imageUrl: 'https://images.unsplash.com/photo-1581092334812-78d10336214d?q=80&w=800&auto=format&fit=crop' }
+      { id: 'ind-1', name: 'Heavy-Duty Inverter', description: 'Handles large inductive loads like motors, pumps, and heavy machinery.', features: ['DSP Based Control', 'High Overload Capability', 'Rugged Build'], imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
+      { id: 'ind-2', name: 'Commercial Backup Inverter', description: 'Ideal for shopping malls, hospitals, and educational institutions.', features: ['3-Phase Output', 'LCD Monitoring Panel', 'Modular Design'], imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' }
     ],
     benefits: ['Industrial Grade Components', 'High Load Capacity', '24/7 Reliability']
   },
@@ -87,18 +87,18 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     description: 'Accelerate your business sustainability goals while cutting operational costs.',
     bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
     products: [
-      { id: 'csp-1', name: '5KW Solar System', description: 'Perfect for small offices, clinics, and retail stores.', features: ['Optimal ROI', 'Commercial Grade Inverter', 'Tier-1 Panels'], imageUrl: 'https://images.unsplash.com/photo-1588693959146-81cf94e9f506?q=80&w=800&auto=format&fit=crop' },
-      { id: 'csp-2', name: '10KW Business Solar', description: 'Comprehensive grid-tied solar setup for high energy-consuming businesses.', features: ['High Conversion Efficiency', 'Remote Plant Monitoring', 'Tax Depreciation Benefits'], imageUrl: 'https://images.unsplash.com/photo-1588693959146-81cf94e9f506?q=80&w=800&auto=format&fit=crop' }
+      { id: 'csp-1', name: '5KW Solar System', description: 'Perfect for small offices, clinics, and retail stores.', features: ['Optimal ROI', 'Commercial Grade Inverter', 'Tier-1 Panels'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { id: 'csp-2', name: '10KW Business Solar', description: 'Comprehensive grid-tied solar setup for high energy-consuming businesses.', features: ['High Conversion Efficiency', 'Remote Plant Monitoring', 'Tax Depreciation Benefits'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
     ],
     benefits: ['Tax Benefits', 'Brand Value Enhancement', 'Fixed Energy Costs']
   },
   'industrial-solar-projects': {
     title: 'Industrial Solar Projects',
     description: 'Large scale solar deployments designed for manufacturing facilities and warehouses.',
-    bannerImage: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=2500&auto=format&fit=crop',
+    bannerImage: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop',
     products: [
-      { id: 'isp-1', name: 'Factory Rooftop Solar', description: 'Custom engineered mega-watt scale solar plants for factories.', features: ['Custom EPC Operations', 'High Tensile Structure', 'O&M Services'], imageUrl: 'https://images.unsplash.com/photo-1588693959146-81cf94e9f506?q=80&w=800&auto=format&fit=crop' },
-      { id: 'isp-2', name: 'Warehouse Solar Setup', description: 'Maximize massive unused roof space with light-weight solar installations.', features: ['Non-penetrating Mounts', 'Distributed Inverters', 'High Yield'], imageUrl: 'https://images.unsplash.com/photo-1588693959146-81cf94e9f506?q=80&w=800&auto=format&fit=crop' }
+      { id: 'isp-1', name: 'Factory Rooftop Solar', description: 'Custom engineered mega-watt scale solar plants for factories.', features: ['Custom EPC Operations', 'High Tensile Structure', 'O&M Services'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { id: 'isp-2', name: 'Warehouse Solar Setup', description: 'Maximize massive unused roof space with light-weight solar installations.', features: ['Non-penetrating Mounts', 'Distributed Inverters', 'High Yield'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
     ],
     benefits: ['Massive Cost Savings', 'Energy Independence', 'Corporate Social Responsibility']
   },
@@ -128,7 +128,7 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
     products: [
       { id: 'rts-1', name: 'Residential Rooftop Plant', description: 'Aesthetic, compact rooftop installations tailored for home architecture.', features: ['Custom Design', 'Aesthetic Mounting', 'Weatherproof'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { id: 'rts-2', name: 'Commercial Rooftop Plant', description: 'Optimized array designs for maximum yield on flat commercial roofs.', features: ['Ballasted Mounts', 'Walkway Integration', 'High Wind Resistance'], imageUrl: 'https://images.unsplash.com/photo-1588693959146-81cf94e9f506?q=80&w=800&auto=format&fit=crop' }
+      { id: 'rts-2', name: 'Commercial Rooftop Plant', description: 'Optimized array designs for maximum yield on flat commercial roofs.', features: ['Ballasted Mounts', 'Walkway Integration', 'High Wind Resistance'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
     ],
     benefits: ['Space Utilization', 'Cooler Roof Temperatures', 'Scalable Capacity']
   },
@@ -137,8 +137,8 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     description: 'Professional mounting, wiring, and commissioning by certified engineers.',
     bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
     products: [
-      { id: 'srv-1', name: 'End-to-End Installation', description: 'From site survey to net-meter commissioning, we handle it all.', features: ['Site Audit', 'Structural Engineering', 'Grid Approvals'], imageUrl: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=800&auto=format&fit=crop' },
-      { id: 'srv-2', name: 'AMC & Support', description: 'Annual maintenance contracts to keep your solar plant running optimally.', features: ['Panel Cleaning', 'System Health Check', 'Priority Support'], imageUrl: 'https://images.unsplash.com/photo-1588693959146-81cf94e9f506?q=80&w=800&auto=format&fit=crop' }
+      { id: 'srv-1', name: 'End-to-End Installation', description: 'From site survey to net-meter commissioning, we handle it all.', features: ['Site Audit', 'Structural Engineering', 'Grid Approvals'], imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+      { id: 'srv-2', name: 'AMC & Support', description: 'Annual maintenance contracts to keep your solar plant running optimally.', features: ['Panel Cleaning', 'System Health Check', 'Priority Support'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
     ],
     benefits: ['Expert Execution', 'Safety Standards Followed', 'Hassle-free Permitting']
   },

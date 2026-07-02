@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Mail, MapPin, Phone, Facebook, Instagram, Linkedin, Twitter, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { mainNavLinks } from '../data/navigation';
 
 export default function Footer() {
   return (
@@ -30,27 +31,34 @@ export default function Footer() {
            
            {/* Column 1: Useful Links */}
            <div>
-              <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Useful Links</h4>
+              <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Quick Links</h4>
               <ul className="space-y-3">
-                 <li><Link to="/store-locator" className="text-gray-400 hover:text-brand-green transition-colors">Store Locator</Link></li>
-                 <li><Link to="/contact" className="text-gray-400 hover:text-brand-green transition-colors">Enquire Now</Link></li>
-                 <li><Link to="/contact" className="text-gray-400 hover:text-brand-green transition-colors">Solar Financing</Link></li>
-                 <li><Link to="/contact" className="text-gray-400 hover:text-brand-green transition-colors">Compliance & Certifications</Link></li>
-                 <li><Link to="/catalogue" className="text-gray-400 hover:text-brand-green transition-colors">Brochure Downloads</Link></li>
+                 {mainNavLinks.map(link => (
+                   <li key={link.name}>
+                     <Link to={link.href} className="text-gray-400 hover:text-brand-green transition-colors">
+                       {link.name}
+                     </Link>
+                   </li>
+                 ))}
+                 <li><Link to="/about" className="text-gray-400 hover:text-brand-green transition-colors">About Us</Link></li>
               </ul>
            </div>
 
            {/* Column 2: Our Products */}
            <div>
-              <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Our Products</h4>
+              <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Categories</h4>
               <ul className="space-y-3">
-                 <li><Link to="/power-solutions/home-inverters" className="text-gray-400 hover:text-brand-green transition-colors">Home Inverters</Link></li>
-                 <li><Link to="/power-solutions/battery-backup-systems" className="text-gray-400 hover:text-brand-green transition-colors">Inverter Batteries</Link></li>
-                 <li><Link to="/mobility-solutions/ev-battery-solutions" className="text-gray-400 hover:text-brand-green transition-colors">EV Battery Solutions</Link></li>
-                 <li><Link to="/power-solutions/industrial-inverters" className="text-gray-400 hover:text-brand-green transition-colors">3/Phase Industrial Inverters</Link></li>
-                 <li><Link to="/power-solutions/ups-systems" className="text-gray-400 hover:text-brand-green transition-colors">UPS Systems</Link></li>
-                 <li><Link to="/solar-solutions" className="text-gray-400 hover:text-brand-green transition-colors">Solar Solutions</Link></li>
-                 <li><Link to="/accessories" className="text-gray-400 hover:text-brand-green transition-colors">Electrical Accessories</Link></li>
+                 {mainNavLinks
+                   .filter(link => link.hasDropdown && link.dropdownItems)
+                   .flatMap(link => link.dropdownItems || [])
+                   .slice(0, 7)
+                   .map(item => (
+                     <li key={item.name}>
+                       <Link to={item.href} className="text-gray-400 hover:text-brand-green transition-colors">
+                         {item.name}
+                       </Link>
+                     </li>
+                 ))}
               </ul>
            </div>
 
@@ -58,7 +66,7 @@ export default function Footer() {
            <div className="lg:col-span-2">
               <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Contact Info</h4>
               <div className="mb-4">
-                <img src="/logo-dark.png" alt="New Bharat Electricals" className="w-[180px] md:w-[220px] lg:w-[250px] h-auto object-contain" />
+                <img src="/logo-dark.png" alt="New Bharat Electricals" className="w-[110px] md:w-[140px] lg:w-[160px] h-auto object-contain" />
               </div>
               <div className="flex items-start text-gray-400 mb-6">
                  <MapPin className="text-brand-green mt-1 mr-3 flex-shrink-0" size={18} />

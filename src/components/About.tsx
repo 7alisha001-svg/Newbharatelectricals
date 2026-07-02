@@ -43,7 +43,7 @@ export default function About() {
             className="md:w-1/2 relative bg-gray-100 min-h-[300px]"
           >
             <img 
-              src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=1200&auto=format&fit=crop" 
+              src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1200&auto=format&fit=crop" 
               alt="Electrical Manufacturing" 
               className="absolute inset-0 w-full h-full object-cover"
             />

@@ -38,9 +38,9 @@ export default function ProductPage() {
       { label: 'Color', value: 'White / Green' }
     ],
     price: '9,37,000',
-    imageUrl: 'https://images.unsplash.com/photo-1508514177221-188b1cc92444?q=80&w=1200&auto=format&fit=crop', // Fallback for testing
+    imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1200&auto=format&fit=crop', // Fallback for testing
     thumbnails: [
-      'https://images.unsplash.com/photo-1508514177221-188b1cc92444?q=80&w=400&auto=format&fit=crop'
+      'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop'
     ]
   };
 
