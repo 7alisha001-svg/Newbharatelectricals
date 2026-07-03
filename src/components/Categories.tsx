@@ -35,7 +35,7 @@ export default function Categories() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
           {categories.map((cat, idx) => (
             <motion.div 
               key={cat.title}
@@ -45,7 +45,7 @@ export default function Categories() {
               transition={{ delay: idx * 0.1 }}
             >
               <Link to={`/${cat.slug}`} className="flex flex-col items-center group">
-                <div className="w-full aspect-square bg-brand-gray rounded-xl overflow-hidden mb-4 border border-gray-100 shadow-sm group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative">
+                <div className="w-full aspect-square bg-brand-gray rounded-xl overflow-hidden mb-2 sm:mb-4 border border-gray-100 shadow-sm group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative">
                   <img 
                     src={cat.image} 
                     alt={cat.title} 
@@ -54,7 +54,7 @@ export default function Categories() {
                   {/* Subtle overlay on hover */}
                   <div className="absolute inset-0 bg-brand-dark/0 group-hover:bg-brand-dark/10 transition-colors duration-300"></div>
                 </div>
-                <h3 className="font-heading font-bold text-gray-800 text-center text-sm md:text-base group-hover:text-brand-green transition-colors">
+                <h3 className="font-heading font-bold text-gray-800 text-center text-xs sm:text-sm md:text-base group-hover:text-brand-green transition-colors">
                   {cat.title}
                 </h3>
               </Link>

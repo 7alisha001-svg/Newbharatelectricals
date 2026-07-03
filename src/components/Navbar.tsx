@@ -61,7 +61,7 @@ export default function Navbar() {
                 <img 
                   src="/logo-light.png" 
                   alt="New Bharat Electricals" 
-                  className="h-[100px] md:h-[130px] lg:h-[160px] w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
+                  className="h-[80px] sm:h-[90px] md:h-[130px] lg:h-[160px] w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
                 />
               </Link>
             </div>

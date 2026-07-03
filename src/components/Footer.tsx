@@ -27,11 +27,11 @@ export default function Footer() {
         </div>
 
         {/* Main Footer Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-10 mb-12 md:mb-16">
            
            {/* Column 1: Useful Links */}
            <div>
-              <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Quick Links</h4>
+              <h4 className="text-white font-bold mb-4 md:mb-6 font-heading tracking-wide uppercase">Quick Links</h4>
               <ul className="space-y-3">
                  {mainNavLinks.map(link => (
                    <li key={link.name}>
@@ -40,7 +40,6 @@ export default function Footer() {
                      </Link>
                    </li>
                  ))}
-                 <li><Link to="/about" className="text-gray-400 hover:text-brand-green transition-colors">About Us</Link></li>
               </ul>
            </div>
 
@@ -119,8 +118,8 @@ export default function Footer() {
         <div className="border-t border-gray-800 py-8 flex flex-col lg:flex-row justify-between items-center text-xs text-gray-500">
             <div className="mb-4 lg:mb-0 text-center lg:text-left">
               Copyright © {new Date().getFullYear()} New Bharat Electricals . All Rights Reserved.  
-              <span className="mx-2">|</span> <Link to="/contact" className="hover:text-brand-green transition-colors">Terms & Conditions</Link> 
-              <span className="mx-2">|</span> <Link to="/contact" className="hover:text-brand-green transition-colors">Privacy Policy</Link> 
+              <span className="mx-2">|</span> <Link to="/terms-and-conditions" className="hover:text-brand-green transition-colors">Terms & Conditions</Link> 
+              <span className="mx-2">|</span> <Link to="/privacy-policy" className="hover:text-brand-green transition-colors">Privacy Policy</Link> 
               <span className="mx-2">|</span> <Link to="/contact" className="hover:text-brand-green transition-colors">Disclaimer</Link>
               <span className="mx-2">|</span> <Link to="/admin" className="hover:text-brand-green transition-colors">Admin Login</Link>
             </div>

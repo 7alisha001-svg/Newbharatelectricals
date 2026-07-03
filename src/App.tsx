@@ -14,6 +14,9 @@ import Contact from './pages/Contact';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
+import AboutUsPage from './pages/AboutUsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsConditionsPage from './pages/TermsConditionsPage';
 import ScrollToTop from './components/ScrollToTop';
 
 // Admin Pages
@@ -67,6 +70,9 @@ export default function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
+              <Route path="/about-us" element={<AboutUsPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
               <Route path="/:category" element={<GenericCategoryPage />} />
               <Route path="/:category/:subcategory" element={<GenericSubCategoryPage />} />
               <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />

@@ -26,6 +26,7 @@ export const categoryNav: Record<string, {name: string, slug: string}[]> = {
 
 export const mainNavLinks = [
   { name: 'Home', href: '/' },
+  { name: 'About Us', href: '/about-us' },
   { 
     name: 'Power Solutions', 
     href: '/power-solutions',

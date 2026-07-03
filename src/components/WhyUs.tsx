@@ -27,17 +27,17 @@ export default function WhyUs() {
   return (
     <section className="py-10 bg-white border-t border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
           {reasons.map((reason) => (
             <div
               key={reason.title}
-              className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 bg-[#f8f9fa] p-6 rounded-xl border border-gray-100/50 hover:shadow-sm hover:border-gray-200 transition-all justify-center"
+              className="flex flex-col xl:flex-row items-center xl:items-start text-center xl:text-left gap-3 sm:gap-4 bg-[#f8f9fa] p-4 sm:p-6 rounded-xl border border-gray-100/50 hover:shadow-sm hover:border-gray-200 transition-all justify-center"
             >
               <div className="text-brand-green">
                 {reason.icon}
               </div>
               <div className="flex flex-col">
-                <h3 className="font-heading font-bold text-gray-900 text-base md:text-sm lg:text-base uppercase tracking-wide mb-1 flex items-center justify-center md:justify-start">
+                <h3 className="font-heading font-bold text-gray-900 text-xs sm:text-sm lg:text-base uppercase tracking-wide mb-1 flex items-center justify-center xl:justify-start leading-tight">
                   {reason.title}
                 </h3>
                 <p className="text-gray-500 text-xs md:text-xs xl:text-sm">

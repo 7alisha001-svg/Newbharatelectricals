@@ -87,7 +87,7 @@ export default function TrendingProducts() {
           </div>
         </div>
 
-        <div className="flex overflow-x-auto gap-4 md:gap-6 hide-scrollbar pb-4 -mx-4 px-4 lg:mx-0 lg:px-0">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:overflow-x-auto gap-3 md:gap-4 lg:pb-4 lg:-mx-4 lg:px-4 lg:mx-0 lg:px-0 hide-scrollbar">
           {trendingProducts.map((product, idx) => (
             <motion.div 
               key={product.id}
@@ -95,39 +95,39 @@ export default function TrendingProducts() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden flex flex-col group transition-all min-w-[260px] md:min-w-[280px]"
+              className="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden flex flex-col group transition-all lg:min-w-[260px] xl:min-w-[280px]"
             >
-              <div className="p-4 relative">
-                <Link to="/contact" className="absolute top-4 right-4 text-gray-400 hover:text-brand-green hover:scale-110 z-10 bg-white p-1.5 rounded-full shadow-sm transition-all">
-                  <Heart size={18} />
+              <div className="p-2 sm:p-4 relative">
+                <Link to="/contact" className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-400 hover:text-brand-green hover:scale-110 z-10 bg-white p-1 sm:p-1.5 rounded-full shadow-sm transition-all">
+                  <Heart size={16} className="sm:w-4 sm:h-4" />
                 </Link>
                 {product.discount && (
-                  <span className="absolute top-4 left-4 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider z-10">
+                  <span className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-orange-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full uppercase tracking-wider z-10">
                     Trending
                   </span>
                 )}
-                <Link to={`/${product.category}/${product.subcategory}/${product.id}`} className="block h-48 w-full bg-white flex items-center justify-center p-2">
+                <Link to={`/${product.category}/${product.subcategory}/${product.id}`} className="block h-32 sm:h-48 w-full bg-white flex items-center justify-center p-1 sm:p-2">
                   <img src={product.imageUrl} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
                 </Link>
               </div>
-              <div className="p-4 pt-0 flex flex-col flex-grow border-t border-gray-50 mt-2">
-                <div className="flex items-center text-xs mt-3 mb-2 text-yellow-500">
-                  <Star fill="currentColor" size={14} className="mr-0.5" />
-                  <Star fill="currentColor" size={14} className="mr-0.5" />
-                  <Star fill="currentColor" size={14} className="mr-0.5" />
-                  <Star fill="currentColor" size={14} className="mr-0.5" />
-                  <Star fill="currentColor" size={14} className="text-gray-300 mr-1" />
+              <div className="p-3 sm:p-4 pt-0 flex flex-col flex-grow border-t border-gray-50 mt-1 sm:mt-2">
+                <div className="flex items-center text-[10px] sm:text-xs mt-2 sm:mt-3 mb-1.5 sm:mb-2 text-yellow-500">
+                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5" />
+                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
+                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
+                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
+                  <Star fill="currentColor" size={12} className="text-gray-300 mr-0.5 sm:mr-1 hidden sm:block" />
                   <span className="text-gray-400">({product.reviews})</span>
                 </div>
                 <Link to={`/${product.category}/${product.subcategory}/${product.id}`}>
-                  <h3 className="text-sm font-bold text-gray-800 leading-snug mb-3 group-hover:text-brand-green transition-colors line-clamp-2">
+                  <h3 className="text-xs sm:text-sm font-bold text-gray-800 leading-snug mb-2 sm:mb-3 group-hover:text-brand-green transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                 </Link>
                 <div className="mt-auto">
-                  <div className="flex items-end mb-4">
-                    <span className="text-lg font-bold text-gray-900 mr-2">₹{product.price}</span>
-                    <span className="text-sm text-gray-400 line-through mb-0.5">₹{product.originalPrice}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-end mb-2 sm:mb-4">
+                    <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{product.price}</span>
+                    <span className="text-[10px] sm:text-sm text-gray-400 line-through mb-0.5">₹{product.originalPrice}</span>
                   </div>
                   <button 
                     onClick={() => addToCart({
@@ -137,9 +137,9 @@ export default function TrendingProducts() {
                       imageUrl: product.imageUrl,
                       quantity: 1
                     })}
-                    className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                    className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-1.5 sm:py-2 rounded-lg font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
                   >
-                    <ShoppingCart size={14} className="mr-2" /> Add to Cart
+                    <ShoppingCart size={14} className="mr-1 sm:mr-2" /> <span className="hidden sm:inline">Add to Cart</span><span className="sm:hidden">Add</span>
                   </button>
                 </div>
               </div>

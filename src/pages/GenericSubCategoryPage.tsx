@@ -170,7 +170,7 @@ export default function GenericSubCategoryPage() {
              </div>
 
              {products.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
                   {products.map((product, idx) => (
                     <motion.div 
                       key={product.id}
@@ -180,9 +180,9 @@ export default function GenericSubCategoryPage() {
                       className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col relative"
                     >
                       {/* Product Image */}
-                      <div className="h-56 relative bg-white flex items-center justify-center p-6 border-b border-gray-100/50">
-                        <Link to={`/${category}/${subcategory}/${product.id}`} className="absolute top-4 right-4 text-gray-300 hover:text-brand-green transition-colors z-10">
-                           <Heart size={20} />
+                      <div className="h-32 sm:h-56 relative bg-white flex items-center justify-center p-2 sm:p-6 border-b border-gray-100/50">
+                        <Link to={`/${category}/${subcategory}/${product.id}`} className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-300 hover:text-brand-green transition-colors z-10">
+                           <Heart size={16} className="sm:w-5 sm:h-5" />
                         </Link>
                         <Link to={`/${category}/${subcategory}/${product.id}`} className="w-full h-full block">
                           <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
@@ -190,43 +190,43 @@ export default function GenericSubCategoryPage() {
                       </div>
                       
                       {/* Product Detail */}
-                      <div className="p-6 flex flex-col flex-grow">
+                      <div className="p-3 sm:p-6 flex flex-col flex-grow">
                         <Link to={`/${category}/${subcategory}/${product.id}`}>
-                          <h3 className="font-heading font-bold text-lg text-brand-dark mb-2 group-hover:text-brand-green transition-colors leading-tight line-clamp-1">{product.name}</h3>
+                          <h3 className="font-heading font-bold text-sm sm:text-lg text-brand-dark mb-1 sm:mb-2 group-hover:text-brand-green transition-colors leading-tight line-clamp-2 sm:line-clamp-1">{product.name}</h3>
                         </Link>
                         
-                        <div className="flex items-center justify-between mb-3 text-xs text-gray-400 font-medium">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3 text-[10px] sm:text-xs text-gray-400 font-medium">
                            <span className="flex items-center text-yellow-500">
                              ★ 5.0 Rating
                            </span>
-                           <span>In Stock</span>
+                           <span className="hidden sm:inline">In Stock</span>
                         </div>
 
                         {/* Specs List Style */}
-                        <div className="space-y-1.5 mb-6">
+                        <div className="space-y-1 sm:space-y-1.5 mb-2 sm:mb-6">
                           {product.features.slice(0,2).map((feat, i) => (
-                            <p key={i} className="text-xs text-gray-500 flex items-center truncate">
-                               <span className="w-1 h-1 bg-brand-green rounded-full mr-2 flex-shrink-0"></span>
+                            <p key={i} className="text-[10px] sm:text-xs text-gray-500 flex items-center truncate">
+                               <span className="w-1 h-1 bg-brand-green rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
                                {feat}
                             </p>
                           ))}
                         </div>
                         
                         {/* Price & Action Area - Pushed to bottom */}
-                        <div className="mt-auto border-t border-gray-100 pt-4">
-                           <div className="flex justify-between items-center mb-4">
+                        <div className="mt-auto border-t border-gray-100 pt-2 sm:pt-4">
+                           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 sm:mb-4">
                              <div>
-                               <p className="text-[10px] text-gray-400 uppercase tracking-wide font-bold">Offer Price</p>
-                               <p className="text-brand-green font-bold text-lg leading-none">Get Quote</p>
+                               <p className="text-[8px] sm:text-[10px] text-gray-400 uppercase tracking-wide font-bold">Offer Price</p>
+                               <p className="text-brand-green font-bold text-sm sm:text-lg leading-none mt-0.5">Get Quote</p>
                              </div>
-                             <p className="text-xs text-gray-500 text-right max-w-[50%] leading-tight">Inclusive of all taxes</p>
+                             <p className="hidden sm:block text-xs text-gray-500 text-right max-w-[50%] leading-tight">Inclusive of all taxes</p>
                            </div>
                            
-                           <div className="grid grid-cols-2 gap-2">
-                             <a href={`https://wa.me/919457002000?text=${whatsappMessage} - ${encodeURIComponent(product.name)}`} target="_blank" rel="noreferrer" className="flex items-center justify-center text-brand-green border border-brand-green font-bold py-2.5 px-2 rounded hover:bg-brand-green-light transition-colors text-xs uppercase tracking-wide">
+                           <div className="grid grid-cols-2 gap-1 sm:gap-2 mt-2 sm:mt-0">
+                             <a href={`https://wa.me/919457002000?text=${whatsappMessage} - ${encodeURIComponent(product.name)}`} target="_blank" rel="noreferrer" className="flex items-center justify-center text-brand-green border border-brand-green font-bold py-1.5 sm:py-2.5 px-1 sm:px-2 rounded hover:bg-brand-green-light transition-colors text-[9px] sm:text-xs uppercase tracking-wide">
                                 WhatsApp
                              </a>
-                             <Link to={`/${category}/${subcategory}/${product.id}`} className="flex items-center justify-center bg-brand-green text-white font-bold py-2.5 px-2 rounded hover:bg-brand-green-dark transition-colors text-xs uppercase tracking-wide shadow-md shadow-brand-green/20">
+                             <Link to={`/${category}/${subcategory}/${product.id}`} className="flex items-center justify-center bg-brand-green text-white font-bold py-1.5 sm:py-2.5 px-1 sm:px-2 rounded hover:bg-brand-green-dark transition-colors text-[9px] sm:text-xs uppercase tracking-wide shadow-md shadow-brand-green/20">
                                 Enquiry
                              </Link>
                            </div>
