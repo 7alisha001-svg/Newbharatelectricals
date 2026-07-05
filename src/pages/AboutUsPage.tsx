@@ -19,7 +19,7 @@ export default function AboutUsPage() {
             src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop" 
             alt="About Us Background" 
             className="w-full h-full object-cover"
-          />
+           onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
         </div>
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8 relative z-20 text-center">
           <motion.h1 
@@ -81,7 +81,7 @@ export default function AboutUsPage() {
                 src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1000&auto=format&fit=crop" 
                 alt="Our Facility" 
                 className="w-full h-full object-cover"
-              />
+               onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
             </motion.div>
           </div>
         </div>

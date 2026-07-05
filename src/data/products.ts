@@ -21,11 +21,46 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     description: 'Explore our wide range of digital and pure sine wave inverters for homes and businesses.',
     bannerImage: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop',
     products: [
-      { id: 'an-star-11075', name: 'AN STAR 11075', description: '10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power.', features: ['10 KVA / 120V Capacity', 'Pure Sine Wave Output', 'Intelligent LCD Display'], imageUrl: '/images/amaze-an-star-1475-1.jpg' },
-      { id: 'inv-1', name: '800VA Inverter', description: 'Compact and efficient inverter for small homes and essential load.', features: ['Digital Display', 'Low Noise', 'High Efficiency'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' },
+      { id: 'an-star-11075', name: 'AN STAR 11075', description: '10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power.', features: ['10 KVA / 120V Capacity', 'Pure Sine Wave Output', 'Intelligent LCD Display'], imageUrl: '/images/amaze-an-star-1475-1.jpg' },      { id: 'inv-1', name: '800VA Inverter', description: 'Compact and efficient inverter for small homes and essential load.', features: ['Digital Display', 'Low Noise', 'High Efficiency'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' },
       { id: 'inv-3', name: 'Pure Sine Wave Inverter', description: 'Provides grid-like power to ensure the highest safety for sensitive modern appliances.', features: ['Noiseless Operation', 'Extended Appliance Life', 'LED Indicators'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' }
     ],
     benefits: ['Silent Operation', 'Safe for Sensitive Electronics', 'Quick Recharge']
+  },
+  'batteries': {
+    title: 'Batteries',
+    description: 'High-performance tubular and flat plate batteries for long-lasting backup.',
+    bannerImage: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'bat-1', name: 'Tall Tubular Battery', description: 'Superior backup time and long life.', features: ['Low Maintenance', 'Deep Cycle Design'], imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Long Life', 'Fast Charging', 'Low Maintenance']
+  },
+  '3-phase-inverters': {
+    title: '3-Phase Inverters',
+    description: 'Heavy duty 3-phase inverters for industrial and commercial use.',
+    bannerImage: 'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: '3pi-1', name: '15KVA 3-Phase Inverter', description: 'Industrial grade 3-phase inverter.', features: ['DSP Based', 'High Efficiency'], imageUrl: 'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Industrial Grade', 'High Efficiency', 'Robust Design']
+  },
+  'lift-inverters': {
+    title: 'Lift Inverters',
+    description: 'Specialized backup solutions for elevators and heavy motors.',
+    bannerImage: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'li-1', name: 'Lift UPS 6KVA', description: 'Reliable backup for passenger elevators.', features: ['ARD Compatible', 'High Surge Capacity'], imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['High Surge Capacity', 'Safe Operation', 'Reliable Backup']
+  },
+  'combo-products': {
+    title: 'Combo Products',
+    description: 'Ready-to-use inverter and battery combo packages for hassle-free installation.',
+    bannerImage: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'combo-1', name: 'Home Combo 1KVA', description: 'Complete power backup solution for small homes.', features: ['Inverter + Battery', 'Free Installation'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Cost Effective', 'Perfect Match', 'Easy Setup']
   },
   'ups-systems': {
     title: 'UPS Systems',
@@ -84,6 +119,63 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
   },
 
   // Solar Solutions
+  'solar-on-grid-inverters': {
+    title: 'Solar On-Grid Inverters',
+    description: 'Grid-tied inverters for maximum savings and net metering.',
+    bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'sgi-1', name: '5KW On-Grid Inverter', description: 'High-efficiency grid-tied inverter.', features: ['98% Efficiency', 'Wi-Fi Monitoring', 'Compact Design'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { id: 'sgi-2', name: '10KW 3-Phase On-Grid', description: 'Commercial grade grid-tied inverter.', features: ['3-Phase Output', 'Dual MPPT', 'IP65 Rated'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Lower Electricity Bills', 'Grid Exporting', 'Maintenance Free']
+  },
+  'solar-off-grid-inverters': {
+    title: 'Solar Off-Grid Inverters',
+    description: 'Independent power generation for remote locations and complete backup.',
+    bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'soi-1', name: '3KW Off-Grid Inverter', description: 'Reliable off-grid inverter for home use.', features: ['Pure Sine Wave', 'Built-in Charge Controller', 'Battery Prioritization'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Energy Independence', 'Reliable Backup', 'Works Without Grid']
+  },
+  'solar-hybrid-inverters': {
+    title: 'Solar Hybrid Inverters',
+    description: 'Intelligent systems balancing grid, solar, and battery for optimal performance.',
+    bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'shi-1', name: 'Hybrid Inverter 5KW', description: 'Intelligently manages power from solar, grid, and batteries simultaneously.', features: ['Grid-Export Feature', 'Battery Prioritization', 'LCD Touch Panel'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Maximum Flexibility', 'Smart Grid Management', 'Seamless Switchover']
+  },
+  'solar-panels': {
+    title: 'Solar Panels',
+    description: 'High-efficiency monocrystalline and polycrystalline panels.',
+    bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'sp-1', name: '330W Poly Panel', description: 'Durable polycrystalline solar panel.', features: ['Cost Effective', 'High Yield', 'Weather Resistant'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { id: 'sp-2', name: '540W Mono PERC Half-Cut', description: 'Premium ultra-high efficiency monocrystalline panel.', features: ['Half-Cut Tech', 'Better Shading Tolerance', '25-Year Warranty'], imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Maximum Power Generation', 'Durable Construction', 'High ROI']
+  },
+  'solar-batteries': {
+    title: 'Solar Batteries',
+    description: 'Store excess solar energy during the day for reliable night-time use.',
+    bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'sb-1', name: 'Lithium Battery Pack', description: 'Modern, high-density energy storage with ultra-long cycle life.', features: ['Lightweight', '10+ Years Life', 'BMS Integrated'], imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
+      { id: 'sb-2', name: 'Solar Tubular Battery', description: 'Specially designed deep-cycle tubular batteries for solar charging profiles.', features: ['C10 Rating', 'Low Water Topping', 'Handles Partial State of Charge'], imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Energy Security', 'Night-time Load Running', 'Long Lifespan']
+  },
+  'solar-charge-controllers': {
+    title: 'Solar Charge Controllers',
+    description: 'MPPT and PWM controllers for optimal charging of your solar battery bank.',
+    bannerImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'scc-1', name: '40A MPPT Controller', description: 'High-efficiency MPPT charge controller.', features: ['99% Tracking Efficiency', 'LCD Display', 'Multi-stage Charging'], imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Maximize Battery Life', 'High Efficiency Tracking', 'Safe Charging']
+  },
   'residential-solar-panels': {
     title: 'Residential Solar Panels',
     description: 'Harness the sun for your home and dramatically reduce your electricity bills.',

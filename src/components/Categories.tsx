@@ -50,7 +50,7 @@ export default function Categories() {
                     src={cat.image} 
                     alt={cat.title} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                   onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                   {/* Subtle overlay on hover */}
                   <div className="absolute inset-0 bg-brand-dark/0 group-hover:bg-brand-dark/10 transition-colors duration-300"></div>
                 </div>

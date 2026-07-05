@@ -98,12 +98,12 @@ export default function ProductPage() {
             {/* Left - Image Gallery */}
             <div className="w-full lg:w-1/2 p-4 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col">
               <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
-                <img src={product.imageUrl} alt={displayTitle} className="max-w-full max-h-full object-contain" />
+                <img src={product.imageUrl} alt={displayTitle} className="max-w-full max-h-full object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
               </div>
               <div className="flex gap-4">
                 {product.thumbnails.map((thumb, idx) => (
                   <button key={idx} className="w-20 h-20 border-2 border-brand-green rounded-lg overflow-hidden bg-white p-2">
-                    <img src={thumb} alt={`Thumbnail ${idx}`} className="w-full h-full object-contain" />
+                    <img src={thumb} alt={`Thumbnail ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                   </button>
                 ))}
               </div>

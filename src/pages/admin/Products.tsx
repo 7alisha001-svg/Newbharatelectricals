@@ -155,7 +155,7 @@ export default function AdminProducts() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded bg-gray-100 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-200">
                           {product.image_url ? (
-                            <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                            <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                           ) : (
                             <Package size={20} className="text-gray-400" />
                           )}

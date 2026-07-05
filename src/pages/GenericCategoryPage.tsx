@@ -9,41 +9,46 @@ export default function GenericCategoryPage() {
   const title = formatSlugToTitle(category);
 
   // Dynamic logic to figure out subcategories for this category to render placeholder grid
-  let subcategories: { name: string; slug: string; desc: string; icon: any }[] = [];
+  let subcategories: { name: string; slug: string; desc: string; icon: any; imageUrl?: string }[] = [];
 
   if (category === 'power-solutions') {
     subcategories = [
-      { name: 'UPS Systems', slug: 'ups-systems', desc: 'High reliability UPS for critical loads.', icon: <Zap size={24} /> },
-      { name: 'Home Inverters', slug: 'home-inverters', desc: 'Keep your home powered during outages.', icon: <Zap size={24} /> },
-      { name: 'Industrial Inverters', slug: 'industrial-inverters', desc: 'Heavy duty inverters for large scale operations.', icon: <Microchip size={24} /> },
-      { name: 'Battery Backup Systems', slug: 'battery-backup-systems', desc: 'Long-lasting power storage solutions.', icon: <BatteryCharging size={24} /> },
-      { name: 'Power Backup Solutions', slug: 'power-backup-solutions', desc: 'Comprehensive blackout protection.', icon: <Zap size={24} /> },
+      { name: 'Inverters', slug: 'inverters', desc: 'Explore our wide range of digital and pure sine wave inverters.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Batteries', slug: 'batteries', desc: 'High-performance tubular and flat plate batteries.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
+      { name: '3-Phase Inverters', slug: '3-phase-inverters', desc: 'Heavy-duty 3-phase power solutions.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Lift Inverters', slug: 'lift-inverters', desc: 'Reliable backup power for elevators.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Combo Products', slug: 'combo-products', desc: 'Optimized inverter and battery bundles.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
     ];
   } else if (category === 'solar-solutions') {
     subcategories = [
-      { name: 'Residential Solar Panels', slug: 'residential-solar-panels', desc: 'Harness the sun for your home.', icon: <Sun size={24} /> },
-      { name: 'Commercial Solar Panels', slug: 'commercial-solar-panels', desc: 'Reduce your business electricity bills.', icon: <Sun size={24} /> },
-      { name: 'Industrial Solar Projects', slug: 'industrial-solar-projects', desc: 'Large scale solar deployments.', icon: <Sun size={24} /> },
-      { name: 'Solar Inverters', slug: 'solar-inverters', desc: 'Efficient DC to AC conversion.', icon: <Microchip size={24} /> },
-      { name: 'Solar Battery Storage', slug: 'solar-battery-storage', desc: 'Store solar energy for night use.', icon: <BatteryCharging size={24} /> },
-      { name: 'Solar Installation Services', slug: 'solar-installation-services', desc: 'Professional mounting and wiring.', icon: <Sun size={24} /> },
-      { name: 'Rooftop Solar Solutions', slug: 'rooftop-solar-solutions', desc: 'Turn your roof into a power plant.', icon: <Sun size={24} /> },
+      { name: 'Solar On-Grid Inverters', slug: 'solar-on-grid-inverters', desc: 'Grid-tied inverters for maximum savings.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Solar Off-Grid Inverters', slug: 'solar-off-grid-inverters', desc: 'Independent power generation for remote locations.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Solar Hybrid Inverters', slug: 'solar-hybrid-inverters', desc: 'Intelligent systems balancing grid, solar, and battery.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Solar Panels', slug: 'solar-panels', desc: 'High-efficiency monocrystalline and polycrystalline panels.', icon: <Sun size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Solar Batteries', slug: 'solar-batteries', desc: 'Deep cycle batteries designed for solar storage.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Solar Charge Controllers', slug: 'solar-charge-controllers', desc: 'MPPT and PWM controllers for optimal charging.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
     ];
   } else if (category === 'mobility-solutions') {
     subcategories = [
-      { name: 'E-Rickshaw Batteries', slug: 'e-rickshaw-batteries', desc: 'Durable batteries for daily transit.', icon: <BatteryCharging size={24} /> },
-      { name: 'EV Battery Solutions', slug: 'ev-battery-solutions', desc: 'Next-generation EV power cells.', icon: <BatteryCharging size={24} /> },
-      { name: 'Charging Support', slug: 'charging-support', desc: 'Fast and reliable charging networks.', icon: <Zap size={24} /> },
-      { name: 'Automotive Battery Solutions', slug: 'automotive-battery-solutions', desc: 'Start your vehicle with confidence.', icon: <BatteryCharging size={24} /> },
+      { name: 'E-Rickshaw Batteries', slug: 'e-rickshaw-batteries', desc: 'Durable batteries for daily transit.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
+      { name: 'EV Battery Solutions', slug: 'ev-battery-solutions', desc: 'Next-generation EV power cells.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Charging Support', slug: 'charging-support', desc: 'Fast and reliable charging networks.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Automotive Battery Solutions', slug: 'automotive-battery-solutions', desc: 'Start your vehicle with confidence.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
     ];
   } else if (category === 'accessories') {
     subcategories = [
-      { name: 'Solar Connectors', slug: 'solar-connectors', desc: 'MC4 and weatherproof connectors.', icon: <Microchip size={24} /> },
-      { name: 'Wiring Accessories', slug: 'wiring-accessories', desc: 'High quality copper structured wiring.', icon: <Zap size={24} /> },
-      { name: 'Electrical Cables', slug: 'electrical-cables', desc: 'Industrial grade insulated cables.', icon: <Zap size={24} /> },
-      { name: 'Switches', slug: 'switches', desc: 'Modern and durable switchgears.', icon: <Microchip size={24} /> },
-      { name: 'Installation Accessories', slug: 'installation-accessories', desc: 'Mounts, brackets, and rails.', icon: <Microchip size={24} /> },
-      { name: 'Battery Accessories', slug: 'battery-accessories', desc: 'Terminals, water indicators, and racks.', icon: <BatteryCharging size={24} /> },
+      { name: 'Solar Connectors', slug: 'solar-connectors', desc: 'MC4 and weatherproof connectors.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Wiring Accessories', slug: 'wiring-accessories', desc: 'High quality copper structured wiring.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Electrical Cables', slug: 'electrical-cables', desc: 'Industrial grade insulated cables.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Switches', slug: 'switches', desc: 'Modern and durable switchgears.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Installation Accessories', slug: 'installation-accessories', desc: 'Mounts, brackets, and rails.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Battery Accessories', slug: 'battery-accessories', desc: 'Terminals, water indicators, and racks.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
+    ];
+  } else if (category === 'categories') {
+    subcategories = [
+      { name: 'Amaze', slug: 'amaze', desc: 'Premium power and solar solutions.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Luminous', slug: 'luminous', desc: 'Advanced inverters and batteries.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
+      { name: 'Microtek', slug: 'microtek', desc: 'Reliable power backup solutions.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
     ];
   }
 
@@ -122,16 +127,23 @@ export default function GenericCategoryPage() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.05 }}
             >
-              <Link to={`/${category}/${sub.slug}`} className="block h-full group">
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:border-brand-green hover:shadow-md transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                  <div className="text-brand-green mb-4 w-12 h-12 bg-gray-50 flex items-center justify-center rounded-full group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
-                    {sub.icon}
-                  </div>
-                  <h3 className="font-heading font-bold text-lg mb-2 text-gray-900 group-hover:text-brand-green transition-colors">{sub.name}</h3>
-                  <p className="text-gray-500 text-sm mb-4 flex-grow">{sub.desc}</p>
-                  
-                  <div className="inline-flex items-center text-brand-green font-bold text-xs uppercase tracking-wide mt-auto">
-                    View Range <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+              <Link to={category === 'categories' ? `/brands/${sub.slug}` : `/${category}/${sub.slug}`} className="block h-full group">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-brand-green hover:shadow-md transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+                  {sub.imageUrl && (
+                    <div className="w-full h-48 overflow-hidden bg-gray-100">
+                      <img src={sub.imageUrl} alt={sub.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                    </div>
+                  )}
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="text-brand-green mb-4 w-12 h-12 bg-gray-50 flex items-center justify-center rounded-full group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
+                      {sub.icon}
+                    </div>
+                    <h3 className="font-heading font-bold text-lg mb-2 text-gray-900 group-hover:text-brand-green transition-colors">{sub.name}</h3>
+                    <p className="text-gray-500 text-sm mb-4 flex-grow">{sub.desc}</p>
+                    
+                    <div className="inline-flex items-center text-brand-green font-bold text-xs uppercase tracking-wide mt-auto">
+                      View Range <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
                 </div>
               </Link>

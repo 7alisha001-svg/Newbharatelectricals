@@ -1,8 +1,9 @@
 import { Phone, MessageCircle, ChevronDown, Menu, X, Zap, Heart, User, MapPin, Search, ShoppingCart, Store, Headset } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { mainNavLinks as navLinks } from '../data/navigation';
 import { useCart } from '../context/CartContext';
+import logoLight from '../assets/images/logo-light.png';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,10 +60,10 @@ export default function Navbar() {
             <div className="flex items-center flex-shrink-0">
               <Link to="/" className="flex items-center group">
                 <img 
-                  src="/logo-light.png" 
+                  src={logoLight} 
                   alt="New Bharat Electricals" 
                   className="h-[80px] sm:h-[90px] md:h-[130px] lg:h-[160px] w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
-                />
+                 onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
               </Link>
             </div>
 

@@ -185,7 +185,7 @@ export default function GenericSubCategoryPage() {
                            <Heart size={16} className="sm:w-5 sm:h-5" />
                         </Link>
                         <Link to={`/${category}/${subcategory}/${product.id}`} className="w-full h-full block">
-                          <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+                          <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                         </Link>
                       </div>
                       

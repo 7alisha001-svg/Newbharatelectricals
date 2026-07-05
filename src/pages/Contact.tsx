@@ -175,7 +175,22 @@ export default function Contact() {
                     <MapPin size={24} />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-lg">Head Office</p>
+                    <p className="font-bold text-gray-900 text-lg">Office Location</p>
+                    <p className="text-gray-600 mt-1 leading-relaxed">
+                      Near Dr Amar Singh,<br />
+                      Chaudhary Saray Lalpul Road,<br />
+                      Budaun HO, Budaun 243601,<br />
+                      Uttar Pradesh
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex">
+                  <div className="bg-white p-3 rounded-xl shadow-sm text-brand-green mr-5 h-min">
+                    <MapPin size={24} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 text-lg">Warehouse Location</p>
                     <p className="text-gray-600 mt-1 leading-relaxed">
                       Near Dr Amar Singh,<br />
                       Chaudhary Saray Lalpul Road,<br />

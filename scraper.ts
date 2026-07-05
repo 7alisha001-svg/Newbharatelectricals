@@ -8,7 +8,7 @@ async function scrapeCategories() {
     const html = await response.text();
     const $ = cheerio.load(html);
     
-    const categoryLinks = new Set();
+    const categoryLinks = new Set<string>();
     $('a').each((i, el) => {
       const href = $(el).attr('href');
       if (href && href.includes('/category/')) {
@@ -29,7 +29,7 @@ async function scrapeProductsFromCategory(categoryUrl) {
     const html = await response.text();
     const $ = cheerio.load(html);
     
-    const productLinks = new Set();
+    const productLinks = new Set<string>();
     $('a').each((i, el) => {
       const href = $(el).attr('href');
       if (href && href.includes('/product/')) {

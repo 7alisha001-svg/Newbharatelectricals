@@ -65,7 +65,7 @@ export default function Footer() {
            <div className="lg:col-span-2">
               <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Contact Info</h4>
               <div className="mb-4">
-                <img src="/logo-footer.png" alt="New Bharat Electricals" className="w-[200px] md:w-[250px] lg:w-[300px] h-auto object-contain" />
+                <img src="/logo-footer.png" alt="New Bharat Electricals" className="w-[200px] md:w-[250px] lg:w-[300px] h-auto object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
               </div>
               <div className="flex items-start text-gray-400 mb-6">
                  <MapPin className="text-brand-green mt-1 mr-3 flex-shrink-0" size={18} />
