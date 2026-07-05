@@ -16,6 +16,17 @@ export interface SubCategoryData {
 
 export const subcategoryDataMap: Record<string, SubCategoryData> = {
   // Power Solutions
+  'inverters': {
+    title: 'Inverters',
+    description: 'Explore our wide range of digital and pure sine wave inverters for homes and businesses.',
+    bannerImage: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop',
+    products: [
+      { id: 'an-star-11075', name: 'AN STAR 11075', description: '10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power.', features: ['10 KVA / 120V Capacity', 'Pure Sine Wave Output', 'Intelligent LCD Display'], imageUrl: '/images/amaze-an-star-1475-1.jpg' },
+      { id: 'inv-1', name: '800VA Inverter', description: 'Compact and efficient inverter for small homes and essential load.', features: ['Digital Display', 'Low Noise', 'High Efficiency'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' },
+      { id: 'inv-3', name: 'Pure Sine Wave Inverter', description: 'Provides grid-like power to ensure the highest safety for sensitive modern appliances.', features: ['Noiseless Operation', 'Extended Appliance Life', 'LED Indicators'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' }
+    ],
+    benefits: ['Silent Operation', 'Safe for Sensitive Electronics', 'Quick Recharge']
+  },
   'ups-systems': {
     title: 'UPS Systems',
     description: 'High reliability UPS for critical loads and uninterrupted power supply.',
@@ -32,6 +43,7 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     description: 'Keep your home powered during outages with our reliable home inverters.',
     bannerImage: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop',
     products: [
+      { id: 'an-star-11075', name: 'AN STAR 11075', description: '10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power.', features: ['10 KVA / 120V Capacity', 'Pure Sine Wave Output', 'Intelligent LCD Display'], imageUrl: '/images/amaze-an-star-1475-1.jpg' },
       { id: 'inv-1', name: '800VA Inverter', description: 'Compact and efficient inverter for small homes and essential load.', features: ['Digital Display', 'Low Noise', 'High Efficiency'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' },
       { id: 'inv-2', name: '1100VA Inverter', description: 'Standard capacity inverter for typical 2-3 BHK homes.', features: ['Fast Battery Charge', 'Safe for Appliances', 'Compact Design'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' },
       { id: 'inv-3', name: 'Pure Sine Wave Inverter', description: 'Provides grid-like power to ensure the highest safety for sensitive modern appliances.', features: ['Noiseless Operation', 'Extended Appliance Life', 'LED Indicators'], imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop' }
@@ -43,6 +55,7 @@ export const subcategoryDataMap: Record<string, SubCategoryData> = {
     description: 'Heavy duty inverters designed for commercial establishments and large scale operations.',
     bannerImage: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2500&auto=format&fit=crop',
     products: [
+      { id: 'an-star-11075', name: 'AN STAR 11075', description: '10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power for commercial and industrial applications.', features: ['10 KVA / 120V Capacity', 'Pure Sine Wave Output', 'Intelligent LCD Display'], imageUrl: '/images/amaze-an-star-1475-1.jpg' },
       { id: 'ind-1', name: 'Heavy-Duty Inverter', description: 'Handles large inductive loads like motors, pumps, and heavy machinery.', features: ['DSP Based Control', 'High Overload Capability', 'Rugged Build'], imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
       { id: 'ind-2', name: 'Commercial Backup Inverter', description: 'Ideal for shopping malls, hospitals, and educational institutions.', features: ['3-Phase Output', 'LCD Monitoring Panel', 'Modular Design'], imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' }
     ],

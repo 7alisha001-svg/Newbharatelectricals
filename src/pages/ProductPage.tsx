@@ -12,40 +12,46 @@ export default function ProductPage() {
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  // This is placeholder structural data based on the provided AMI 3100 example.
+  // This is placeholder structural data.
   // It will be replaced naturally when real data is integrated into a unified data structure.
   const product = {
-    id: productId || 'ami-3100',
-    name: 'AMI 3100',
-    sku: `NBE-${productId?.substring(0, 4).toUpperCase() || 'AMI3'}`,
+    id: productId || 'an-star-11075',
+    name: 'AN STAR 11075',
+    sku: `NBE-${productId?.substring(0, 4).toUpperCase() || 'ANS1'}`,
     stockStatus: 'In Stock',
-    description: 'AMI range from New Bharat Electricals allows smart management of Solar Power to deliver uninterrupted power for all electrical applications & excess remaining power is fed back to Grid. It is designed for high performance against the typically tough Indian grid conditions with IP 66 technology.',
+    description: 'The AN STAR 11075 is a high-performance 10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power for homes, offices, commercial establishments, and industrial applications. Built with advanced digital technology, it features an intelligent LCD display that provides real-time information about battery status, backup time, charging performance, and load percentage.',
     features: [
-      'VA Rating 100kW',
-      'Max Efficiency',
-      'AFCI Protection, proactively reduces fire risk.',
-      'IP 66 Protection',
-      'Compatible with latest PV panel',
-      'DC Overloading 150%',
-      'AC Overloading 110%',
-      'Warranty 8 years'
+      '10 KVA / 120V High-Capacity Power Backup',
+      'Pure Sine Wave Output for Sensitive Electronics',
+      'Intelligent LCD Display with Real-Time Monitoring',
+      'Displays Battery Backup Time, Charging Time & Load Percentage',
+      'User-Selectable Battery Charging Current',
+      'Super Fast Battery Charging Technology',
+      'Adjustable Output Voltage (200V–240V)'
     ],
     specifications: [
-      { label: 'Brand', value: 'New Bharat Electricals' },
-      { label: 'Category', value: formatSlugToTitle(subcategory || 'solar-inverters') },
-      { label: 'Weight', value: '18 kg' },
-      { label: 'Dimensions', value: '450 x 300 x 200 mm' },
-      { label: 'Color', value: 'White / Green' }
+      { label: 'Model', value: 'AN STAR 11075' },
+      { label: 'Product Type', value: 'Digital Pure Sine Wave Inverter' },
+      { label: 'Capacity', value: '10 KVA' },
+      { label: 'Output Waveform', value: 'Pure Sine Wave' },
+      { label: 'Battery Bank Voltage', value: '120V' },
+      { label: 'Number of Batteries', value: '10 × 12V Batteries' },
+      { label: 'Dimensions', value: '55.5 × 30 × 60 cm' },
+      { label: 'Net Weight', value: '80 kg' },
+      { label: 'Warranty', value: '36 Months' },
+      { label: 'Country of Origin', value: 'Made in India' }
     ],
     price: '9,37,000',
-    imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1200&auto=format&fit=crop', // Fallback for testing
+    imageUrl: '/images/amaze-an-star-1475-1.jpg',
     thumbnails: [
-      'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop'
+      '/images/amaze-an-star-1475-1.jpg',
+      '/images/4-500x500.jpg',
+      '/images/2.jpg'
     ]
   };
 
   // If real data matches the ID, we'll swap it out later.
-  const displayTitle = productId === 'ami-3100' ? 'AMI 3100' : formatSlugToTitle(productId || '');
+  const displayTitle = productId === 'an-star-11075' ? 'AN STAR 11075' : formatSlugToTitle(productId || '');
   const categoryTitle = formatSlugToTitle(category || 'Category');
   const subCategoryTitle = formatSlugToTitle(subcategory || 'Subcategory');
 

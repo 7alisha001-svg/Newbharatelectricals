@@ -5,14 +5,14 @@ import { useCart } from '../context/CartContext';
 
 export const featuredProducts = [
   {
-    id: 'ami-3100',
-    category: 'solar-solutions',
-    subcategory: 'solar-inverters',
-    name: 'AMI 3100 Solar Inverter',
+    id: 'an-star-11075',
+    category: 'power-solutions',
+    subcategory: 'home-inverters',
+    name: 'AN STAR 11075',
     originalPrice: '10,50,000',
     price: '9,37,000',
     discount: '11% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=400&auto=format&fit=crop',
+    imageUrl: '/images/amaze-an-star-1475-1.jpg',
     rating: 4.8,
     reviews: 124
   },
