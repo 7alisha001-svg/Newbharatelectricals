@@ -50,41 +50,81 @@ export default function AdminLogin() {
     try {
       if (adminExists === false) {
         // Initial Admin Setup
-        const { data, error: signUpError } = await supabase.auth.signUp({
+        console.log("Starting first admin setup for:", email);
+        
+        let { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
         });
 
+        console.log("SignUp response:", { data, signUpError });
+
         if (signUpError) throw signUpError;
 
-        if (data.user) {
-           const { error: insertError } = await supabase.rpc('create_first_admin', {
-             admin_id: data.user.id,
-             admin_email: email,
-             admin_full_name: fullName
+        let currentUser = data.user;
+        let currentSession = data.session;
+
+        // Check if the user already existed (identities array is empty)
+        if (currentUser && currentUser.identities && currentUser.identities.length === 0) {
+           console.log("User already exists. Attempting sign in to get real ID...");
+           const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+             email,
+             password,
            });
            
-           if (insertError) throw insertError;
+           console.log("SignIn response:", { signInData, signInError });
            
-           // If email confirmation is required, sign in might be needed later.
-           // Let's attempt to sign in if there's no session
-           if (!data.session) {
-             const { error: signInError } = await supabase.auth.signInWithPassword({
-               email,
-               password,
-             });
-             
-             if (signInError) {
-               if (signInError.message.toLowerCase().includes('email not confirmed')) {
-                 throw new Error("Account created! Please check your email to confirm before logging in.");
-               }
-               throw signInError;
-             }
+           if (signInError) {
+              if (signInError.message.toLowerCase().includes('email not confirmed')) {
+                throw new Error("This account exists but email is not confirmed. Please check your email or use a different one.");
+              }
+              throw new Error("This email is already registered. Please use the correct password or a different email.");
            }
            
-           // Registration successful, log them in
-           navigate('/admin/dashboard');
+           currentUser = signInData.user;
+           currentSession = signInData.session;
         }
+
+        if (!currentUser) {
+          throw new Error("Failed to retrieve user information after signup.");
+        }
+
+        console.log("Calling create_first_admin RPC with:", {
+          admin_id: currentUser.id,
+          admin_email: email,
+          admin_full_name: fullName
+        });
+
+        const { error: insertError, data: rpcData } = await supabase.rpc('create_first_admin', {
+          admin_id: currentUser.id,
+          admin_email: email,
+          admin_full_name: fullName
+        });
+        
+        console.log("RPC response:", { rpcData, insertError });
+        
+        if (insertError) throw insertError;
+        
+        // If email confirmation is required, sign in might be needed later.
+        // Let's attempt to sign in if there's no session
+        if (!currentSession) {
+          console.log("No session after setup, attempting to sign in...");
+          const { error: finalSignInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          
+          if (finalSignInError) {
+            if (finalSignInError.message.toLowerCase().includes('email not confirmed')) {
+              throw new Error("Account created! Please check your email to confirm before logging in.");
+            }
+            throw finalSignInError;
+          }
+        }
+        
+        console.log("Setup complete, navigating to dashboard.");
+        // Registration successful, log them in
+        navigate('/admin/dashboard');
       } else {
         // Regular Login
         const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -97,10 +137,11 @@ export default function AdminLogin() {
         // Verify they are an admin
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-           const { data: adminData } = await supabase.from('admin_users').select('*').eq('id', user.id).single();
+           const { data: adminData, error: adminErr } = await supabase.from('admin_users').select('*').eq('id', user.id).single();
+           console.log("Admin check response:", { adminData, adminErr });
            if (!adminData) {
              await supabase.auth.signOut();
-             throw new Error("Unauthorized access. You are not an administrator.");
+             throw new Error(`Unauthorized access. You are not an administrator. Details: ${adminErr?.message || 'Row not found'}`);
            }
         }
 
