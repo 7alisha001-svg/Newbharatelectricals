@@ -21,7 +21,7 @@ export default function Footer() {
             </div>
             
             <div className="flex items-center bg-white/5 rounded-full py-2 px-4">
-               <span className="text-gray-300 font-medium mr-4 hidden sm:block">Want to become a local dealer?</span>
+               <span className="text-gray-100 font-medium mr-4 hidden sm:block">Want to become a local dealer?</span>
                <Link to="/contact" className="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2 px-6 rounded-full transition-colors text-xs uppercase tracking-widest">Partner Program</Link>
             </div>
         </div>
@@ -35,7 +35,7 @@ export default function Footer() {
               <ul className="space-y-3">
                  {mainNavLinks.map(link => (
                    <li key={link.name}>
-                     <Link to={link.href} className="text-gray-400 hover:text-brand-green transition-colors">
+                     <Link to={link.href} className="text-gray-300 font-medium hover:text-brand-green transition-colors">
                        {link.name}
                      </Link>
                    </li>
@@ -53,7 +53,7 @@ export default function Footer() {
                    .slice(0, 7)
                    .map(item => (
                      <li key={item.name}>
-                       <Link to={item.href} className="text-gray-400 hover:text-brand-green transition-colors">
+                       <Link to={item.href} className="text-gray-300 font-medium hover:text-brand-green transition-colors">
                          {item.name}
                        </Link>
                      </li>
@@ -67,9 +67,9 @@ export default function Footer() {
               <div className="mb-4">
                 <img src="/logo-footer.png" alt="New Bharat Electricals" className="w-[200px] md:w-[250px] lg:w-[300px] h-auto object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
               </div>
-              <div className="flex items-start text-gray-400 mb-6">
+              <div className="flex items-start text-gray-200 mb-6">
                  <MapPin className="text-brand-green mt-1 mr-3 flex-shrink-0" size={18} />
-                 <p className="leading-relaxed">
+                 <p className="leading-relaxed font-medium">
                    Near Dr Amar Singh, <br />
                    Chaudhary Saray Lalpul Road, <br />
                    Budaun HO, Budaun 243601, <br />
@@ -83,27 +83,27 @@ export default function Footer() {
               <h4 className="text-white font-bold mb-6 font-heading tracking-wide uppercase">Support</h4>
               <div className="space-y-4">
                  <div className="flex flex-col">
-                   <span className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-1">Call & Buy</span>
+                   <span className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Call & Buy</span>
                    <a href="tel:+919457002000" className="text-brand-green-light font-bold text-lg hover:text-brand-green transition-colors">+91 94570 02000</a>
                  </div>
                  <div className="flex flex-col">
-                   <span className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-1">Solar Enquiry</span>
-                   <a href="tel:+919457002000" className="text-gray-300 hover:text-brand-green transition-colors">+91 94570 02000</a>
+                   <span className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Solar Enquiry</span>
+                   <a href="tel:+919457002000" className="text-gray-100 font-medium hover:text-brand-green transition-colors">+91 94570 02000</a>
                  </div>
                  <div className="flex flex-col">
-                   <span className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-1">Email Support</span>
-                   <a href="mailto:newbharatelectricals00@gmail.com" className="text-gray-300 hover:text-brand-green transition-colors">newbharatelectricals00@gmail.com</a>
+                   <span className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Email Support</span>
+                   <a href="mailto:newbharatelectricals00@gmail.com" className="text-gray-100 font-medium hover:text-brand-green transition-colors">newbharatelectricals00@gmail.com</a>
                  </div>
                  
                  {/* Payment Methods Mockup */}
                  <div className="pt-4">
-                    <span className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-2 block">We Support</span>
+                    <span className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-2 block">We Support</span>
                     <div className="flex gap-2 flex-wrap text-2xl text-gray-400">
                        <i className="fa fa-cc-visa opacity-50 hover:opacity-100 transition-opacity"></i>
                        <i className="fa fa-cc-mastercard opacity-50 hover:opacity-100 transition-opacity"></i>
                        <i className="fa fa-cc-paypal opacity-50 hover:opacity-100 transition-opacity"></i>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1 flex gap-2">
+                    <p className="text-xs text-gray-400 font-medium mt-1 flex gap-2">
                       <span className="bg-gray-800 px-2 py-0.5 rounded">UPI</span>
                       <span className="bg-gray-800 px-2 py-0.5 rounded">Net Banking</span>
                       <span className="bg-gray-800 px-2 py-0.5 rounded">EMI</span>
@@ -115,7 +115,7 @@ export default function Footer() {
         </div>
         
         {/* Bottom Copyright */}
-        <div className="border-t border-gray-800 py-8 flex flex-col lg:flex-row justify-between items-center text-xs text-gray-500">
+        <div className="border-t border-gray-800 py-8 flex flex-col lg:flex-row justify-between items-center text-xs text-gray-400 font-medium">
             <div className="mb-4 lg:mb-0 text-center lg:text-left">
               Copyright © {new Date().getFullYear()} New Bharat Electricals . All Rights Reserved.  
               <span className="mx-2">|</span> <Link to="/terms-and-conditions" className="hover:text-brand-green transition-colors">Terms & Conditions</Link> 

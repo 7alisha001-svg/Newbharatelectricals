@@ -34,33 +34,46 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
     setError(null);
     
+    console.log('Starting checkout process...');
     const orderId = 'ORD' + Math.floor(100000 + Math.random() * 900000);
     
+    const payload = { 
+      order_id: orderId,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+      payment_method: formData.paymentMethod,
+      total_amount: cartTotal,
+      cart_items: cart
+    };
+    
+    console.log('Order Payload:', payload);
+    
     try {
-      const { error: dbError } = await supabase
+      console.log('Sending insert request to Supabase orders table...');
+      const { data, error: dbError } = await supabase
         .from('orders')
-        .insert([{ 
-          order_id: orderId,
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          pincode: formData.pincode,
-          payment_method: formData.paymentMethod,
-          total_amount: cartTotal,
-          cart_items: cart
-        }]);
+        .insert([payload]);
+        
+      console.log('Supabase API Response - Data:', data);
+      console.log('Supabase API Response - Error:', dbError);
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error('Supabase returned an error during insert:', dbError);
+        throw dbError;
+      }
       
       clearCart();
       navigate('/order-success', { state: { orderId, total: cartTotal } });
     } catch (err: any) {
-      console.error('Error submitting order:', err);
-      setError('There was a problem placing your order. Please try again.');
+      console.error('Checkout process failed:', err);
+      const errorMessage = err?.message || err?.details || JSON.stringify(err);
+      setError(`There was a problem placing your order: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }

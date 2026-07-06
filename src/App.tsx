@@ -20,16 +20,19 @@ import TermsConditionsPage from './pages/TermsConditionsPage';
 import BrandPage from './pages/BrandPage';
 import ScrollToTop from './components/ScrollToTop';
 
-// Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
+import Orders from './pages/admin/Orders';
 import Products from './pages/admin/Products';
 import Inventory from './pages/admin/Inventory';
-import Orders from './pages/admin/Orders';
+import Categories from './pages/admin/Categories';
+import Brands from './pages/admin/Brands';
 import Customers from './pages/admin/Customers';
+import Settings from './pages/admin/Settings';
 
 const PublicLayout = () => (
+
   <div className="min-h-screen top-0 bg-white selection:bg-brand-green selection:text-white flex flex-col">
     <Navbar />
     <main className="flex-grow pt-24">
@@ -52,14 +55,16 @@ export default function App() {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            {/* Admin Routes */}
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="orders" element={<Orders />} />
               <Route path="products" element={<Products />} />
               <Route path="inventory" element={<Inventory />} />
-              <Route path="orders" element={<Orders />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="brands" element={<Brands />} />
               <Route path="customers" element={<Customers />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
 
             {/* Public Routes */}

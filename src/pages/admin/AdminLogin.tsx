@@ -1,195 +1,210 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, User, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, User, ShieldCheck } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 export default function AdminLogin() {
-  const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [adminExists, setAdminExists] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [adminExists, setAdminExists] = useState<boolean | null>(null);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
-    checkAdminExists();
-  }, []);
-
-  const checkAdminExists = async () => {
-    try {
-      const { data, error } = await supabase.rpc('check_if_admin_exists');
-      
-      if (error) {
-        console.error('Error checking admin users:', error);
-      } else {
-        if (data === false) {
-          setAdminExists(false);
-          setIsLogin(false);
+    const checkAdminStatus = async () => {
+      try {
+        const { data, error } = await supabase.rpc('check_if_admin_exists');
+        if (error) {
+          console.error("Error checking admin:", error);
+          // Fallback if RPC doesn't exist
+          const { count, error: countError } = await supabase.from('admin_users').select('*', { count: 'exact', head: true });
+          if (!countError) {
+             setAdminExists((count || 0) > 0);
+          } else {
+             setAdminExists(false); // Assume no admin if we can't check
+          }
         } else {
-          setAdminExists(true);
-          setIsLogin(true);
+          setAdminExists(data);
         }
+      } catch (e) {
+        setAdminExists(false);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    };
+    
+    // Check if user is already logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) navigate('/admin/dashboard');
+      else checkAdminStatus();
+    });
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
     setLoading(true);
+    setError(null);
 
     try {
-      if (!isLogin && !adminExists) {
-        // Create the first admin in Supabase Auth
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+      if (adminExists === false) {
+        // Initial Admin Setup
+        const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
         });
 
-        if (authError) {
-          throw new Error(authError.message || 'Signup failed in Supabase Auth.');
-        }
+        if (signUpError) throw signUpError;
 
-        if (authData.user) {
-          // Insert into admin_users (RLS policy allows this only if table is empty)
-          const { error: insertError } = await supabase
-            .from('admin_users')
-            .insert([{ id: authData.user.id, email }]);
-            
-          if (insertError) {
-             // Clean up the auth user if insert fails
-             await supabase.auth.signOut();
-             throw new Error('Failed to create admin record. An admin might already exist.');
-          }
-
-          if (authData.session) {
-             setSuccessMessage('Admin account created successfully. Redirecting...');
-             setTimeout(() => {
-                navigate('/admin/dashboard');
-             }, 1000);
-          } else {
-             setSuccessMessage('Admin account created successfully. Please log in.');
-             setAdminExists(true);
-             setIsLogin(true);
-             setPassword(''); // Clear password for login
-          }
-        } else {
-           throw new Error('Failed to create authentication user.');
+        if (data.user) {
+           const { error: insertError } = await supabase.rpc('create_first_admin', {
+             admin_id: data.user.id,
+             admin_email: email,
+             admin_full_name: fullName
+           });
+           
+           if (insertError) throw insertError;
+           
+           // If email confirmation is required, sign in might be needed later.
+           // Let's attempt to sign in if there's no session
+           if (!data.session) {
+             const { error: signInError } = await supabase.auth.signInWithPassword({
+               email,
+               password,
+             });
+             
+             if (signInError) {
+               if (signInError.message.toLowerCase().includes('email not confirmed')) {
+                 throw new Error("Account created! Please check your email to confirm before logging in.");
+               }
+               throw signInError;
+             }
+           }
+           
+           // Registration successful, log them in
+           navigate('/admin/dashboard');
         }
       } else {
-        // Regular login
-        const { data, error } = await supabase.auth.signInWithPassword({
+        // Regular Login
+        const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            throw new Error('Invalid email or password.');
-          }
-          throw error;
-        }
+        if (signInError) throw signInError;
         
         // Verify they are an admin
-        const { data: adminData, error: adminError } = await supabase
-          .from('admin_users')
-          .select('id')
-          .eq('id', data.user.id)
-          .single();
-          
-        if (adminError || !adminData) {
-          await supabase.auth.signOut();
-          throw new Error('Unauthorized. You do not have administrator access.');
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+           const { data: adminData } = await supabase.from('admin_users').select('*').eq('id', user.id).single();
+           if (!adminData) {
+             await supabase.auth.signOut();
+             throw new Error("Unauthorized access. You are not an administrator.");
+           }
         }
 
         navigate('/admin/dashboard');
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please try again.');
+      console.error("Auth error:", err);
+      setError(err.message || 'An error occurred during authentication.');
     } finally {
       setLoading(false);
     }
   };
 
+  if (adminExists === null) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-        <div className="bg-brand-dark p-6 text-center">
-          <h2 className="text-2xl font-heading font-bold text-white">
-            {isLogin ? 'Admin Login' : 'Admin Setup'}
-          </h2>
-          <p className="text-gray-400 mt-2 text-sm">
-            {isLogin ? 'Secure access to WooCommerce Dashboard' : 'Create the first Super Admin account'}
+      <Helmet>
+        <title>{adminExists ? 'Admin Login' : 'Admin Setup'} | New Bharat Electricals</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+        <div className="text-center mb-8">
+          <div className="bg-brand-green/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ShieldCheck size={32} className="text-brand-green" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {adminExists ? 'Admin Portal' : 'Setup Super Admin'}
+          </h1>
+          <p className="text-gray-500 mt-2 text-sm">
+            {adminExists 
+              ? 'Sign in to access the control panel' 
+              : 'Create the first administrator account to secure the system.'}
           </p>
         </div>
-        
-        <form onSubmit={handleSubmit} className="p-8">
-          {error && (
-            <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-xl border border-red-200 flex items-start text-sm">
-              <AlertCircle size={18} className="mr-2 mt-0.5 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
 
-          {successMessage && (
-            <div className="mb-6 bg-green-50 text-green-700 p-4 rounded-xl border border-green-200 flex items-start text-sm">
-              <CheckCircle2 size={18} className="mr-2 mt-0.5 flex-shrink-0" />
-              <span>{successMessage}</span>
-            </div>
-          )}
+        {error && (
+          <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm mb-6 border border-red-100 text-center">
+            {error}
+          </div>
+        )}
 
-          <div className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {!adminExists && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User size={18} className="text-gray-400" />
                 </div>
                 <input 
-                  type="email" 
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 w-full bg-gray-50 border border-gray-200 rounded-lg py-3 focus:bg-white focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 outline-none transition-all"
-                  placeholder="admin@example.com"
+                  type="text" 
+                  required 
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green focus:border-brand-green outline-none transition-all"
+                  placeholder="John Doe"
                 />
               </div>
             </div>
+          )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock size={18} className="text-gray-400" />
-                </div>
-                <input 
-                  type="password" 
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 w-full bg-gray-50 border border-gray-200 rounded-lg py-3 focus:bg-white focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 outline-none transition-all"
-                  placeholder="••••••••"
-                />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Mail size={18} className="text-gray-400" />
               </div>
+              <input 
+                type="email" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green focus:border-brand-green outline-none transition-all"
+                placeholder="admin@example.com"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock size={18} className="text-gray-400" />
+              </div>
+              <input 
+                type="password" 
+                required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green focus:border-brand-green outline-none transition-all"
+                placeholder="••••••••"
+                minLength={6}
+              />
             </div>
           </div>
 
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full mt-8 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-3.5 rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full bg-brand-green text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-green-dark transition-colors flex items-center justify-center disabled:opacity-70 mt-4 shadow-lg shadow-brand-green/20"
           >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Processing...
-              </span>
-            ) : (isLogin ? 'Login to Dashboard' : 'Create Admin Account')}
+            {loading ? 'Processing...' : (adminExists ? 'Secure Login' : 'Create Admin Account')}
           </button>
         </form>
       </div>
