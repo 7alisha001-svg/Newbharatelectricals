@@ -30,8 +30,10 @@ import Inventory from './pages/admin/Inventory';
 import Categories from './pages/admin/Categories';
 import CategoryForm from './pages/admin/CategoryForm';
 import Brands from './pages/admin/Brands';
+import BrandForm from './pages/admin/BrandForm';
 import Customers from './pages/admin/Customers';
 import Settings from './pages/admin/Settings';
+import Navigation from './pages/admin/Navigation';
 
 import { StoreProvider } from './context/StoreContext';
 
@@ -72,7 +74,10 @@ export default function App() {
               <Route path="categories/new" element={<CategoryForm />} />
               <Route path="categories/:id/edit" element={<CategoryForm />} />
               <Route path="brands" element={<Brands />} />
+              <Route path="brands/new" element={<BrandForm />} />
+              <Route path="brands/:id/edit" element={<BrandForm />} />
               <Route path="customers" element={<Customers />} />
+              <Route path="navigation" element={<Navigation />} />
               <Route path="settings" element={<Settings />} />
             </Route>
 

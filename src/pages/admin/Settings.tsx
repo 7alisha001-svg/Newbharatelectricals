@@ -1,3 +1,4 @@
+import { useStore } from '../../context/StoreContext';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Save } from 'lucide-react';
@@ -13,6 +14,7 @@ export default function Settings() {
     shipping_charges: 0,
     free_shipping_threshold: 0
   });
+  const { refreshStore } = useStore();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -30,6 +32,7 @@ export default function Settings() {
     setMessage('');
     try {
       await supabase.from('settings').upsert({ id: 'global', ...settings });
+      await refreshStore();
       setMessage('Settings saved successfully.');
     } catch (error) {
       console.error("Error saving settings:", error);

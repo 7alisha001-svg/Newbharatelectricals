@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, ShoppingCart, Package, Archive, 
-  Tags, Flag, Users, Settings, LogOut, Menu, X
+  Tags, Flag, Users, Settings, LogOut, Menu, X, Navigation as NavIcon
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -11,9 +11,9 @@ const navigation = [
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Inventory', href: '/admin/inventory', icon: Archive },
-  { name: 'Categories', href: '/admin/categories', icon: Tags },
   { name: 'Brands', href: '/admin/brands', icon: Flag },
   { name: 'Customers', href: '/admin/customers', icon: Users },
+  { name: 'Navigation', href: '/admin/navigation', icon: NavIcon },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

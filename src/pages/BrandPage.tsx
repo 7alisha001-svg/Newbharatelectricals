@@ -27,7 +27,7 @@ export default function BrandPage() {
   return (
     <>
       <Helmet>
-        <title>{title} Products | New Bharat Electricals</title>
+        <title>{title} Products ({brandProducts.length} Products) | New Bharat Electricals</title>
         <meta name="description" content={`Explore all ${title} products available at New Bharat Electricals.`} />
       </Helmet>
 
@@ -82,7 +82,7 @@ export default function BrandPage() {
       <section className="max-w-[1600px] mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
-            {title} Products
+            {title} Products <span className="text-sm font-normal text-gray-500 ml-2">({brandProducts.length} Products)</span>
           </h2>
         </div>
 

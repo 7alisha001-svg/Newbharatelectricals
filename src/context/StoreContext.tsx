@@ -1,6 +1,20 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
+interface Settings {
+  id: string;
+  business_name?: string;
+  logo_url?: string;
+  email?: string;
+  phone?: string;
+  office_address?: string;
+  warehouse_address?: string;
+  social_links?: any;
+  gst_number?: string;
+  shipping_charges?: number;
+  free_shipping_threshold?: number;
+}
+
 interface Category {
   id: string;
   name: string;
@@ -43,6 +57,8 @@ interface StoreContextType {
   brands: Brand[];
   products: Product[];
   loading: boolean;
+  settings: Settings | null;
+  refreshStore: () => Promise<void>;
 }
 
 const StoreContext = createContext<StoreContextType>({
@@ -50,6 +66,8 @@ const StoreContext = createContext<StoreContextType>({
   brands: [],
   products: [],
   loading: true,
+  settings: null,
+  refreshStore: async () => {},
 });
 
 export const useStore = () => useContext(StoreContext);
@@ -59,28 +77,32 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [brands, setBrands] = useState<Brand[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<Settings | null>(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [catRes, brandRes, prodRes, settingsRes] = await Promise.all([
+        supabase.from('categories').select('*').order('name', { ascending: true }),
+        supabase.from('brands').select('*').order('name', { ascending: true }),
+        supabase.from('products').select('*').eq('status', 'publish').order('created_at', { ascending: false }),
+        supabase.from('settings').select('*').eq('id', 'global').single(),
+      ]);
+
+      if (catRes.data) setCategories(catRes.data);
+      if (brandRes.data) setBrands(brandRes.data);
+      if (prodRes.data) setProducts(prodRes.data);
+      if (settingsRes.data) setSettings(settingsRes.data);
+    } catch (error) {
+      console.error('Error fetching store data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [catRes, brandRes, prodRes] = await Promise.all([
-          supabase.from('categories').select('*').order('name', { ascending: true }),
-          supabase.from('brands').select('*').order('name', { ascending: true }),
-          supabase.from('products').select('*').eq('status', 'publish').order('created_at', { ascending: false }),
-        ]);
-
-        if (catRes.data) setCategories(catRes.data);
-        if (brandRes.data) setBrands(brandRes.data);
-        if (prodRes.data) setProducts(prodRes.data);
-      } catch (error) {
-        console.error('Error fetching store data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
+
 
     // Setup Realtime subscriptions
     const catSub = supabase
@@ -97,6 +119,13 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       })
       .subscribe();
 
+    const settingsSub = supabase
+      .channel('settings_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => {
+        fetchData();
+      })
+      .subscribe();
+
     const prodSub = supabase
       .channel('products_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
@@ -108,11 +137,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       catSub.unsubscribe();
       brandSub.unsubscribe();
       prodSub.unsubscribe();
+      settingsSub.unsubscribe();
     };
   }, []);
 
   return (
-    <StoreContext.Provider value={{ categories, brands, products, loading }}>
+    <StoreContext.Provider value={{ categories, brands, products, loading, settings, refreshStore: fetchData }}>
       {children}
     </StoreContext.Provider>
   );

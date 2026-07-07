@@ -1,4 +1,10 @@
-export const categoryNav: Record<string, {name: string, slug: string}[]> = {
+require('dotenv').config();
+const { createClient } = require('@supabase/supabase-js');
+const fs = require('fs');
+
+const supabase = createClient('https://ftxyuhwejcqxoyhmkczl.supabase.co', process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_6wykfsdrjqNFsREjd8Johg_uGcFLqse');
+
+const categoryNav = {
   'mobility-solutions': [
     { name: 'E-Rickshaw Batteries', slug: 'e-rickshaw-batteries' },
     { name: 'EV Battery Solutions', slug: 'ev-battery-solutions' },
@@ -19,16 +25,16 @@ export const categoryNav: Record<string, {name: string, slug: string}[]> = {
   ]
 };
 
-export const mainNavLinks = [
+const mainNavLinks = [
   { name: 'Home', href: '/' },
   { 
-    name: 'Power Solution', 
+    name: 'Power Solutions', 
     href: '/power-solutions',
     hasDropdown: true,
     dropdownItems: categoryNav['power-solutions'].map(item => ({ name: item.name, href: `/power-solutions/${item.slug}` }))
   },
   { 
-    name: 'Solar Panel', 
+    name: 'Solar Solutions', 
     href: '/solar-solutions',
     hasDropdown: true,
     dropdownItems: [
@@ -49,3 +55,13 @@ export const mainNavLinks = [
   { name: 'About Us', href: '/about-us' },
   { name: 'Contact Us', href: '/contact' }
 ];
+
+async function run() {
+  const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+  let social_links = settingsData?.social_links || {};
+  social_links.navigation = mainNavLinks;
+  
+  const { error } = await supabase.from('settings').upsert({ id: 'global', social_links });
+  console.log("Updated navigation in DB:", error ? error : "Success");
+}
+run();

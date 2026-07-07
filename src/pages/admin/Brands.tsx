@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
 export default function Brands() {
   const [brands, setBrands] = useState<any[]>([]);
+  const { refreshStore } = useStore();
   const [loading, setLoading] = useState(true);
 
   const fetchBrands = async () => {
@@ -25,6 +27,7 @@ export default function Brands() {
     if(window.confirm('Are you sure you want to delete this brand?')) {
       try {
         await supabase.from('brands').delete().eq('id', id);
+        await refreshStore();
         fetchBrands();
       } catch (err) {
         console.error("Error deleting brand", err);
@@ -39,10 +42,10 @@ export default function Brands() {
           <h1 className="text-2xl font-bold text-gray-900">Brands</h1>
           <p className="text-gray-500 mt-1 text-sm">Manage product brands</p>
         </div>
-        <button className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
+        <Link to="/admin/brands/new" className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
           <Plus size={18} className="mr-2" />
           Add Brand
-        </button>
+        </Link>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -71,9 +74,9 @@ export default function Brands() {
                       <span className="text-xs text-gray-600">{brand.is_active ? 'Active' : 'Inactive'}</span>
                     </td>
                     <td className="p-4 text-right">
-                      <button className="text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1">
+                      <Link to={`/admin/brands/${brand.id}/edit`} className="text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1 inline-block">
                         <Edit2 size={16} />
-                      </button>
+                      </Link>
                       <button onClick={() => deleteBrand(brand.id)} className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors">
                         <Trash2 size={16} />
                       </button>
@@ -88,3 +91,4 @@ export default function Brands() {
     </div>
   );
 }
+

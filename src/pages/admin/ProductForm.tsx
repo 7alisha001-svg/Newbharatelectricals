@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
 export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { refreshStore } = useStore();
   const isEdit = Boolean(id);
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
   const [message, setMessage] = useState({ text: '', type: '' });
-  const [categories, setCategories] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -41,14 +42,25 @@ export default function ProductForm() {
 
   useEffect(() => {
     fetchCategories();
+    fetchBrands();
     if (isEdit) {
       fetchProduct();
     }
   }, [id]);
 
+  
+  const fetchBrands = async () => {
+    try {
+      const { data } = await supabase.from('brands').select('*').order('name', { ascending: true });
+      setBrands(data || []);
+    } catch (err) {
+      console.error("Error fetching brands", err);
+    }
+  };
+
   const fetchCategories = async () => {
     const { data } = await supabase.from('categories').select('name').eq('is_active', true);
-    setCategories(data || []);
+     
   };
 
   const fetchProduct = async () => {
@@ -157,7 +169,7 @@ export default function ProductForm() {
       }
 
       if (error) throw error;
-
+      await refreshStore();
       setMessage({ text: `Product ${isEdit ? 'updated' : 'created'} successfully!`, type: 'success' });
       if (!isEdit) {
         setTimeout(() => navigate('/admin/products'), 1500);
@@ -237,17 +249,16 @@ export default function ProductForm() {
               <input type="text" name="sku" value={formData.sku} onChange={handleChange} className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none" />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none">
-                <option value="">Select Category</option>
-                {categories.map((c, i) => <option key={i} value={c.name}>{c.name}</option>)}
-              </select>
-            </div>
+
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-              <input type="text" name="brand" value={formData.brand} onChange={handleChange} className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Brand *</label>
+              <select name="brand" value={formData.brand} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none">
+                <option value="">Select a brand</option>
+                {brands.map(brand => (
+                  <option key={brand.id} value={brand.name}>{brand.name}</option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -408,3 +419,4 @@ export default function ProductForm() {
     </div>
   );
 }
+

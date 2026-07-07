@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Search, Edit2, Trash2, Package } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
 export default function Products() {
   const [products, setProducts] = useState<any[]>([]);
+  const { refreshStore } = useStore();
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -33,6 +34,7 @@ export default function Products() {
     if(window.confirm('Are you sure you want to delete this product?')) {
       try {
         await supabase.from('products').delete().eq('id', id);
+        await refreshStore();
         fetchProducts();
       } catch (err) {
         console.error("Error deleting product", err);
@@ -72,7 +74,7 @@ export default function Products() {
             <thead>
               <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                 <th className="p-4 font-medium">Product</th>
-                <th className="p-4 font-medium">Category</th>
+                <th className="p-4 font-medium">Brand</th>
                 <th className="p-4 font-medium">Price</th>
                 <th className="p-4 font-medium">Stock</th>
                 <th className="p-4 font-medium">Status</th>
@@ -102,7 +104,7 @@ export default function Products() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4 text-gray-600">{product.category || '-'}</td>
+                    <td className="p-4 font-medium text-brand-green">{product.brand || '-'}</td>
                     <td className="p-4 font-medium text-gray-900">₹{product.regular_price?.toLocaleString()}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
@@ -135,3 +137,4 @@ export default function Products() {
     </div>
   );
 }
+
