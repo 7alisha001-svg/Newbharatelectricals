@@ -102,7 +102,7 @@ export default function ProductPage() {
                 <img src={product.images[0]} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
               </div>
               <div className="flex gap-4">
-                {product.thumbnails.map((thumb, idx) => (
+                {product.images.map((thumb, idx) => (
                   <button key={idx} className="w-20 h-20 border-2 border-brand-green rounded-lg overflow-hidden bg-white p-2">
                     <img src={thumb} alt={`Thumbnail ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                   </button>

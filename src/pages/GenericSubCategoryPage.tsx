@@ -3,24 +3,24 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { CheckCircle2, ArrowRight, Heart, Phone, MessageCircle, SlidersHorizontal, Zap } from 'lucide-react';
 import { formatSlugToTitle } from '../utils/formatters';
-import { subcategoryDataMap } from '../data/products';
+import { useStore } from '../context/StoreContext';
 import { categoryNav } from '../data/navigation';
 import { useState } from 'react';
 
 export default function GenericSubCategoryPage() {
   const { category, subcategory } = useParams<{ category: string, subcategory: string }>();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const { products: storeProducts, loading } = useStore();
   
   const categoryTitle = formatSlugToTitle(category);
-
-  // Fallback data in case the slug doesn't match perfectly
   const defaultSubCategoryTitle = formatSlugToTitle(subcategory);
-  const data = subcategory ? subcategoryDataMap[subcategory] : null;
+  const title = defaultSubCategoryTitle;
+  
+  const description = `Discover our premium line of ${defaultSubCategoryTitle.toLowerCase()}. Engineered for superior performance and unmatched reliability in every condition.`;
+  
+  // Find products matching this subcategory (slug matching)
+  const products = storeProducts.filter(p => p.slug === subcategory || p.category?.toLowerCase().replace(/\s+/g, '-') === category?.toLowerCase().replace(/\s+/g, '-'));
 
-  const title = data ? data.title : defaultSubCategoryTitle;
-  const description = data ? data.description : `Discover our premium line of ${defaultSubCategoryTitle.toLowerCase()}. Engineered for superior performance and unmatched reliability in every condition.`;
-  const bannerImage = data ? data.bannerImage : 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop';
-  const products = data ? data.products : [];
   
   const defaultFeatures = [
     "Premium quality and high durability",
@@ -28,7 +28,7 @@ export default function GenericSubCategoryPage() {
     "Comprehensive warranty and support",
     "Nationwide service network"
   ];
-  const features = data ? data.benefits : defaultFeatures;
+  const features = defaultFeatures;
 
   const whatsappMessage = encodeURIComponent(`Hi, I am interested in your ${title} products.`);
 
@@ -63,7 +63,7 @@ export default function GenericSubCategoryPage() {
               initial={{ scale: 1.05 }}
               animate={{ scale: 1 }}
               transition={{ duration: 1.5, ease: 'easeOut' }}
-              src={bannerImage} alt={title} className="w-full h-full object-cover origin-center" />
+              src={"https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop"} alt={title} className="w-full h-full object-cover origin-center" />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent flex items-end">
                <div className="max-w-[1600px] w-full mx-auto px-4 lg:px-8 pb-8 z-20">
                   <motion.h1 
@@ -185,7 +185,7 @@ export default function GenericSubCategoryPage() {
                            <Heart size={16} className="sm:w-5 sm:h-5" />
                         </Link>
                         <Link to={`/${category}/${subcategory}/${product.id}`} className="w-full h-full block">
-                          <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                          <img src={product.image_url} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                         </Link>
                       </div>
                       

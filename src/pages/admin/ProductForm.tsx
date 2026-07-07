@@ -56,7 +56,7 @@ export default function ProductForm() {
       const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
       if (error) throw error;
       if (data) {
-        let meta = { tags: [], features: [], meta_title: '', meta_description: '', specs: [] };
+        let meta: any = { tags: [], features: [], meta_title: '', meta_description: '', specs: [] };
         
         // Handle tags column parsing
         if (data.tags) {
@@ -89,7 +89,7 @@ export default function ProductForm() {
           short_description: data.short_description || '',
           image_url: data.image_url || '',
           gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
-          tags: meta.tags || meta.list || [],
+          tags: meta.tags || [],
           features: meta.features || [],
           meta_title: meta.meta_title || '',
           meta_description: meta.meta_description || '',
