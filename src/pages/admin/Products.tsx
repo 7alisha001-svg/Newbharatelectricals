@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Package } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Products() {
   const [products, setProducts] = useState<any[]>([]);
@@ -9,7 +10,7 @@ export default function Products() {
 
   const fetchProducts = async () => {
     try {
-      let query = supabase.from('products').select(`*, categories(name), brands(name)`).order('created_at', { ascending: false });
+      let query = supabase.from('products').select('*').order('created_at', { ascending: false });
       
       if (searchTerm) {
         query = query.ilike('name', `%${searchTerm}%`);
@@ -46,10 +47,10 @@ export default function Products() {
           <h1 className="text-2xl font-bold text-gray-900">Products</h1>
           <p className="text-gray-500 mt-1 text-sm">Manage your product catalog</p>
         </div>
-        <button className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
+        <Link to="/admin/products/new" className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
           <Plus size={18} className="mr-2" />
           Add Product
-        </button>
+        </Link>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -89,8 +90,8 @@ export default function Products() {
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
-                           {product.images && product.images.length > 0 ? (
-                             <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                           {product.image_url ? (
+                             <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
                            ) : (
                              <Package size={20} className="text-gray-400" />
                            )}
@@ -101,7 +102,7 @@ export default function Products() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4 text-gray-600">{product.categories?.name || '-'}</td>
+                    <td className="p-4 text-gray-600">{product.category || '-'}</td>
                     <td className="p-4 font-medium text-gray-900">₹{product.regular_price?.toLocaleString()}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
@@ -113,13 +114,13 @@ export default function Products() {
                       </span>
                     </td>
                     <td className="p-4">
-                      <span className={`inline-block w-2 h-2 rounded-full mr-2 ${product.is_active ? 'bg-green-500' : 'bg-gray-300'}`}></span>
-                      <span className="text-xs text-gray-600">{product.is_active ? 'Active' : 'Draft'}</span>
+                      <span className={`inline-block w-2 h-2 rounded-full mr-2 ${product.status === 'publish' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+                      <span className="text-xs text-gray-600">{product.status === 'publish' ? 'Active' : 'Draft'}</span>
                     </td>
                     <td className="p-4 text-right">
-                      <button className="text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1">
+                      <Link to={`/admin/products/${product.id}/edit`} className="inline-flex text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1">
                         <Edit2 size={16} />
-                      </button>
+                      </Link>
                       <button onClick={() => deleteProduct(product.id)} className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors">
                         <Trash2 size={16} />
                       </button>

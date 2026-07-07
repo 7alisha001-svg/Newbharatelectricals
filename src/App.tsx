@@ -25,8 +25,10 @@ import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import Orders from './pages/admin/Orders';
 import Products from './pages/admin/Products';
+import ProductForm from './pages/admin/ProductForm';
 import Inventory from './pages/admin/Inventory';
 import Categories from './pages/admin/Categories';
+import CategoryForm from './pages/admin/CategoryForm';
 import Brands from './pages/admin/Brands';
 import Customers from './pages/admin/Customers';
 import Settings from './pages/admin/Settings';
@@ -60,8 +62,12 @@ export default function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="orders" element={<Orders />} />
               <Route path="products" element={<Products />} />
+              <Route path="products/new" element={<ProductForm />} />
+              <Route path="products/:id/edit" element={<ProductForm />} />
               <Route path="inventory" element={<Inventory />} />
               <Route path="categories" element={<Categories />} />
+              <Route path="categories/new" element={<CategoryForm />} />
+              <Route path="categories/:id/edit" element={<CategoryForm />} />
               <Route path="brands" element={<Brands />} />
               <Route path="customers" element={<Customers />} />
               <Route path="settings" element={<Settings />} />

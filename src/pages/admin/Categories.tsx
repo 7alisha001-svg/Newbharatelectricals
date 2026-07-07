@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Categories() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -39,10 +40,10 @@ export default function Categories() {
           <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
           <p className="text-gray-500 mt-1 text-sm">Organize products into categories</p>
         </div>
-        <button className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
+        <Link to="/admin/categories/new" className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
           <Plus size={18} className="mr-2" />
           Add Category
-        </button>
+        </Link>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -73,9 +74,9 @@ export default function Categories() {
                       <span className="text-xs text-gray-600">{cat.is_active ? 'Active' : 'Inactive'}</span>
                     </td>
                     <td className="p-4 text-right">
-                      <button className="text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1">
+                      <Link to={`/admin/categories/${cat.id}/edit`} className="inline-flex text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1">
                         <Edit2 size={16} />
-                      </button>
+                      </Link>
                       <button onClick={() => deleteCategory(cat.id)} className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors">
                         <Trash2 size={16} />
                       </button>
