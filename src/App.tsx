@@ -33,6 +33,8 @@ import Brands from './pages/admin/Brands';
 import Customers from './pages/admin/Customers';
 import Settings from './pages/admin/Settings';
 
+import { StoreProvider } from './context/StoreContext';
+
 const PublicLayout = () => (
 
   <div className="min-h-screen top-0 bg-white selection:bg-brand-green selection:text-white flex flex-col">
@@ -53,8 +55,9 @@ export default function App() {
         <meta name="description" content="New Bharat Electricals provides high-quality solar solutions, inverters, batteries, and home electrical products. Powering every home and business with durable and efficient electrical systems." />
         <meta name="keywords" content="solar panels, inverters, batteries, electrical accessories, new bharat electricals, Buduan" />
       </Helmet>
-      <CartProvider>
-        <BrowserRouter>
+      <StoreProvider>
+        <CartProvider>
+          <BrowserRouter>
           <ScrollToTop />
           <Routes>
             <Route path="/admin" element={<AdminLogin />} />
@@ -92,7 +95,8 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-      </CartProvider>
+        </CartProvider>
+      </StoreProvider>
     </HelmetProvider>
   );
 }

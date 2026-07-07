@@ -1,63 +1,28 @@
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { ChevronRight, Home, ShoppingCart, Star } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ArrowRight, Zap, Sun, Microchip, BatteryCharging, ChevronRight, Home } from 'lucide-react';
-import { formatSlugToTitle } from '../utils/formatters';
+import { useStore } from '../context/StoreContext';
+import { useCart } from '../context/CartContext';
 
 export default function GenericCategoryPage() {
-  const { category } = useParams<{ category: string }>();
-  const title = formatSlugToTitle(category);
+  const { category: categorySlug } = useParams<{ category: string }>();
+  const { categories, products, loading } = useStore();
+  const { addToCart } = useCart();
 
-  // Dynamic logic to figure out subcategories for this category to render placeholder grid
-  let subcategories: { name: string; slug: string; desc: string; icon: any; imageUrl?: string }[] = [];
+  if (loading) return <div className="p-20 text-center">Loading...</div>;
 
-  if (category === 'power-solutions') {
-    subcategories = [
-      { name: 'Inverters', slug: 'inverters', desc: 'Explore our wide range of digital and pure sine wave inverters.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Batteries', slug: 'batteries', desc: 'High-performance tubular and flat plate batteries.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-      { name: '3-Phase Inverters', slug: '3-phase-inverters', desc: 'Heavy-duty 3-phase power solutions.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Lift Inverters', slug: 'lift-inverters', desc: 'Reliable backup power for elevators.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Combo Products', slug: 'combo-products', desc: 'Optimized inverter and battery bundles.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
-    ];
-  } else if (category === 'solar-solutions') {
-    subcategories = [
-      { name: 'Solar On-Grid Inverters', slug: 'solar-on-grid-inverters', desc: 'Grid-tied inverters for maximum savings.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Solar Off-Grid Inverters', slug: 'solar-off-grid-inverters', desc: 'Independent power generation for remote locations.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Solar Hybrid Inverters', slug: 'solar-hybrid-inverters', desc: 'Intelligent systems balancing grid, solar, and battery.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Solar Panels', slug: 'solar-panels', desc: 'High-efficiency monocrystalline and polycrystalline panels.', icon: <Sun size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Solar Batteries', slug: 'solar-batteries', desc: 'Deep cycle batteries designed for solar storage.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Solar Charge Controllers', slug: 'solar-charge-controllers', desc: 'MPPT and PWM controllers for optimal charging.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-    ];
-  } else if (category === 'mobility-solutions') {
-    subcategories = [
-      { name: 'E-Rickshaw Batteries', slug: 'e-rickshaw-batteries', desc: 'Durable batteries for daily transit.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-      { name: 'EV Battery Solutions', slug: 'ev-battery-solutions', desc: 'Next-generation EV power cells.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Charging Support', slug: 'charging-support', desc: 'Fast and reliable charging networks.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Automotive Battery Solutions', slug: 'automotive-battery-solutions', desc: 'Start your vehicle with confidence.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-    ];
-  } else if (category === 'accessories') {
-    subcategories = [
-      { name: 'Solar Connectors', slug: 'solar-connectors', desc: 'MC4 and weatherproof connectors.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Wiring Accessories', slug: 'wiring-accessories', desc: 'High quality copper structured wiring.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Electrical Cables', slug: 'electrical-cables', desc: 'Industrial grade insulated cables.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Switches', slug: 'switches', desc: 'Modern and durable switchgears.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Installation Accessories', slug: 'installation-accessories', desc: 'Mounts, brackets, and rails.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Battery Accessories', slug: 'battery-accessories', desc: 'Terminals, water indicators, and racks.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop' },
-    ];
-  } else if (category === 'categories') {
-    subcategories = [
-      { name: 'Amaze', slug: 'amaze', desc: 'Premium power and solar solutions.', icon: <Zap size={24} />, imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Luminous', slug: 'luminous', desc: 'Advanced inverters and batteries.', icon: <BatteryCharging size={24} />, imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-      { name: 'Microtek', slug: 'microtek', desc: 'Reliable power backup solutions.', icon: <Microchip size={24} />, imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-    ];
+  const currentCategory = categories.find(c => c.slug === categorySlug);
+  
+  if (!currentCategory) {
+    return <div className="p-20 text-center">Category not found</div>;
   }
 
-  // Choose a generic background image based on category
-  const bgImage = category === 'solar-solutions' 
-    ? 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop'
-    : category === 'mobility-solutions'
-    ? 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=2500&auto=format&fit=crop'
-    : 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop';
+  // Filter products by category name
+  const categoryProducts = products.filter(p => p.category === currentCategory.name);
+
+  const title = currentCategory.name;
+  const bgImage = currentCategory.image_url || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop';
 
   return (
     <>
@@ -65,6 +30,7 @@ export default function GenericCategoryPage() {
         <title>{title} | New Bharat Electricals</title>
         <meta name="description" content={`Explore our premium range of ${title.toLowerCase()} configured for efficiency, reliability, and maximum performance by New Bharat Electricals.`} />
       </Helmet>
+
       <div className="w-full bg-white pb-20">
         
         {/* Breadcrumb Header */}
@@ -89,7 +55,7 @@ export default function GenericCategoryPage() {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/70 to-transparent"></div>
         </motion.div>
-
+        
         <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 lg:px-8">
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
@@ -105,51 +71,92 @@ export default function GenericCategoryPage() {
             transition={{ duration: 0.4, delay: 0.1 }}
             className="text-base md:text-lg text-gray-300 max-w-2xl"
           >
-            Explore our premium range of {title.toLowerCase()} configured for efficiency, reliability, and maximum performance.
+            {currentCategory.description || `Explore our premium range of ${title.toLowerCase()} configured for efficiency, reliability, and maximum performance.`}
           </motion.p>
         </div>
       </section>
 
-      {/* Subcategories Grid */}
+      {/* Products Grid */}
       <section className="max-w-[1600px] mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
-            Shop by Category
+            Products
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {subcategories.map((sub, idx) => (
-            <motion.div
-              key={sub.slug}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.05 }}
-            >
-              <Link to={category === 'categories' ? `/brands/${sub.slug}` : `/${category}/${sub.slug}`} className="block h-full group">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-brand-green hover:shadow-md transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                  {sub.imageUrl && (
-                    <div className="w-full h-48 overflow-hidden bg-gray-100">
-                      <img src={sub.imageUrl} alt={sub.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
-                    </div>
+        {categoryProducts.length === 0 ? (
+          <div className="text-gray-500 py-10">No products found in this category.</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {categoryProducts.map((product, idx) => {
+              const discountPercent = product.regular_price > product.sale_price 
+                ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)
+                : 0;
+
+              return (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                className="bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col group transition-all duration-300"
+              >
+                <div className="p-3 sm:p-5 relative bg-white h-40 sm:h-56 flex items-center justify-center">
+                   {discountPercent > 0 && (
+                    <span className="absolute top-3 left-3 bg-brand-orange text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider z-10">
+                      {discountPercent}% OFF
+                    </span>
                   )}
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="text-brand-green mb-4 w-12 h-12 bg-gray-50 flex items-center justify-center rounded-full group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
-                      {sub.icon}
+                  <Link to={`/${currentCategory.slug}/all/${product.id}`} className="block w-full h-full p-2">
+                    <img 
+                      src={product.image_url} 
+                      alt={product.name} 
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
+                      onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} 
+                    />
+                  </Link>
+                </div>
+                
+                <div className="p-4 sm:p-5 flex flex-col flex-grow border-t border-gray-50">
+                   <div className="flex items-center text-[10px] sm:text-xs text-yellow-400 mb-2">
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="text-gray-200" />
                     </div>
-                    <h3 className="font-heading font-bold text-lg mb-2 text-gray-900 group-hover:text-brand-green transition-colors">{sub.name}</h3>
-                    <p className="text-gray-500 text-sm mb-4 flex-grow">{sub.desc}</p>
-                    
-                    <div className="inline-flex items-center text-brand-green font-bold text-xs uppercase tracking-wide mt-auto">
-                      View Range <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                  <Link to={`/${currentCategory.slug}/all/${product.id}`}>
+                    <h3 className="font-bold text-gray-800 text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
+                      {product.name}
+                    </h3>
+                  </Link>
+                  <p className="text-xs text-gray-500 line-clamp-2 mb-4">{product.short_description || product.description}</p>
+                  
+                  <div className="mt-auto">
+                    <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
+                      <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
+                      <span className="text-xs sm:text-sm text-gray-400 line-through">₹{product.regular_price}</span>
                     </div>
+                    <button 
+                      onClick={() => addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.sale_price.toString(),
+                        imageUrl: product.image_url,
+                        quantity: 1
+                      })}
+                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                    >
+                      <ShoppingCart size={14} className="mr-2" /> Add to Cart
+                    </button>
                   </div>
                 </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+              )
+            })}
+          </div>
+        )}
       </section>
     </div>
     </>

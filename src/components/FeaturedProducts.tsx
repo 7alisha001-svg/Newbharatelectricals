@@ -2,60 +2,16 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-
-export const featuredProducts = [
-  {
-    id: 'an-star-11075',
-    category: 'power-solutions',
-    subcategory: 'home-inverters',
-    name: 'AN STAR 11075',
-    originalPrice: '10,50,000',
-    price: '9,37,000',
-    discount: '11% OFF',
-    imageUrl: '/images/amaze-an-star-1475-1.jpg',
-    rating: 4.8,
-    reviews: 124
-  },
-  {
-    id: 'nxt-plus-2kVA',
-    category: 'power-solutions',
-    subcategory: 'home-inverters',
-    name: 'Luminous Zelio+ Home Pure Sine Wave',
-    originalPrice: '7,500',
-    price: '6,250',
-    discount: '16% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop',
-    rating: 4.5,
-    reviews: 89
-  },
-  {
-    id: 'inver-battery-200ah',
-    category: 'power-solutions',
-    subcategory: 'battery-backup-systems',
-    name: 'Exide Invatubular 150Ah Tall Tubular',
-    originalPrice: '18,000',
-    price: '15,500',
-    discount: '14% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=400&auto=format&fit=crop',
-    rating: 4.9,
-    reviews: 210
-  },
-  {
-    id: 'solar-panel-330w',
-    category: 'solar-solutions',
-    subcategory: 'residential-solar-panels',
-    name: 'Loom Solar Panel 330 Watt Mono Perc',
-    originalPrice: '15,000',
-    price: '12,500',
-    discount: '16% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=400&auto=format&fit=crop',
-    rating: 4.7,
-    reviews: 56
-  }
-];
+import { useStore } from '../context/StoreContext';
 
 export default function FeaturedProducts() {
   const { addToCart } = useCart();
+  const { products, loading } = useStore();
+
+  const featuredProducts = products.filter(p => p.is_featured).slice(0, 4);
+
+  if (loading) return null;
+  if (featuredProducts.length === 0) return null;
 
   return (
     <section className="py-12 bg-[#f4f4f4] border-b border-gray-200">
@@ -70,7 +26,16 @@ export default function FeaturedProducts() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-          {featuredProducts.map((product, idx) => (
+          {featuredProducts.map((product, idx) => {
+            const discountPercent = product.regular_price > product.sale_price 
+              ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)
+              : 0;
+            
+            // Format category name for url slug, using basic replace
+            const categorySlug = product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'category';
+            const subcategorySlug = product.slug || product.id;
+
+            return (
             <motion.div 
               key={product.id}
               initial={{ opacity: 0, y: 20 }}
@@ -83,13 +48,13 @@ export default function FeaturedProducts() {
                 <Link to="/contact" className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-400 hover:text-brand-green hover:scale-110 z-10 bg-white p-1 sm:p-1.5 rounded-full shadow-sm transition-all">
                   <Heart size={16} className="sm:w-4 sm:h-4" />
                 </Link>
-                {product.discount && (
+                {discountPercent > 0 && (
                   <span className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-brand-green text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full uppercase tracking-wider z-10">
-                    {product.discount}
+                    {discountPercent}% OFF
                   </span>
                 )}
-                <Link to={`/${product.category}/${product.subcategory}/${product.id}`} className="block h-32 sm:h-48 w-full bg-white flex items-center justify-center p-1 sm:p-2">
-                  <img src={product.imageUrl} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`} className="block h-32 sm:h-48 w-full bg-white flex items-center justify-center p-1 sm:p-2">
+                  <img src={product.image_url} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                 </Link>
               </div>
               <div className="p-3 sm:p-4 pt-0 flex flex-col flex-grow border-t border-gray-50 mt-1 sm:mt-2">
@@ -99,24 +64,23 @@ export default function FeaturedProducts() {
                   <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
                   <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
                   <Star fill="currentColor" size={12} className="text-gray-300 mr-0.5 sm:mr-1 hidden sm:block" />
-                  <span className="text-gray-400">({product.reviews})</span>
                 </div>
-                <Link to={`/${product.category}/${product.subcategory}/${product.id}`}>
+                <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`}>
                   <h3 className="text-xs sm:text-sm font-bold text-gray-800 leading-snug mb-2 sm:mb-3 group-hover:text-brand-green transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                 </Link>
                 <div className="mt-auto">
                   <div className="flex flex-col sm:flex-row sm:items-end mb-2 sm:mb-4">
-                    <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{product.price}</span>
-                    <span className="text-[10px] sm:text-sm text-gray-400 line-through mb-0.5">₹{product.originalPrice}</span>
+                    <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
+                    <span className="text-[10px] sm:text-sm text-gray-400 line-through mb-0.5">₹{product.regular_price}</span>
                   </div>
                   <button 
                     onClick={() => addToCart({
                       id: product.id,
                       name: product.name,
-                      price: product.price,
-                      imageUrl: product.imageUrl,
+                      price: product.sale_price.toString(),
+                      imageUrl: product.image_url,
                       quantity: 1
                     })}
                     className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-1.5 sm:py-2 rounded-lg font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
@@ -126,7 +90,7 @@ export default function FeaturedProducts() {
                 </div>
               </div>
             </motion.div>
-          ))}
+          )})}
         </div>
       </div>
     </section>

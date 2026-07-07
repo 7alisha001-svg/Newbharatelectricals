@@ -1,150 +1,109 @@
-import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-
-const trendingProducts = [
-  {
-    id: 'e-rickshaw-battery-100ah',
-    category: 'mobility-solutions',
-    subcategory: 'e-rickshaw-batteries',
-    name: 'New Bharat E-Rickshaw Battery 100Ah',
-    originalPrice: '12,000',
-    price: '9,800',
-    discount: '18% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop',
-    rating: 4.6,
-    reviews: 156
-  },
-  {
-    id: 'solar-pcu-5kva',
-    category: 'solar-solutions',
-    subcategory: 'solar-inverters',
-    name: 'Smart Solar PCU 5kVA MPPT',
-    originalPrice: '45,000',
-    price: '38,500',
-    discount: '14% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=400&auto=format&fit=crop',
-    rating: 4.9,
-    reviews: 78
-  },
-  {
-    id: 'heavy-duty-inverter-2-5kva',
-    category: 'power-solutions',
-    subcategory: 'industrial-inverters',
-    name: 'Heavy Duty Industrial Inverter 2.5kVA',
-    originalPrice: '25,000',
-    price: '21,000',
-    discount: '16% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop',
-    rating: 4.7,
-    reviews: 92
-  },
-  {
-    id: 'ev-charger-wallbox',
-    category: 'mobility-solutions',
-    subcategory: 'charging-support',
-    name: 'Fast EV Charger Wallbox 7.2kW',
-    originalPrice: '35,000',
-    price: '29,999',
-    discount: '14% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=400&auto=format&fit=crop',
-    rating: 4.8,
-    reviews: 45
-  },
-  {
-    id: 'tubular-battery-220ah',
-    category: 'power-solutions',
-    subcategory: 'battery-backup-systems',
-    name: 'Jumbo Tubular Battery 220Ah capacity',
-    originalPrice: '22,000',
-    price: '18,500',
-    discount: '15% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=400&auto=format&fit=crop',
-    rating: 4.9,
-    reviews: 134
-  }
-];
+import { useStore } from '../context/StoreContext';
 
 export default function TrendingProducts() {
   const { addToCart } = useCart();
+  const { products, loading } = useStore();
+
+  const trendingProducts = products.slice(0, 4);
+
+  if (loading) return null;
+  if (trendingProducts.length === 0) return null;
 
   return (
-    <section className="py-12 bg-white border-b border-gray-100 overflow-hidden">
+    <section className="py-12 md:py-16 bg-white">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
-            Trending Products
-          </h2>
-          <div className="flex items-center space-x-2">
-            {/* Carousel navigation placeholders */}
-            <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-brand-green hover:border-brand-green cursor-pointer transition-colors">
-              &larr;
-            </div>
-            <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-brand-green hover:border-brand-green cursor-pointer transition-colors">
-              &rarr;
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3 mb-2">
+              Trending Products
+            </h2>
+            <p className="text-sm text-gray-500 pl-4">Discover what's popular among our customers</p>
           </div>
+          <Link to="/power-solutions" className="hidden sm:inline-flex text-brand-green font-bold text-sm tracking-wide uppercase hover:underline">
+            View All Trending
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:overflow-x-auto gap-3 md:gap-4 lg:pb-4 lg:-mx-4 lg:px-4 lg:mx-0 lg:px-0 hide-scrollbar">
-          {trendingProducts.map((product, idx) => (
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+          {trendingProducts.map((product, idx) => {
+            const discountPercent = product.regular_price > product.sale_price 
+              ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)
+              : 0;
+            
+            const categorySlug = product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'category';
+            const subcategorySlug = product.slug || product.id;
+
+            return (
             <motion.div 
               key={product.id}
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden flex flex-col group transition-all lg:min-w-[260px] xl:min-w-[280px]"
+              className="bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] border border-gray-50 overflow-hidden flex flex-col group transition-all duration-300 transform hover:-translate-y-1"
             >
-              <div className="p-2 sm:p-4 relative">
-                <Link to="/contact" className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-400 hover:text-brand-green hover:scale-110 z-10 bg-white p-1 sm:p-1.5 rounded-full shadow-sm transition-all">
-                  <Heart size={16} className="sm:w-4 sm:h-4" />
+              <div className="p-3 sm:p-5 relative bg-gradient-to-b from-gray-50 to-white">
+                <Link to="/contact" className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-300 hover:text-brand-orange hover:scale-110 z-10 transition-all">
+                  <Heart size={18} className="sm:w-5 sm:h-5" />
                 </Link>
-                {product.discount && (
-                  <span className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-orange-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full uppercase tracking-wider z-10">
-                    Trending
+                {discountPercent > 0 && (
+                  <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-brand-orange text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider z-10">
+                    {discountPercent}% OFF
                   </span>
                 )}
-                <Link to={`/${product.category}/${product.subcategory}/${product.id}`} className="block h-32 sm:h-48 w-full bg-white flex items-center justify-center p-1 sm:p-2">
-                  <img src={product.imageUrl} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`} className="block h-36 sm:h-52 w-full flex items-center justify-center p-2">
+                  <img src={product.image_url} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                 </Link>
               </div>
-              <div className="p-3 sm:p-4 pt-0 flex flex-col flex-grow border-t border-gray-50 mt-1 sm:mt-2">
-                <div className="flex items-center text-[10px] sm:text-xs mt-2 sm:mt-3 mb-1.5 sm:mb-2 text-yellow-500">
-                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5" />
-                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
-                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
-                  <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5 hidden sm:block" />
-                  <Star fill="currentColor" size={12} className="text-gray-300 mr-0.5 sm:mr-1 hidden sm:block" />
-                  <span className="text-gray-400">({product.reviews})</span>
+              <div className="p-4 sm:p-5 pt-0 flex flex-col flex-grow">
+                <div className="flex items-center justify-between mt-3 sm:mt-4 mb-2">
+                  <div className="flex items-center text-[10px] sm:text-xs text-yellow-400">
+                    <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5" />
+                    <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5" />
+                    <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5" />
+                    <Star fill="currentColor" size={12} className="mr-0.5 sm:w-3.5 sm:h-3.5" />
+                    <Star fill="currentColor" size={12} className="text-gray-200 mr-1" />
+                  </div>
+                  <span className="text-[9px] sm:text-[10px] text-gray-400 font-medium bg-gray-100 px-1.5 py-0.5 rounded uppercase">{product.category || 'Product'}</span>
                 </div>
-                <Link to={`/${product.category}/${product.subcategory}/${product.id}`}>
-                  <h3 className="text-xs sm:text-sm font-bold text-gray-800 leading-snug mb-2 sm:mb-3 group-hover:text-brand-green transition-colors line-clamp-2">
+                <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`}>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-800 leading-snug mb-2 group-hover:text-brand-orange transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                 </Link>
-                <div className="mt-auto">
-                  <div className="flex flex-col sm:flex-row sm:items-end mb-2 sm:mb-4">
-                    <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{product.price}</span>
-                    <span className="text-[10px] sm:text-sm text-gray-400 line-through mb-0.5">₹{product.originalPrice}</span>
+                <div className="mt-auto pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-col">
+                      <span className="text-xs sm:text-sm text-gray-400 line-through mb-0.5 leading-none">₹{product.regular_price}</span>
+                      <span className="text-base sm:text-lg font-bold text-brand-dark leading-none">₹{product.sale_price}</span>
+                    </div>
                   </div>
                   <button 
                     onClick={() => addToCart({
                       id: product.id,
                       name: product.name,
-                      price: product.price,
-                      imageUrl: product.imageUrl,
+                      price: product.sale_price.toString(),
+                      imageUrl: product.image_url,
                       quantity: 1
                     })}
-                    className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-1.5 sm:py-2 rounded-lg font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
+                    className="w-full bg-gray-900 hover:bg-brand-orange text-white transition-colors py-2 sm:py-2.5 rounded font-bold tracking-wide text-[11px] sm:text-xs uppercase flex items-center justify-center shadow-sm"
                   >
-                    <ShoppingCart size={14} className="mr-1 sm:mr-2" /> <span className="hidden sm:inline">Add to Cart</span><span className="sm:hidden">Add</span>
+                    <ShoppingCart size={14} className="mr-2" /> Add to Cart
                   </button>
                 </div>
               </div>
             </motion.div>
-          ))}
+          )})}
+        </div>
+        
+        <div className="mt-6 text-center sm:hidden">
+          <Link to="/power-solutions" className="inline-flex items-center text-brand-green font-bold text-sm tracking-wide uppercase hover:underline">
+            View All Trending <span className="ml-1">→</span>
+          </Link>
         </div>
       </div>
     </section>

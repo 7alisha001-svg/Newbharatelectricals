@@ -1,9 +1,28 @@
 import { motion } from 'motion/react';
 import { Mail, MapPin, Phone, Facebook, Instagram, Linkedin, Twitter, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { mainNavLinks } from '../data/navigation';
+import { useStore } from '../context/StoreContext';
 
 export default function Footer() {
+  const { categories, brands } = useStore();
+  
+  const mainNavLinks = [
+    { name: 'Home', href: '/' },
+    { 
+      name: 'Categories', 
+      href: '/categories',
+      hasDropdown: true,
+      dropdownItems: categories.map(cat => ({ name: cat.name, href: `/${cat.slug}` }))
+    },
+    { 
+      name: 'Brands', 
+      href: '/brands',
+      hasDropdown: true,
+      dropdownItems: brands.map(brand => ({ name: brand.name, href: `/brands/${brand.slug}` }))
+    },
+    { name: 'About Us', href: '/about-us' },
+    { name: 'Contact Us', href: '/contact' }
+  ];
   return (
     <footer className="bg-brand-dark pt-16 relative text-sm border-t-4 border-brand-green">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-8">

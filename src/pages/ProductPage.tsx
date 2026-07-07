@@ -4,8 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import { CheckCircle2, Share2, MessageCircle, ChevronRight, Home, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { formatSlugToTitle } from '../utils/formatters';
 import { useCart } from '../context/CartContext';
+import { useStore } from '../context/StoreContext';
 
 export default function ProductPage() {
+  const { products, loading } = useStore();
   const { category, subcategory, productId } = useParams<{ category: string, subcategory: string, productId: string }>();
   const [quantity, setQuantity] = useState(1);
   const [pincode, setPincode] = useState('');
@@ -14,56 +16,55 @@ export default function ProductPage() {
 
   // This is placeholder structural data.
   // It will be replaced naturally when real data is integrated into a unified data structure.
+  
+  if (loading) return <div className="p-20 text-center flex justify-center items-center h-[50vh]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green"></div></div>;
+  
+  const rawProduct = products.find(p => p.id === productId);
+  if (!rawProduct) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center bg-gray-50 text-center px-4">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h2>
+        <p className="text-gray-500 mb-6">The product you are looking for does not exist or has been removed.</p>
+        <Link to="/" className="bg-brand-green text-white font-bold py-3 px-8 rounded-lg hover:bg-brand-green-dark transition-colors">Return Home</Link>
+      </div>
+    );
+  }
+
+  const discountPercent = rawProduct.regular_price > rawProduct.sale_price 
+    ? Math.round(((rawProduct.regular_price - rawProduct.sale_price) / rawProduct.regular_price) * 100)
+    : 0;
+
   const product = {
-    id: productId || 'an-star-11075',
-    name: 'AN STAR 11075',
-    sku: `NBE-${productId?.substring(0, 4).toUpperCase() || 'ANS1'}`,
-    stockStatus: 'In Stock',
-    description: 'The AN STAR 11075 is a high-performance 10 KVA Pure Sine Wave Digital Inverter designed to deliver reliable, uninterrupted power for homes, offices, commercial establishments, and industrial applications. Built with advanced digital technology, it features an intelligent LCD display that provides real-time information about battery status, backup time, charging performance, and load percentage.',
-    features: [
-      '10 KVA / 120V High-Capacity Power Backup',
-      'Pure Sine Wave Output for Sensitive Electronics',
-      'Intelligent LCD Display with Real-Time Monitoring',
-      'Displays Battery Backup Time, Charging Time & Load Percentage',
-      'User-Selectable Battery Charging Current',
-      'Super Fast Battery Charging Technology',
-      'Adjustable Output Voltage (200V–240V)'
-    ],
-    specifications: [
-      { label: 'Model', value: 'AN STAR 11075' },
-      { label: 'Product Type', value: 'Digital Pure Sine Wave Inverter' },
-      { label: 'Capacity', value: '10 KVA' },
-      { label: 'Output Waveform', value: 'Pure Sine Wave' },
-      { label: 'Battery Bank Voltage', value: '120V' },
-      { label: 'Number of Batteries', value: '10 × 12V Batteries' },
-      { label: 'Dimensions', value: '55.5 × 30 × 60 cm' },
-      { label: 'Net Weight', value: '80 kg' },
-      { label: 'Warranty', value: '36 Months' },
-      { label: 'Country of Origin', value: 'Made in India' }
-    ],
-    price: '9,37,000',
-    imageUrl: '/images/amaze-an-star-1475-1.jpg',
-    thumbnails: [
-      '/images/amaze-an-star-1475-1.jpg',
-      '/images/4-500x500.jpg',
-      '/images/2.jpg'
-    ]
+    id: rawProduct.id,
+    name: rawProduct.name,
+    sku: rawProduct.sku || `NBE-${rawProduct.id.substring(0, 6).toUpperCase()}`,
+    stockStatus: rawProduct.stock_quantity > 0 ? 'In Stock' : 'Out of Stock',
+    description: rawProduct.description,
+    features: rawProduct.features || [],
+    originalPrice: rawProduct.regular_price.toLocaleString('en-IN'),
+    price: rawProduct.sale_price.toLocaleString('en-IN'),
+    rawPrice: rawProduct.sale_price.toString(),
+    discount: discountPercent > 0 ? `${discountPercent}% OFF` : null,
+    rating: 4.8,
+    reviews: 124,
+    images: rawProduct.gallery_images?.length > 0 ? rawProduct.gallery_images : (rawProduct.image_url ? [rawProduct.image_url] : []),
+    specifications: rawProduct.specs || []
   };
 
+
   // If real data matches the ID, we'll swap it out later.
-  const displayTitle = productId === 'an-star-11075' ? 'AN STAR 11075' : formatSlugToTitle(productId || '');
   const categoryTitle = formatSlugToTitle(category || 'Category');
   const subCategoryTitle = formatSlugToTitle(subcategory || 'Subcategory');
 
   const currentUrl = window.location.href;
-  const whatsappMessage = encodeURIComponent(`Hello, I would like to enquire about ${displayTitle}. \n\nPrice: ₹${product.price} \nLink: ${currentUrl}`);
+  const whatsappMessage = encodeURIComponent(`Hello, I would like to enquire about ${product.name}. \n\nPrice: ₹${product.price} \nLink: ${currentUrl}`);
 
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
-      name: displayTitle,
-      price: product.price,
-      imageUrl: product.imageUrl,
+      name: product.name,
+      price: product.rawPrice,
+      imageUrl: product.images[0],
       quantity
     });
     navigate('/cart');
@@ -72,7 +73,7 @@ export default function ProductPage() {
   return (
     <>
       <Helmet>
-        <title>{displayTitle} | {subCategoryTitle} | New Bharat Electricals</title>
+        <title>{product.name} | {subCategoryTitle} | New Bharat Electricals</title>
         <meta name="description" content={product.description.slice(0, 160)} />
       </Helmet>
       
@@ -87,7 +88,7 @@ export default function ProductPage() {
               <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
               <Link to={`/${category}/${subcategory}`} className="text-gray-400 hover:text-brand-green">{subCategoryTitle}</Link>
               <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
-              <span className="text-brand-green font-bold">{displayTitle}</span>
+              <span className="text-brand-green font-bold">{product.name}</span>
             </div>
           </div>
         </div>
@@ -98,7 +99,7 @@ export default function ProductPage() {
             {/* Left - Image Gallery */}
             <div className="w-full lg:w-1/2 p-4 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col">
               <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
-                <img src={product.imageUrl} alt={displayTitle} className="max-w-full max-h-full object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                <img src={product.images[0]} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
               </div>
               <div className="flex gap-4">
                 {product.thumbnails.map((thumb, idx) => (
@@ -115,7 +116,7 @@ export default function ProductPage() {
                 <Share2 size={24} />
               </button>
               
-              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-gray-900 mb-2 pr-12">{displayTitle}</h1>
+              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-gray-900 mb-2 pr-12">{product.name}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
                  <span>SKU: <span className="font-medium text-gray-900">{product.sku}</span></span>
                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>

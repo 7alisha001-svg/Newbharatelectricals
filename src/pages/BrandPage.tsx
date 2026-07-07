@@ -1,125 +1,167 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { ChevronRight, Home, ShoppingCart, Star } from 'lucide-react';
 import { motion } from 'motion/react';
-import { Download, FileText, ArrowRight } from 'lucide-react';
-import { formatSlugToTitle } from '../utils/formatters';
-import { subcategoryDataMap } from '../data/products';
+import { useStore } from '../context/StoreContext';
+import { useCart } from '../context/CartContext';
 
 export default function BrandPage() {
   const { brandSlug } = useParams<{ brandSlug: string }>();
-  const title = formatSlugToTitle(brandSlug || 'amaze');
+  const { brands, products, loading } = useStore();
+  const { addToCart } = useCart();
 
-  const catalogues = [
-    { title: "Power Solutions", desc: "Complete range of power solutions, inverters & UPS.", type: "PDF", file: `/pdfs/${title} Power Solutions.pdf` },
-    { title: "Solar Solutions", desc: "Detailed specs for solar panels and solutions.", type: "PDF", file: `/pdfs/${title} Solar Solutions.pdf` },
-    { title: "3 Phase Inverters", desc: "Heavy-duty 3 phase inverters catalogue.", type: "PDF", file: `/pdfs/${title} 3 Phase Inverters.pdf` }
-  ];
+  if (loading) return <div className="p-20 text-center">Loading...</div>;
 
-  const allProducts = Object.values(subcategoryDataMap).flatMap(sub => sub.products);
-  const brandProducts = allProducts.filter(p => p.name.toLowerCase().includes(title.toLowerCase()));
+  const currentBrand = brands.find(b => b.slug === brandSlug);
+  
+  if (!currentBrand) {
+    return <div className="p-20 text-center">Brand not found</div>;
+  }
 
-  const demoProducts = [
-    { id: '1', name: 'AN STAR 11075', desc: '10 KVA Pure Sine Wave Digital Inverter', image: '/images/amaze-an-star-1475-1.jpg' },
-    { id: '2', name: `${title} Tubular Battery`, desc: '150Ah Tall Tubular Battery', image: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=800&auto=format&fit=crop' },
-    { id: '3', name: `${title} Solar Panel`, desc: '330W Polycrystalline Solar Panel', image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop' },
-    { id: '4', name: `${title} PCU`, desc: 'Solar Power Conditioning Unit', image: 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop' },
-  ];
+  // Filter products by brand name
+  const brandProducts = products.filter(p => p.brand === currentBrand.name);
 
-  const productsToDisplay = brandProducts.length > 0 ? brandProducts : demoProducts;
+  const title = currentBrand.name;
+  const bgImage = currentBrand.logo_url || 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop';
 
   return (
     <>
       <Helmet>
-        <title>{title} | Brands | New Bharat Electricals</title>
-        <meta name="description" content={`Explore ${title} catalogues and products.`} />
+        <title>{title} Products | New Bharat Electricals</title>
+        <meta name="description" content={`Explore all ${title} products available at New Bharat Electricals.`} />
       </Helmet>
-      
-      <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center pb-20">
-        <div className="w-full bg-brand-dark py-20 px-6 text-center">
+
+      <div className="w-full bg-white pb-20">
+        
+        {/* Breadcrumb Header */}
+        <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
+          <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
+            <div className="flex items-center text-sm font-medium text-gray-500 overflow-x-auto whitespace-nowrap hide-scrollbar">
+              <Link to="/" className="text-gray-400 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
+              <Link to="/brands" className="text-gray-400 hover:text-brand-green">Brands</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
+              <span className="text-brand-green font-bold">{title}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Brand Hero */}
+      <section className="relative w-full h-[250px] md:h-[300px] flex items-center justify-center overflow-hidden bg-white border-b border-gray-100 mb-12">
+        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 lg:px-8 text-center flex flex-col items-center">
+           {currentBrand.logo_url && (
+            <motion.img 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              src={currentBrand.logo_url} 
+              alt={title}
+              className="h-24 md:h-32 object-contain mb-6 drop-shadow-md"
+            />
+           )}
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-heading font-bold text-white mb-4"
+            transition={{ duration: 0.4 }}
+            className="text-3xl md:text-5xl font-heading font-bold mb-2 text-gray-900"
           >
             {title}
           </motion.h1>
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-gray-400 max-w-2xl mx-auto text-lg"
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-base md:text-lg text-gray-600 max-w-2xl"
           >
-            Download our latest product brochures and explore {title} products.
+            Explore our premium range of {title} products.
           </motion.p>
         </div>
+      </section>
 
-        <div className="max-w-6xl w-full mx-auto px-6 py-16">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3 mb-8">
-            Catalogues
+      {/* Products Grid */}
+      <section className="max-w-[1600px] mx-auto px-4 lg:px-8">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
+            {title} Products
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-            {catalogues.map((cat, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start mb-4">
-                  <div className="bg-brand-gray p-4 rounded-lg text-brand-green mr-4 flex-shrink-0">
-                    <FileText size={32} />
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-gray-900 text-lg mb-1">{cat.title}</h3>
-                    <p className="text-gray-500 text-sm">{cat.desc}</p>
-                  </div>
-                </div>
-                
-                <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
-                  <span className="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-1 rounded">{cat.type}</span>
-                  <a href={cat.file} target="_blank" rel="noreferrer" className="flex items-center bg-brand-green/10 text-brand-green px-4 py-2 rounded-lg font-semibold text-sm hover:bg-brand-green hover:text-white transition-colors">
-                    <Download size={14} className="mr-1.5" /> Open / Download
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        </div>
 
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
-              {title} Products
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {productsToDisplay.map((product, idx) => (
-              <motion.div 
+        {brandProducts.length === 0 ? (
+          <div className="text-gray-500 py-10">No products found for this brand.</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {brandProducts.map((product, idx) => {
+              const discountPercent = product.regular_price > product.sale_price 
+                ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)
+                : 0;
+              const catSlug = product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'category';
+
+              return (
+              <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:border-brand-green transition-all group flex flex-col"
+                transition={{ delay: idx * 0.05 }}
+                className="bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col group transition-all duration-300"
               >
-                <div className="relative aspect-square bg-gray-50 overflow-hidden">
-                  <img src={('imageUrl' in product) ? product.imageUrl : (product as any).image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                <div className="p-3 sm:p-5 relative bg-white h-40 sm:h-56 flex items-center justify-center">
+                   {discountPercent > 0 && (
+                    <span className="absolute top-3 left-3 bg-brand-orange text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider z-10">
+                      {discountPercent}% OFF
+                    </span>
+                  )}
+                  <Link to={`/${catSlug}/all/${product.id}`} className="block w-full h-full p-2">
+                    <img 
+                      src={product.image_url} 
+                      alt={product.name} 
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
+                      onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} 
+                    />
+                  </Link>
                 </div>
-                <div className="p-5 flex flex-col flex-grow">
-                  <h3 className="font-bold text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
-                  <p className="text-sm text-gray-500 mb-3 line-clamp-2">{('description' in product) ? product.description : (product as any).desc}</p>
-                  <div className="mt-auto flex items-center justify-between">
-                    <span className="font-bold text-brand-green">{'price' in product ? (product as any).price : 'Call for Price'}</span>
-                    <button className="text-xs font-bold text-gray-600 hover:text-brand-green transition-colors flex items-center">
-                      View Details <ArrowRight size={12} className="ml-1" />
+                
+                <div className="p-4 sm:p-5 flex flex-col flex-grow border-t border-gray-50">
+                   <div className="flex items-center text-[10px] sm:text-xs text-yellow-400 mb-2">
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="mr-0.5" />
+                      <Star fill="currentColor" size={12} className="text-gray-200" />
+                    </div>
+                  <Link to={`/${catSlug}/all/${product.id}`}>
+                    <h3 className="font-bold text-gray-800 text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
+                      {product.name}
+                    </h3>
+                  </Link>
+                  <p className="text-xs text-gray-500 line-clamp-2 mb-4">{product.short_description || product.description}</p>
+                  
+                  <div className="mt-auto">
+                    <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
+                      <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
+                      <span className="text-xs sm:text-sm text-gray-400 line-through">₹{product.regular_price}</span>
+                    </div>
+                    <button 
+                      onClick={() => addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.sale_price.toString(),
+                        imageUrl: product.image_url,
+                        quantity: 1
+                      })}
+                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                    >
+                      <ShoppingCart size={14} className="mr-2" /> Add to Cart
                     </button>
                   </div>
                 </div>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
-        </div>
-      </div>
+        )}
+      </section>
+    </div>
     </>
   );
 }

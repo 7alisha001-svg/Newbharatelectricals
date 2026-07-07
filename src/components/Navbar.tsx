@@ -1,13 +1,32 @@
 import { Phone, MessageCircle, ChevronDown, Menu, X, Zap, Heart, User, MapPin, Search, ShoppingCart, Store, Headset } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { mainNavLinks as navLinks } from '../data/navigation';
+import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import logoLight from '../assets/images/logo-light.png';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { categories, brands } = useStore();
+  
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { 
+      name: 'Categories', 
+      href: '/categories',
+      hasDropdown: true,
+      dropdownItems: categories.map(cat => ({ name: cat.name, href: `/${cat.slug}` }))
+    },
+    { 
+      name: 'Brands', 
+      href: '/brands',
+      hasDropdown: true,
+      dropdownItems: brands.map(brand => ({ name: brand.name, href: `/brands/${brand.slug}` }))
+    },
+    { name: 'About Us', href: '/about-us' },
+    { name: 'Contact Us', href: '/contact' }
+  ];
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
   const { cartCount } = useCart();
