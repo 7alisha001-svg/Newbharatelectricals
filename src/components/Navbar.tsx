@@ -9,8 +9,23 @@ import logoLight from '../assets/images/logo-light.png';
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { settings } = useStore();
-  const navLinks = settings?.social_links?.navigation || mainNavLinks;
+  const { settings, brands } = useStore();
+  
+  // Build dynamic navLinks based on settings or fallback
+  const baseNavLinks = settings?.social_links?.navigation || mainNavLinks;
+  const navLinks = baseNavLinks.map((link: any) => {
+    if (link.name === 'Brands') {
+      return {
+        ...link,
+        hasDropdown: true,
+        dropdownItems: brands.filter(b => b.is_active !== false).map(b => ({
+          name: b.name,
+          href: `/brands/${b.slug || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-')}`
+        }))
+      };
+    }
+    return link;
+  });
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
   const { cartCount } = useCart();

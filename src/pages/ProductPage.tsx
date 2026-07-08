@@ -73,8 +73,8 @@ export default function ProductPage() {
   return (
     <>
       <Helmet>
-        <title>{product.name} | {subCategoryTitle} | New Bharat Electricals</title>
-        <meta name="description" content={product.description.slice(0, 160)} />
+        <title>{`${product.name} | ${subCategoryTitle} | New Bharat Electricals`}</title>
+        <meta name="description" content={(product.description || '').slice(0, 160)} />
       </Helmet>
       
       <div className="bg-white w-full min-h-screen pb-20">

@@ -160,7 +160,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Helmet>
-        <title>{adminExists ? 'Admin Login' : 'Admin Setup'} | New Bharat Electricals</title>
+        <title>{`${adminExists ? 'Admin Login' : 'Admin Setup'} | New Bharat Electricals`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 

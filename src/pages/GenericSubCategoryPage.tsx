@@ -46,7 +46,7 @@ export default function GenericSubCategoryPage() {
   return (
     <>
       <Helmet>
-        <title>{title} | {categoryTitle} | New Bharat Electricals</title>
+        <title>{`${title} | ${categoryTitle} | New Bharat Electricals`}</title>
         <meta name="description" content={description} />
       </Helmet>
       <div className="w-full bg-brand-gray/30">
@@ -213,7 +213,7 @@ export default function GenericSubCategoryPage() {
 
                         {/* Specs List Style */}
                         <div className="space-y-1 sm:space-y-1.5 mb-2 sm:mb-6">
-                          {product.features.slice(0,2).map((feat, i) => (
+                          {(product.features || []).slice(0,2).map((feat, i) => (
                             <p key={i} className="text-[10px] sm:text-xs text-gray-500 flex items-center truncate">
                                <span className="w-1 h-1 bg-brand-green rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
                                {feat}

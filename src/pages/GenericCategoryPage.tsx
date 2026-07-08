@@ -72,7 +72,7 @@ export default function GenericCategoryPage() {
   return (
     <>
       <Helmet>
-        <title>{title} | New Bharat Electricals</title>
+        <title>{`${title} | New Bharat Electricals`}</title>
         <meta name="description" content={`Explore our premium range of ${title.toLowerCase()} configured for efficiency, reliability, and maximum performance by New Bharat Electricals.`} />
       </Helmet>
 

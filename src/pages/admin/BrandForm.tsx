@@ -17,11 +17,13 @@ export default function BrandForm() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
-    
     logo_url: '',
-    
-    is_active: true
+    is_active: true,
+    is_featured: false
   });
+  
+  // Keep track of the original slug to cleanly update the featured list if slug changes
+  const [originalSlug, setOriginalSlug] = useState('');
 
   useEffect(() => {
     if (isEdit) {
@@ -31,17 +33,30 @@ export default function BrandForm() {
 
   const fetchBrand = async () => {
     try {
-      const { data, error } = await supabase.from('brands').select('*').eq('id', id).single();
-      if (error) throw error;
-      if (data) {
+      const [brandRes, settingsRes] = await Promise.all([
+        supabase.from('brands').select('*').eq('id', id).single(),
+        supabase.from('settings').select('*').eq('id', 'global').single()
+      ]);
+      
+      if (brandRes.error) throw brandRes.error;
+      
+      const brandData = brandRes.data;
+      const settingsData = settingsRes.data;
+      
+      let isFeatured = false;
+      if (brandData && settingsData && settingsData.social_links && settingsData.social_links.featured_brands) {
+        isFeatured = settingsData.social_links.featured_brands.includes(brandData.slug);
+      }
+
+      if (brandData) {
         setFormData({
-          name: data.name || '',
-          slug: data.slug || '',
-          
-          logo_url: data.logo_url || '',
-          
-          is_active: data.is_active ?? true
+          name: brandData.name || '',
+          slug: brandData.slug || '',
+          logo_url: brandData.logo_url || '',
+          is_active: brandData.is_active ?? true,
+          is_featured: isFeatured
         });
+        setOriginalSlug(brandData.slug || '');
       }
     } catch (err: any) {
       console.error("Error fetching brand", err);
@@ -90,6 +105,34 @@ export default function BrandForm() {
       }
 
       if (error) throw error;
+      
+      // Handle featured toggle via settings.social_links.featured_brands
+      const settingsRes = await supabase.from('settings').select('*').eq('id', 'global').single();
+      if (settingsRes.data) {
+        const socialLinks = settingsRes.data.social_links || {};
+        let featuredBrands = socialLinks.featured_brands || [];
+        
+        // Remove the original slug in case it was changed
+        if (isEdit && originalSlug) {
+          featuredBrands = featuredBrands.filter((s: string) => s !== originalSlug);
+        }
+        
+        // Remove the current slug (to avoid duplicates)
+        featuredBrands = featuredBrands.filter((s: string) => s !== formData.slug);
+        
+        // Add if it is checked
+        if (formData.is_featured) {
+          featuredBrands.push(formData.slug);
+        }
+        
+        await supabase.from('settings').update({
+          social_links: {
+            ...socialLinks,
+            featured_brands: featuredBrands
+          }
+        }).eq('id', 'global');
+      }
+
       await refreshStore();
       setMessage({ text: `Brand ${isEdit ? 'updated' : 'created'} successfully!`, type: 'success' });
       if (!isEdit) {
@@ -176,7 +219,7 @@ export default function BrandForm() {
 
           
 
-          <div className="flex items-center mt-6">
+          <div className="md:col-span-1 mt-4">
             <label className="flex items-center cursor-pointer">
               <div className="relative">
                 <input 
@@ -189,8 +232,29 @@ export default function BrandForm() {
                 <div className={`block w-14 h-8 rounded-full transition-colors ${formData.is_active ? 'bg-brand-green' : 'bg-gray-300'}`}></div>
                 <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${formData.is_active ? 'transform translate-x-6' : ''}`}></div>
               </div>
-              <div className="ml-3 text-sm font-medium text-gray-700">
-                {formData.is_active ? 'Active (Visible)' : 'Inactive (Hidden)'}
+              <div className="ml-3">
+                <div className="text-sm font-medium text-gray-900">Active Status</div>
+                <div className="text-xs text-gray-500">{formData.is_active ? 'Visible in Navigation' : 'Hidden everywhere'}</div>
+              </div>
+            </label>
+          </div>
+
+          <div className="md:col-span-1 mt-4">
+            <label className="flex items-center cursor-pointer">
+              <div className="relative">
+                <input 
+                  type="checkbox" 
+                  name="is_featured" 
+                  checked={formData.is_featured} 
+                  onChange={handleChange} 
+                  className="sr-only" 
+                />
+                <div className={`block w-14 h-8 rounded-full transition-colors ${formData.is_featured ? 'bg-brand-green' : 'bg-gray-300'}`}></div>
+                <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${formData.is_featured ? 'transform translate-x-6' : ''}`}></div>
+              </div>
+              <div className="ml-3">
+                <div className="text-sm font-medium text-gray-900">Featured Brand</div>
+                <div className="text-xs text-gray-500">{formData.is_featured ? 'Shown on Homepage' : 'Not shown on Homepage'}</div>
               </div>
             </label>
           </div>

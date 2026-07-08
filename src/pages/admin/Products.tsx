@@ -75,17 +75,19 @@ export default function Products() {
               <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                 <th className="p-4 font-medium">Product</th>
                 <th className="p-4 font-medium">Brand</th>
+                <th className="p-4 font-medium">Category</th>
                 <th className="p-4 font-medium">Price</th>
                 <th className="p-4 font-medium">Stock</th>
                 <th className="p-4 font-medium">Status</th>
+                <th className="p-4 font-medium">Created Date</th>
                 <th className="p-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm divide-y divide-gray-100">
               {loading ? (
-                <tr><td colSpan={6} className="p-8 text-center text-gray-500">Loading...</td></tr>
+                <tr><td colSpan={8} className="p-8 text-center text-gray-500">Loading...</td></tr>
               ) : products.length === 0 ? (
-                <tr><td colSpan={6} className="p-8 text-center text-gray-500">No products found.</td></tr>
+                <tr><td colSpan={8} className="p-8 text-center text-gray-500">No products found.</td></tr>
               ) : (
                 products.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50 transition-colors">
@@ -99,12 +101,13 @@ export default function Products() {
                            )}
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{product.name}</div>
+                          <div className="font-medium text-gray-900 line-clamp-1">{product.name}</div>
                           <div className="text-xs text-gray-400">SKU: {product.sku || 'N/A'}</div>
                         </div>
                       </div>
                     </td>
                     <td className="p-4 font-medium text-brand-green">{product.brand || '-'}</td>
+                    <td className="p-4 text-gray-600 text-xs font-medium">{product.category || '-'}</td>
                     <td className="p-4 font-medium text-gray-900">₹{product.regular_price?.toLocaleString()}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
@@ -118,6 +121,9 @@ export default function Products() {
                     <td className="p-4">
                       <span className={`inline-block w-2 h-2 rounded-full mr-2 ${product.status === 'publish' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
                       <span className="text-xs text-gray-600">{product.status === 'publish' ? 'Active' : 'Draft'}</span>
+                    </td>
+                    <td className="p-4 text-xs text-gray-500">
+                      {new Date(product.created_at).toLocaleDateString('en-GB')}
                     </td>
                     <td className="p-4 text-right">
                       <Link to={`/admin/products/${product.id}/edit`} className="inline-flex text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1">

@@ -6,6 +6,7 @@ import {
   ArrowLeft, Plus, Search, Edit2, Trash2, Package, 
   Upload, X, Save, CheckCircle2, AlertCircle, RefreshCw 
 } from 'lucide-react';
+import ImageUploader from '../../components/admin/ImageUploader';
 
 const categorySlugToName: Record<string, string> = {
   // Power Solutions
@@ -39,6 +40,7 @@ interface FormState {
   status: string;
   brand: string;
   image_url: string;
+  gallery_images: string[];
   features: string[];
   specs: { label: string; value: string }[];
 }
@@ -53,6 +55,7 @@ const initialFormState: FormState = {
   status: 'publish',
   brand: '',
   image_url: '',
+  gallery_images: [],
   features: [],
   specs: []
 };
@@ -164,6 +167,7 @@ export default function CategoryProductManager() {
       status: product.status || 'publish',
       brand: product.brand || '',
       image_url: product.image_url || '',
+      gallery_images: Array.isArray(product.gallery_images) ? product.gallery_images : [],
       features: featureList,
       specs: specList
     });
@@ -189,25 +193,6 @@ export default function CategoryProductManager() {
       ...prev,
       [name]: value
     }));
-  };
-
-  // Image upload handling
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) { // 2MB Limit
-        setMessage({ text: 'Image size exceeds 2MB. Please select a smaller file.', type: 'error' });
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({
-          ...prev,
-          image_url: reader.result as string
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   // Features list manager
@@ -262,6 +247,10 @@ export default function CategoryProductManager() {
       setMessage({ text: 'Product name is required', type: 'error' });
       return;
     }
+    if (!formData.image_url) {
+      setMessage({ text: 'At least one product image is required', type: 'error' });
+      return;
+    }
 
     setFormLoading(true);
     setMessage({ text: '', type: '' });
@@ -294,7 +283,7 @@ export default function CategoryProductManager() {
         description: formData.description,
         short_description: formData.description.slice(0, 150),
         image_url: formData.image_url,
-        gallery_images: formData.image_url ? [formData.image_url] : [],
+        gallery_images: formData.gallery_images,
         features: formData.features,
         specs: formData.specs,
         stock_status: Number(formData.stock_quantity) > 0 ? 'instock' : 'outofstock',
@@ -562,46 +551,22 @@ export default function CategoryProductManager() {
 
                     {/* Direct Image File Upload Section */}
                     <div className="space-y-4 pt-4 border-t border-gray-100">
-                      <h3 className="text-sm font-bold text-gray-900 border-l-3 border-brand-green pl-2 uppercase tracking-wide">Product Image</h3>
+                      <h3 className="text-sm font-bold text-gray-900 border-l-3 border-brand-green pl-2 uppercase tracking-wide">Product Images</h3>
                       
-                      <div className="mt-1 flex justify-center rounded-2xl border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                        <div className="space-y-1 text-center">
-                          {formData.image_url ? (
-                            <div className="relative inline-block mx-auto">
-                              <img 
-                                src={formData.image_url} 
-                                alt="Product Preview" 
-                                className="mx-auto h-36 w-36 object-contain rounded-xl border border-gray-200 p-2 bg-white" 
-                              />
-                              <button 
-                                type="button" 
-                                onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
-                                className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full shadow-lg transition-transform hover:scale-110"
-                                title="Remove Image"
-                              >
-                                <X size={14} />
-                              </button>
-                            </div>
-                          ) : (
-                            <>
-                              <Upload className="mx-auto h-10 w-10 text-gray-400" strokeWidth={1.5} />
-                              <div className="flex text-sm text-gray-600 justify-center">
-                                <label className="relative cursor-pointer rounded-md bg-white font-semibold text-brand-green focus-within:outline-none focus-within:ring-2 focus-within:ring-brand-green focus-within:ring-offset-2 hover:text-brand-green-dark">
-                                  <span>Upload image from your device</span>
-                                  <input 
-                                    ref={fileInputRef} 
-                                    type="file" 
-                                    accept="image/*" 
-                                    className="sr-only" 
-                                    onChange={handleImageChange} 
-                                  />
-                                </label>
-                              </div>
-                              <p className="text-xs text-gray-400">PNG, JPG, JPEG up to 2MB</p>
-                            </>
-                          )}
-                        </div>
-                      </div>
+                      <ImageUploader 
+                        images={formData.image_url ? [formData.image_url, ...formData.gallery_images] : []}
+                        onChange={(newImages) => {
+                          if (newImages.length === 0) {
+                            setFormData(prev => ({ ...prev, image_url: '', gallery_images: [] }));
+                          } else {
+                            setFormData(prev => ({ 
+                              ...prev, 
+                              image_url: newImages[0], 
+                              gallery_images: newImages.slice(1) 
+                            }));
+                          }
+                        }}
+                      />
                     </div>
 
                     {/* Pricing & Inventory */}

@@ -4,6 +4,8 @@ import { supabase } from '../../lib/supabase';
 import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
+import ImageUploader from '../../components/admin/ImageUploader';
+
 export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -132,6 +134,12 @@ export default function ProductForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.image_url) {
+      setMessage({ text: 'At least one product image is required.', type: 'error' });
+      return;
+    }
+
     setLoading(true);
     setMessage({ text: '', type: '' });
 
@@ -309,31 +317,20 @@ export default function ProductForm() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">Images</h2>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Main Image URL</label>
-            <input type="text" name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none" />
-            {formData.image_url && (
-              <img src={formData.image_url} alt="Main Preview" className="mt-2 h-32 object-contain rounded-lg border border-gray-200" onError={(e) => e.currentTarget.style.display = 'none'} />
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Gallery Images (URLs)</label>
-            <div className="flex gap-2 mb-2">
-              <input type="text" value={newGalleryImage} onChange={e => setNewGalleryImage(e.target.value)} placeholder="Add gallery image URL" className="flex-1 px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none" />
-              <button type="button" onClick={() => addArrayItem('gallery_images', newGalleryImage, setNewGalleryImage)} className="bg-gray-100 px-4 py-2 rounded-xl hover:bg-gray-200 font-medium text-gray-700">Add</button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {formData.gallery_images.map((img, i) => (
-                <div key={i} className="relative group rounded-lg border border-gray-200 overflow-hidden w-24 h-24">
-                  <img src={img} alt="Gallery" className="w-full h-full object-cover" />
-                  <button type="button" onClick={() => removeArrayItem('gallery_images', i)} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                    <X size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ImageUploader 
+            images={formData.image_url ? [formData.image_url, ...formData.gallery_images] : []}
+            onChange={(newImages) => {
+              if (newImages.length === 0) {
+                setFormData(prev => ({ ...prev, image_url: '', gallery_images: [] }));
+              } else {
+                setFormData(prev => ({ 
+                  ...prev, 
+                  image_url: newImages[0], 
+                  gallery_images: newImages.slice(1) 
+                }));
+              }
+            }}
+          />
         </div>
 
         {/* Features & Tags */}

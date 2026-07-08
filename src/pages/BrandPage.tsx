@@ -12,14 +12,25 @@ export default function BrandPage() {
 
   if (loading) return <div className="p-20 text-center">Loading...</div>;
 
-  const currentBrand = brands.find(b => b.slug === brandSlug);
+  const currentBrand = brands.find(b => b.slug?.toLowerCase() === brandSlug?.toLowerCase() || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-') === brandSlug?.toLowerCase());
   
   if (!currentBrand) {
     return <div className="p-20 text-center">Brand not found</div>;
   }
 
-  // Filter products by brand name
-  const brandProducts = products.filter(p => p.brand === currentBrand.name);
+  // Robustly filter products by brand name or slug
+  const matchBrand = (prodBrand: string, brandName: string, brandSlug: string) => {
+    if (!prodBrand) return false;
+    const pb = prodBrand.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const bn = brandName ? brandName.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+    const bs = brandSlug ? brandSlug.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+    
+    if (bn && (pb === bn || pb.includes(bn) || bn.includes(pb))) return true;
+    if (bs && (pb === bs || pb.includes(bs) || bs.includes(pb))) return true;
+    return false;
+  };
+
+  const brandProducts = products.filter(p => matchBrand(p.brand, currentBrand.name, currentBrand.slug));
 
   const title = currentBrand.name;
   const bgImage = currentBrand.logo_url || 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop';
@@ -27,7 +38,7 @@ export default function BrandPage() {
   return (
     <>
       <Helmet>
-        <title>{title} Products ({brandProducts.length} Products) | New Bharat Electricals</title>
+        <title>{`${title} Products (${brandProducts.length} Products) | New Bharat Electricals`}</title>
         <meta name="description" content={`Explore all ${title} products available at New Bharat Electricals.`} />
       </Helmet>
 
@@ -87,7 +98,14 @@ export default function BrandPage() {
         </div>
 
         {brandProducts.length === 0 ? (
-          <div className="text-gray-500 py-10">No products found for this brand.</div>
+          <div className="bg-gray-50 rounded-2xl border border-gray-100 p-12 text-center flex flex-col items-center">
+            <ShoppingCart className="w-16 h-16 text-gray-300 mb-4" strokeWidth={1.5} />
+            <h3 className="text-xl font-bold text-gray-800 mb-2">No Products Available</h3>
+            <p className="text-gray-500 max-w-md">We are currently updating our catalogue for {title}. Please check back later or explore our other premium brands.</p>
+            <Link to="/catalogue" className="mt-6 bg-brand-green hover:bg-brand-green-dark text-white px-6 py-2.5 rounded-xl font-medium transition-colors">
+              Browse All Products
+            </Link>
+          </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {brandProducts.map((product, idx) => {
