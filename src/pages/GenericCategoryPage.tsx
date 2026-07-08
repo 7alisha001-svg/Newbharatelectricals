@@ -12,14 +12,59 @@ export default function GenericCategoryPage() {
 
   if (loading) return <div className="p-20 text-center">Loading...</div>;
 
-  const currentCategory = categories.find(c => c.slug === categorySlug);
+  let currentCategory = categories.find(c => c.slug === categorySlug);
+  
+  if (!currentCategory) {
+    if (categorySlug === 'power-solutions') {
+      currentCategory = {
+        id: 'power-solutions',
+        name: 'Power Solutions',
+        slug: 'power-solutions',
+        description: 'High-performance inverters, tall tubular batteries, and integrated combo power backups.',
+        image_url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop',
+        display_order: 1,
+        is_active: true,
+        created_at: ''
+      };
+    } else if (categorySlug === 'solar-solutions') {
+      currentCategory = {
+        id: 'solar-solutions',
+        name: 'Solar Solutions',
+        slug: 'solar-solutions',
+        description: 'Complete range of solar on-grid, off-grid and hybrid PCUs, advanced solar panels, and solar charge controllers.',
+        image_url: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
+        display_order: 2,
+        is_active: true,
+        created_at: ''
+      };
+    }
+  }
   
   if (!currentCategory) {
     return <div className="p-20 text-center">Category not found</div>;
   }
 
-  // Filter products by category name
-  const categoryProducts = products.filter(p => p.category === currentCategory.name);
+  const isProductInParentCategory = (productCat: string, parentSlug: string) => {
+    if (!productCat || !parentSlug) return false;
+    const pCat = productCat.toLowerCase().trim();
+    const pSlug = parentSlug.toLowerCase().trim();
+
+    if (pSlug === 'power-solutions') {
+      const powerSubcats = ['inverter', 'batter', '3-phase', 'lift', 'combo'];
+      return powerSubcats.some(sub => pCat.includes(sub));
+    }
+    if (pSlug === 'solar-solutions') {
+      const solarSubcats = ['solar'];
+      return solarSubcats.some(sub => pCat.includes(sub));
+    }
+    return pCat === pSlug;
+  };
+
+  // Filter products by category name or matching subcategory
+  const categoryProducts = products.filter(p => 
+    p.category === currentCategory.name || 
+    isProductInParentCategory(p.category || '', categorySlug || '')
+  );
 
   const title = currentCategory.name;
   const bgImage = currentCategory.image_url || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop';

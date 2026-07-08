@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, ShoppingCart, Package, Archive, 
-  Tags, Flag, Users, Settings, LogOut, Menu, X, Navigation as NavIcon
+  Tags, Flag, Users, Settings, LogOut, Menu, X, Navigation as NavIcon,
+  Zap, Sun
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -15,6 +16,23 @@ const navigation = [
   { name: 'Customers', href: '/admin/customers', icon: Users },
   { name: 'Navigation', href: '/admin/navigation', icon: NavIcon },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
+];
+
+const powerCategories = [
+  { name: 'Inverters', href: '/admin/power-solutions/inverters' },
+  { name: 'Batteries', href: '/admin/power-solutions/batteries' },
+  { name: '3-Phase Inverters', href: '/admin/power-solutions/3-phase-inverters' },
+  { name: 'Lift Inverters', href: '/admin/power-solutions/lift-inverters' },
+  { name: 'Combo Products', href: '/admin/power-solutions/combo-products' },
+];
+
+const solarCategories = [
+  { name: 'Solar On-Grid Inverter', href: '/admin/solar-solutions/solar-on-grid-inverters' },
+  { name: 'Solar Off-Grid Inverter', href: '/admin/solar-solutions/solar-off-grid-inverters' },
+  { name: 'Solar Hybrid Inverter', href: '/admin/solar-solutions/solar-hybrid-inverters' },
+  { name: 'Solar Panel', href: '/admin/solar-solutions/solar-panels' },
+  { name: 'Solar Batteries', href: '/admin/solar-solutions/solar-batteries' },
+  { name: 'Solar Charge Controller', href: '/admin/solar-solutions/solar-charge-controllers' },
 ];
 
 export default function AdminSidebar({ 
@@ -71,27 +89,81 @@ export default function AdminSidebar({
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`
-                  flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors
-                  ${isActive 
-                    ? 'bg-brand-green text-white' 
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }
-                `}
-                onClick={() => setIsOpen(false)}
-              >
-                <item.icon size={20} className={`mr-3 ${isActive ? 'text-white' : 'text-gray-400'}`} />
-                {item.name}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6 custom-scrollbar">
+          {/* General Section */}
+          <div className="space-y-1">
+            <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">General</p>
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`
+                    flex items-center px-4 py-2.5 text-xs font-semibold rounded-xl transition-colors
+                    ${isActive 
+                      ? 'bg-brand-green text-white font-bold' 
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    }
+                  `}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <item.icon size={16} className={`mr-2.5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Power Solution Section */}
+          <div className="space-y-1">
+            <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Power Solution</p>
+            {powerCategories.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`
+                    flex items-center px-4 py-2.5 text-xs font-semibold rounded-xl transition-colors
+                    ${isActive 
+                      ? 'bg-brand-green text-white font-bold' 
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    }
+                  `}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Zap size={14} className={`mr-2.5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Solar Solution Section */}
+          <div className="space-y-1">
+            <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Solar Solution</p>
+            {solarCategories.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`
+                    flex items-center px-4 py-2.5 text-xs font-semibold rounded-xl transition-colors
+                    ${isActive 
+                      ? 'bg-brand-green text-white font-bold' 
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    }
+                  `}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Sun size={14} className={`mr-2.5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
         </nav>
 
         <div className="p-4 border-t border-gray-800">

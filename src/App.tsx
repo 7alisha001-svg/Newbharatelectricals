@@ -34,6 +34,7 @@ import BrandForm from './pages/admin/BrandForm';
 import Customers from './pages/admin/Customers';
 import Settings from './pages/admin/Settings';
 import Navigation from './pages/admin/Navigation';
+import CategoryProductManager from './pages/admin/CategoryProductManager';
 
 import { StoreProvider } from './context/StoreContext';
 
@@ -79,6 +80,8 @@ export default function App() {
               <Route path="customers" element={<Customers />} />
               <Route path="navigation" element={<Navigation />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="power-solutions/:subcategory" element={<CategoryProductManager />} />
+              <Route path="solar-solutions/:subcategory" element={<CategoryProductManager />} />
             </Route>
 
             {/* Public Routes */}

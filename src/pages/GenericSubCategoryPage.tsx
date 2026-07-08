@@ -18,8 +18,17 @@ export default function GenericSubCategoryPage() {
   
   const description = `Discover our premium line of ${defaultSubCategoryTitle.toLowerCase()}. Engineered for superior performance and unmatched reliability in every condition.`;
   
+  const matchCategory = (prodCat: string, urlSubCat: string) => {
+    if (!prodCat || !urlSubCat) return false;
+    const c1 = prodCat.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const c2 = urlSubCat.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const s1 = c1.endsWith('s') ? c1.slice(0, -1) : c1;
+    const s2 = c2.endsWith('s') ? c2.slice(0, -1) : c2;
+    return s1 === s2 || s1.includes(s2) || s2.includes(s1);
+  };
+
   // Find products matching this subcategory (slug matching)
-  const products = storeProducts.filter(p => p.slug === subcategory || p.category?.toLowerCase().replace(/\s+/g, '-') === category?.toLowerCase().replace(/\s+/g, '-'));
+  const products = storeProducts.filter(p => p.slug === subcategory || (p.category && matchCategory(p.category, subcategory || '')));
 
   
   const defaultFeatures = [
