@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, ShoppingCart, Package, Archive, 
   Tags, Flag, Users, Settings, LogOut, Menu, X, Navigation as NavIcon,
-  Zap, Sun
+  Zap, Sun, FileSpreadsheet
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -15,6 +15,7 @@ const navigation = [
   { name: 'Brands', href: '/admin/brands', icon: Flag },
   { name: 'Customers', href: '/admin/customers', icon: Users },
   { name: 'Navigation', href: '/admin/navigation', icon: NavIcon },
+  { name: 'Google Sheets', href: '/admin/sheets', icon: FileSpreadsheet },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

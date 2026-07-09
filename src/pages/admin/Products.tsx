@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Search, Edit2, Trash2, Package } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Package, FileSpreadsheet } from 'lucide-react';
 import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
 export default function Products() {
@@ -49,10 +49,16 @@ export default function Products() {
           <h1 className="text-2xl font-bold text-gray-900">Products</h1>
           <p className="text-gray-500 mt-1 text-sm">Manage your product catalog</p>
         </div>
-        <Link to="/admin/products/new" className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
-          <Plus size={18} className="mr-2" />
-          Add Product
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/admin/sheets" className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-medium py-2 px-4 rounded-xl transition-colors flex items-center shadow-sm">
+            <FileSpreadsheet size={18} className="mr-2 text-brand-green" />
+            Google Sheets Sync
+          </Link>
+          <Link to="/admin/products/new" className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center">
+            <Plus size={18} className="mr-2" />
+            Add Product
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

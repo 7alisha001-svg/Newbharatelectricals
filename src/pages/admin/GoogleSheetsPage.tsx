@@ -1,0 +1,953 @@
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../lib/supabase';
+import { useStore } from '../../context/StoreContext';
+import { 
+  initAuth, 
+  googleSignIn, 
+  logout, 
+  getAccessToken 
+} from '../../lib/googleAuth';
+import { 
+  listUserSpreadsheets, 
+  createSpreadsheet, 
+  readSpreadsheetValues, 
+  updateSpreadsheetValues, 
+  getSpreadsheetSheets,
+  GoogleSpreadsheet 
+} from '../../lib/googleSheetsService';
+import { 
+  FileSpreadsheet, 
+  Download, 
+  Upload, 
+  CheckCircle2, 
+  AlertTriangle, 
+  Loader2, 
+  LogOut, 
+  User, 
+  RefreshCw, 
+  ExternalLink,
+  ChevronRight,
+  Database,
+  ArrowRight,
+  HelpCircle,
+  Sparkles
+} from 'lucide-react';
+import { User as FirebaseUser } from 'firebase/auth';
+
+export default function GoogleSheetsPage() {
+  const { refreshStore } = useStore();
+  
+  // Auth state
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [signingIn, setSigningIn] = useState(false);
+
+  // General state
+  const [spreadsheets, setSpreadsheets] = useState<GoogleSpreadsheet[]>([]);
+  const [loadingSheets, setLoadingSheets] = useState(false);
+  const [activeTab, setActiveTab] = useState<'export' | 'import'>('export');
+  const [alert, setAlert] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  // Export State
+  const [exportMode, setExportMode] = useState<'new' | 'existing'>('new');
+  const [newSheetTitle, setNewSheetTitle] = useState('New Bharat Electricals Products');
+  const [selectedExportSheetId, setSelectedExportSheetId] = useState('');
+  const [exporting, setExporting] = useState(false);
+  const [exportedSheetUrl, setExportedSheetUrl] = useState<string | null>(null);
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  // Import State
+  const [selectedImportSheetId, setSelectedImportSheetId] = useState('');
+  const [sheetsInSpreadsheet, setSheetsInSpreadsheet] = useState<string[]>([]);
+  const [selectedTabName, setSelectedTabName] = useState('');
+  const [loadingTabs, setLoadingTabs] = useState(false);
+  
+  const [sheetRows, setSheetRows] = useState<string[][]>([]);
+  const [fetchingRows, setFetchingRows] = useState(false);
+  const [duplicateStrategy, setDuplicateStrategy] = useState<'update' | 'skip'>('update');
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{
+    added: number;
+    updated: number;
+    skipped: number;
+    errors: string[];
+  } | null>(null);
+
+  // Load auth on mount
+  useEffect(() => {
+    const unsubscribe = initAuth(
+      (currentUser, token) => {
+        setUser(currentUser);
+        setAccessToken(token);
+        setLoadingAuth(false);
+      },
+      () => {
+        setUser(null);
+        setAccessToken(null);
+        setLoadingAuth(false);
+      }
+    );
+
+    // Fetch total products count from Supabase
+    const getCount = async () => {
+      const { count } = await supabase.from('products').select('*', { count: 'exact', head: true });
+      setTotalProducts(count || 0);
+    };
+    getCount();
+
+    return () => unsubscribe();
+  }, []);
+
+  // Fetch spreadsheets once token is available
+  const loadSpreadsheets = async (token: string) => {
+    setLoadingSheets(true);
+    try {
+      const list = await listUserSpreadsheets(token);
+      setSpreadsheets(list);
+      if (list.length > 0) {
+        setSelectedExportSheetId(list[0].id);
+        setSelectedImportSheetId(list[0].id);
+      }
+    } catch (err) {
+      console.error('Failed to load spreadsheets:', err);
+    } finally {
+      setLoadingSheets(false);
+    }
+  };
+
+  useEffect(() => {
+    if (accessToken) {
+      loadSpreadsheets(accessToken);
+    }
+  }, [accessToken]);
+
+  // Load tabs inside selected spreadsheet for import
+  useEffect(() => {
+    const fetchTabs = async () => {
+      if (!accessToken || !selectedImportSheetId) return;
+      setLoadingTabs(true);
+      try {
+        const tabs = await getSpreadsheetSheets(accessToken, selectedImportSheetId);
+        setSheetsInSpreadsheet(tabs);
+        if (tabs.length > 0) {
+          setSelectedTabName(tabs[0]);
+        }
+      } catch (err: any) {
+        console.error('Failed to fetch spreadsheet tabs:', err);
+        setAlert({
+          type: 'error',
+          text: `Could not load tabs from spreadsheet: ${err.message || err}`
+        });
+      } finally {
+        setLoadingTabs(false);
+      }
+    };
+
+    fetchTabs();
+  }, [selectedImportSheetId, accessToken]);
+
+  const handleGoogleLogin = async () => {
+    setSigningIn(true);
+    setAlert(null);
+    try {
+      const result = await googleSignIn();
+      if (result) {
+        setUser(result.user);
+        setAccessToken(result.accessToken);
+        setAlert({ type: 'success', text: 'Successfully authenticated with Google!' });
+      }
+    } catch (err: any) {
+      setAlert({ type: 'error', text: `Google Login Failed: ${err.message || err}` });
+    } finally {
+      setSigningIn(false);
+    }
+  };
+
+  const handleGoogleLogout = async () => {
+    await logout();
+    setUser(null);
+    setAccessToken(null);
+    setSpreadsheets([]);
+    setAlert({ type: 'info', text: 'Disconnected from Google Account.' });
+  };
+
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+  };
+
+  // Helper to parse comma separated features
+  const parseFeatures = (text: string): string[] => {
+    if (!text) return [];
+    return text.split(',').map(f => f.trim()).filter(f => f.length > 0);
+  };
+
+  // Helper to parse key-value specs: "Label1:Val1, Label2:Val2"
+  const parseSpecs = (text: string): { label: string; value: string }[] => {
+    if (!text) return [];
+    const pairs = text.split(',');
+    const list: { label: string; value: string }[] = [];
+    for (const pair of pairs) {
+      const idx = pair.indexOf(':');
+      if (idx !== -1) {
+        const label = pair.substring(0, idx).trim();
+        const value = pair.substring(idx + 1).trim();
+        if (label || value) {
+          list.push({ label, value });
+        }
+      }
+    }
+    return list;
+  };
+
+  // 1. EXPORT HANDLER
+  const handleExport = async () => {
+    if (!accessToken) return;
+    setExporting(true);
+    setAlert(null);
+    setExportedSheetUrl(null);
+
+    try {
+      // Step A: Fetch all products from Supabase
+      const { data: dbProducts, error: dbError } = await supabase
+        .from('products')
+        .select('*')
+        .order('name', { ascending: true });
+
+      if (dbError) throw dbError;
+      if (!dbProducts || dbProducts.length === 0) {
+        throw new Error('No products found in database to export.');
+      }
+
+      // Step B: Get Spreadsheet ID or create new spreadsheet
+      let targetSheetId = selectedExportSheetId;
+      let targetSheetName = '';
+
+      if (exportMode === 'new') {
+        const sheetTitle = newSheetTitle.trim() || `Products Export ${new Date().toLocaleDateString()}`;
+        const newSheet = await createSpreadsheet(accessToken, sheetTitle);
+        targetSheetId = newSheet.id;
+        targetSheetName = newSheet.name;
+        // Refresh local spreadsheet list
+        loadSpreadsheets(accessToken);
+      } else {
+        const matchingSheet = spreadsheets.find(s => s.id === selectedExportSheetId);
+        targetSheetName = matchingSheet ? matchingSheet.name : 'Selected Spreadsheet';
+      }
+
+      // Step C: Formulate Sheets Payload
+      // Header row matches standard format
+      const headers = [
+        'ID',
+        'SKU',
+        'Name',
+        'Brand',
+        'Category',
+        'Subcategory',
+        'Regular Price',
+        'Sale Price',
+        'Stock Quantity',
+        'Status',
+        'Image URL',
+        'Description',
+        'Short Description',
+        'Features (Comma-separated)',
+        'Specs (Label:Value, Label:Value)'
+      ];
+
+      const rows = dbProducts.map(p => {
+        // format features array to comma-separated
+        const featuresStr = Array.isArray(p.features) ? p.features.join(', ') : '';
+        // format specs array to Label:Value string
+        let specsStr = '';
+        if (Array.isArray(p.specs)) {
+          specsStr = p.specs.map((s: any) => `${s.label || ''}:${s.value || ''}`).join(', ');
+        }
+
+        return [
+          p.id || '',
+          p.sku || '',
+          p.name || '',
+          p.brand || '',
+          p.category || '',
+          p.subcategory || '',
+          p.regular_price || 0,
+          p.sale_price || '',
+          p.stock_quantity || 0,
+          p.status || 'draft',
+          p.image_url || '',
+          p.description || '',
+          p.short_description || '',
+          featuresStr,
+          specsStr
+        ];
+      });
+
+      const finalValues = [headers, ...rows];
+
+      // Step D: Write values using updateSpreadsheetValues API
+      // Write into the first sheet
+      const defaultRange = 'A1:O' + (finalValues.length + 5);
+      await updateSpreadsheetValues(accessToken, targetSheetId, defaultRange, finalValues);
+
+      setExportedSheetUrl(`https://docs.google.com/spreadsheets/d/${targetSheetId}/edit`);
+      setAlert({
+        type: 'success',
+        text: `Successfully exported ${dbProducts.length} products to "${targetSheetName}"!`
+      });
+    } catch (err: any) {
+      console.error('Export error:', err);
+      setAlert({
+        type: 'error',
+        text: `Export failed: ${err.message || err}`
+      });
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  // 2. FETCH PREVIEW FOR IMPORT
+  const handleFetchPreview = async () => {
+    if (!accessToken || !selectedImportSheetId || !selectedTabName) return;
+    setFetchingRows(true);
+    setAlert(null);
+    setImportResult(null);
+    try {
+      // Read values from range
+      const values = await readSpreadsheetValues(accessToken, selectedImportSheetId, `${selectedTabName}!A1:Z1000`);
+      if (values.length === 0) {
+        throw new Error('Spreadsheet tab is empty.');
+      }
+      setSheetRows(values);
+      setAlert({
+        type: 'info',
+        text: `Loaded ${values.length} rows (including header) from the spreadsheet. Check columns and preview below.`
+      });
+    } catch (err: any) {
+      console.error('Fetch rows error:', err);
+      setAlert({
+        type: 'error',
+        text: `Could not read spreadsheet rows: ${err.message || err}`
+      });
+    } finally {
+      setFetchingRows(false);
+    }
+  };
+
+  // 3. IMPORT PRODUCTS HANDLER
+  const handleImport = async () => {
+    if (sheetRows.length < 2) return;
+    
+    // Explicit user confirmation for data mutation (as mandated)
+    const proceed = window.confirm(
+      `Are you sure you want to import/update products in the database? This will process ${sheetRows.length - 1} spreadsheet row(s) using the '${duplicateStrategy}' strategy.`
+    );
+    if (!proceed) return;
+
+    setImporting(true);
+    setAlert(null);
+
+    let added = 0;
+    let updated = 0;
+    let skipped = 0;
+    const errors: string[] = [];
+
+    try {
+      const headers = sheetRows[0].map(h => h.trim().toLowerCase());
+      const dataRows = sheetRows.slice(1);
+
+      // Find indices of standard columns
+      const colIdx = {
+        id: headers.indexOf('id'),
+        sku: headers.indexOf('sku'),
+        name: headers.indexOf('name'),
+        brand: headers.indexOf('brand'),
+        category: headers.indexOf('category'),
+        subcategory: headers.indexOf('subcategory'),
+        regular_price: headers.indexOf('regular price'),
+        sale_price: headers.indexOf('sale price'),
+        stock_quantity: headers.indexOf('stock quantity'),
+        status: headers.indexOf('status'),
+        image_url: headers.indexOf('image url'),
+        description: headers.indexOf('description'),
+        short_description: headers.indexOf('short description'),
+        features: headers.indexOf('features (comma-separated)'),
+        specs: headers.indexOf('specs (label:value, label:value)')
+      };
+
+      // Fallback indices if header names aren't precise
+      if (colIdx.regular_price === -1) colIdx.regular_price = headers.indexOf('price');
+      if (colIdx.stock_quantity === -1) colIdx.stock_quantity = headers.indexOf('stock');
+
+      // Fetch existing products to match by SKU / Slug
+      const { data: existingProducts, error: fetchErr } = await supabase
+        .from('products')
+        .select('*');
+
+      if (fetchErr) throw fetchErr;
+
+      // Loop rows and upsert/insert
+      for (let i = 0; i < dataRows.length; i++) {
+        const row = dataRows[i];
+        
+        // Get values helper
+        const getVal = (idx: number, fallback = '') => {
+          if (idx !== -1 && idx < row.length) {
+            return row[idx] ? String(row[idx]).trim() : fallback;
+          }
+          return fallback;
+        };
+
+        const name = getVal(colIdx.name);
+        if (!name) {
+          errors.push(`Row ${i + 2}: Skipped because product 'Name' is empty.`);
+          skipped++;
+          continue;
+        }
+
+        const sku = getVal(colIdx.sku);
+        const brand = getVal(colIdx.brand);
+        const category = getVal(colIdx.category) || 'power-solutions';
+        const subcategory = getVal(colIdx.subcategory) || 'batteries';
+        const regularPriceVal = getVal(colIdx.regular_price);
+        const regular_price = regularPriceVal ? Number(regularPriceVal.replace(/[^0-9.]/g, '')) : null;
+        
+        const salePriceVal = getVal(colIdx.sale_price);
+        const sale_price = salePriceVal ? Number(salePriceVal.replace(/[^0-9.]/g, '')) : null;
+
+        const stockVal = getVal(colIdx.stock_quantity);
+        const stock_quantity = stockVal ? Number(stockVal.replace(/[^0-9]/g, '')) : 0;
+
+        const status = getVal(colIdx.status).toLowerCase() === 'publish' ? 'publish' : 'draft';
+        const image_url = getVal(colIdx.image_url);
+        const description = getVal(colIdx.description);
+        const short_description = getVal(colIdx.short_description) || description.slice(0, 150);
+
+        const featuresStr = getVal(colIdx.features);
+        const features = parseFeatures(featuresStr);
+
+        const specsStr = getVal(colIdx.specs);
+        const specs = parseSpecs(specsStr);
+
+        const id = getVal(colIdx.id);
+
+        const slug = generateSlug(name);
+
+        // Find existing match
+        let existingMatch = null;
+        if (id) {
+          existingMatch = existingProducts?.find(p => p.id === id);
+        } else if (sku) {
+          existingMatch = existingProducts?.find(p => p.sku === sku);
+        } else {
+          existingMatch = existingProducts?.find(p => p.slug === slug);
+        }
+
+        const payload: any = {
+          name,
+          slug,
+          sku,
+          brand,
+          category,
+          subcategory,
+          regular_price,
+          sale_price,
+          stock_quantity,
+          status,
+          image_url,
+          description,
+          short_description,
+          features,
+          specs,
+          updated_at: new Date().toISOString()
+        };
+
+        if (existingMatch) {
+          if (duplicateStrategy === 'skip') {
+            skipped++;
+            continue;
+          }
+
+          // Update existing
+          const { error: updateErr } = await supabase
+            .from('products')
+            .update(payload)
+            .eq('id', existingMatch.id);
+
+          if (updateErr) {
+            errors.push(`Row ${i + 2} (${name}): ${updateErr.message}`);
+          } else {
+            updated++;
+          }
+        } else {
+          // Insert new
+          const { error: insertErr } = await supabase
+            .from('products')
+            .insert([payload]);
+
+          if (insertErr) {
+            errors.push(`Row ${i + 2} (${name}): ${insertErr.message}`);
+          } else {
+            added++;
+          }
+        }
+      }
+
+      setImportResult({ added, updated, skipped, errors });
+      await refreshStore();
+      setAlert({
+        type: 'success',
+        text: `Completed importing spreadsheet data: added ${added}, updated ${updated}, skipped ${skipped}.`
+      });
+      // Clear rows after successful import
+      setSheetRows([]);
+    } catch (err: any) {
+      console.error('Import process failed:', err);
+      setAlert({
+        type: 'error',
+        text: `Import process failed: ${err.message || err}`
+      });
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  if (loadingAuth) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+        <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
+        <p className="text-sm font-semibold text-gray-500 font-sans">Connecting to authentication services...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 max-w-4xl">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Google Sheets Sync</h1>
+          <p className="text-gray-500 mt-1 text-sm">
+            Bulk-edit and sync your product inventory using Google Sheets spreadsheets
+          </p>
+        </div>
+        {user && (
+          <div className="flex items-center gap-3 bg-gray-100/80 p-2 rounded-xl border border-gray-200">
+            {user.photoURL ? (
+              <img src={user.photoURL} alt={user.displayName || ''} className="w-8 h-8 rounded-full" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-xs uppercase">
+                {user.displayName?.charAt(0) || <User size={16} />}
+              </div>
+            )}
+            <div className="text-left">
+              <p className="text-xs font-bold text-gray-800 line-clamp-1">{user.displayName || 'Google Account'}</p>
+              <p className="text-[10px] text-gray-500 line-clamp-1">{user.email}</p>
+            </div>
+            <button 
+              onClick={handleGoogleLogout} 
+              title="Sign Out Google Account"
+              className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg transition-colors ml-1"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {alert && (
+        <div className={`p-4 rounded-xl text-sm flex items-start gap-3 ${
+          alert.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+          alert.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+          'bg-blue-50 text-blue-700 border border-blue-200'
+        }`}>
+          {alert.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0 text-green-500 mt-0.5" /> : <AlertTriangle className="w-5 h-5 shrink-0 text-amber-500 mt-0.5" />}
+          <div>
+            <p className="font-semibold">{alert.text}</p>
+          </div>
+        </div>
+      )}
+
+      {!user ? (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center flex flex-col items-center max-w-xl mx-auto space-y-6">
+          <div className="w-16 h-16 bg-gradient-to-tr from-green-50 to-emerald-100 rounded-full flex items-center justify-center border border-green-200">
+            <FileSpreadsheet className="w-8 h-8 text-brand-green" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 font-sans">Authorize Google Sheets Access</h2>
+            <p className="text-gray-500 text-sm mt-2 max-w-sm">
+              Link your Google Workspace Account with permission to create spreadsheets, export product catalogs, and fetch spreadsheet records.
+            </p>
+          </div>
+          
+          <button 
+            onClick={handleGoogleLogin}
+            disabled={signingIn}
+            className="inline-flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-xl border border-gray-200 shadow-sm transition-all w-full max-w-xs focus:ring-2 focus:ring-brand-green/20 disabled:opacity-50"
+          >
+            {signingIn ? (
+              <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+            ) : (
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+              </svg>
+            )}
+            Sign in with Google
+          </button>
+          <div className="text-gray-400 text-xs flex items-center gap-1.5">
+            <Sparkles size={12} className="text-amber-500" /> Secure integration under Google API User Data Policies
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {/* Navigation Tabs */}
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => { setActiveTab('export'); setAlert(null); }}
+              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
+                activeTab === 'export'
+                  ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
+                  : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <Download size={16} />
+              Export to Sheets
+            </button>
+            <button
+              onClick={() => { setActiveTab('import'); setAlert(null); }}
+              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
+                activeTab === 'import'
+                  ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
+                  : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <Upload size={16} />
+              Import from Sheets
+            </button>
+          </div>
+
+          {/* TAB 1: EXPORT */}
+          {activeTab === 'export' && (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Export Product Catalog</h3>
+                <p className="text-gray-500 text-sm mt-1">
+                  Dump your entire database catalogue ({totalProducts} items) directly into a Google Spreadsheet.
+                </p>
+              </div>
+
+              <div className="space-y-4 max-w-xl">
+                <div className="flex items-center gap-6">
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="exportMode" 
+                      value="new"
+                      checked={exportMode === 'new'} 
+                      onChange={() => setExportMode('new')}
+                      className="text-brand-green focus:ring-brand-green mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700">Create new Spreadsheet</span>
+                  </label>
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="exportMode" 
+                      value="existing"
+                      checked={exportMode === 'existing'} 
+                      onChange={() => setExportMode('existing')}
+                      className="text-brand-green focus:ring-brand-green mr-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700">Overwrite existing Spreadsheet</span>
+                  </label>
+                </div>
+
+                {exportMode === 'new' ? (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Spreadsheet Title</label>
+                    <input 
+                      type="text" 
+                      value={newSheetTitle}
+                      onChange={(e) => setNewSheetTitle(e.target.value)}
+                      placeholder="e.g. Products Inventory Export"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Select Spreadsheet</label>
+                    {loadingSheets ? (
+                      <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
+                        <Loader2 className="w-4 h-4 animate-spin" /> Loading your spreadsheets...
+                      </div>
+                    ) : spreadsheets.length === 0 ? (
+                      <p className="text-xs text-amber-600 font-medium">No spreadsheets found in your Drive. Create a new one instead.</p>
+                    ) : (
+                      <select
+                        value={selectedExportSheetId}
+                        onChange={(e) => setSelectedExportSheetId(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm bg-white"
+                      >
+                        {spreadsheets.map(s => (
+                          <option key={s.id} value={s.id}>{s.name} ({s.modifiedTime ? new Date(s.modifiedTime).toLocaleDateString() : 'N/A'})</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={handleExport}
+                  disabled={exporting || (exportMode === 'existing' && !selectedExportSheetId)}
+                  className="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2.5 px-6 rounded-xl transition-all inline-flex items-center gap-2 disabled:opacity-50"
+                >
+                  {exporting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Exporting Catalog...
+                    </>
+                  ) : (
+                    <>
+                      <Download size={16} />
+                      Export {totalProducts} Products
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {exportedSheetUrl && (
+                <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-emerald-200">
+                      <FileSpreadsheet className="w-6 h-6 text-brand-green" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">Your sheet is ready!</p>
+                      <p className="text-xs text-gray-500">All columns generated with SKU, categories, prices and description fields.</p>
+                    </div>
+                  </div>
+                  <a 
+                    href={exportedSheetUrl} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold py-1.5 px-4 rounded-lg text-xs inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <ExternalLink size={14} />
+                    Open Google Sheet
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 2: IMPORT */}
+          {activeTab === 'import' && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Import Products from Google Sheets</h3>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Select a spreadsheet and tab, review the data structure, and import products back into your database.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Select Spreadsheet</label>
+                    {loadingSheets ? (
+                      <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
+                        <Loader2 className="w-4 h-4 animate-spin" /> Loading spreadsheets...
+                      </div>
+                    ) : spreadsheets.length === 0 ? (
+                      <p className="text-xs text-amber-600">No spreadsheets found in your Drive.</p>
+                    ) : (
+                      <select
+                        value={selectedImportSheetId}
+                        onChange={(e) => setSelectedImportSheetId(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm bg-white"
+                      >
+                        {spreadsheets.map(s => (
+                          <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Select Tab / Sheet</label>
+                    {loadingTabs ? (
+                      <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
+                        <Loader2 className="w-4 h-4 animate-spin" /> Loading tabs...
+                      </div>
+                    ) : sheetsInSpreadsheet.length === 0 ? (
+                      <p className="text-xs text-gray-500 italic">Choose a spreadsheet to view sheets</p>
+                    ) : (
+                      <select
+                        value={selectedTabName}
+                        onChange={(e) => setSelectedTabName(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm bg-white"
+                      >
+                        {sheetsInSpreadsheet.map(t => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-wrap gap-4">
+                  <button
+                    onClick={handleFetchPreview}
+                    disabled={fetchingRows || !selectedImportSheetId || !selectedTabName}
+                    className="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2.5 px-6 rounded-xl transition-all inline-flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {fetchingRows ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Fetching spreadsheet values...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw size={16} />
+                        Fetch Sheet Data
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* SHEET PREVIEW CONTAINER */}
+              {sheetRows.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900">Spreadsheet Data Preview</h3>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      Showing up to 3 row previews. Make sure column names like SKU, Name, Brand, Price, and Stock exist.
+                    </p>
+                  </div>
+
+                  <div className="overflow-x-auto border border-gray-100 rounded-xl">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-gray-50 text-gray-600 uppercase border-b border-gray-100">
+                          {sheetRows[0].slice(0, 8).map((header, idx) => (
+                            <th key={idx} className="p-3 font-semibold">{header}</th>
+                          ))}
+                          {sheetRows[0].length > 8 && <th className="p-3 font-semibold">...</th>}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 text-gray-700">
+                        {sheetRows.slice(1, 4).map((row, rIdx) => (
+                          <tr key={rIdx} className="hover:bg-gray-50">
+                            {row.slice(0, 8).map((val, cIdx) => (
+                              <td key={cIdx} className="p-3 truncate max-w-[150px]">{val}</td>
+                            ))}
+                            {row.length > 8 && <td className="p-3 text-gray-400">...</td>}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* CONFIG AND FINAL TRIGGER */}
+                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-gray-900">Import Strategy</p>
+                      <div className="flex items-center gap-6 mt-1.5">
+                        <label className="inline-flex items-center cursor-pointer text-xs">
+                          <input 
+                            type="radio" 
+                            name="strategy" 
+                            value="update" 
+                            checked={duplicateStrategy === 'update'} 
+                            onChange={() => setDuplicateStrategy('update')}
+                            className="text-brand-green focus:ring-brand-green mr-2"
+                          />
+                          <span>Update existing products & add new</span>
+                        </label>
+                        <label className="inline-flex items-center cursor-pointer text-xs">
+                          <input 
+                            type="radio" 
+                            name="strategy" 
+                            value="skip" 
+                            checked={duplicateStrategy === 'skip'} 
+                            onChange={() => setDuplicateStrategy('skip')}
+                            className="text-brand-green focus:ring-brand-green mr-2"
+                          />
+                          <span>Only insert new, skip existing products</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={handleImport}
+                      disabled={importing}
+                      className="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2.5 px-6 rounded-xl transition-all inline-flex items-center gap-2 self-end disabled:opacity-50"
+                    >
+                      {importing ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Importing...
+                        </>
+                      ) : (
+                        <>
+                          <Database size={16} />
+                          Import {sheetRows.length - 1} Products
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* IMPORT SUMMARY RESULTS */}
+              {importResult && (
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 text-emerald-700">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                    Import Complete
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+                    <div className="bg-green-50/50 p-4 rounded-xl border border-green-100">
+                      <p className="text-2xl font-black text-green-700">{importResult.added}</p>
+                      <p className="text-xs font-semibold text-green-600 uppercase mt-0.5">Added</p>
+                    </div>
+                    <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                      <p className="text-2xl font-black text-blue-700">{importResult.updated}</p>
+                      <p className="text-xs font-semibold text-blue-600 uppercase mt-0.5">Updated</p>
+                    </div>
+                    <div className="bg-gray-100/50 p-4 rounded-xl border border-gray-200">
+                      <p className="text-2xl font-black text-gray-700">{importResult.skipped}</p>
+                      <p className="text-xs font-semibold text-gray-600 uppercase mt-0.5">Skipped</p>
+                    </div>
+                  </div>
+
+                  {importResult.errors.length > 0 && (
+                    <div className="space-y-2 mt-4">
+                      <p className="text-xs font-bold text-red-600 uppercase tracking-wide">Import Warnings / Errors:</p>
+                      <div className="max-h-40 overflow-y-auto border border-red-100 rounded-xl bg-red-50/30 p-3 space-y-1.5 text-xs text-red-700 font-mono">
+                        {importResult.errors.map((err, idx) => (
+                          <div key={idx} className="flex items-start gap-1">
+                            <span>•</span>
+                            <span>{err}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
