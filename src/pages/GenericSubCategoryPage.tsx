@@ -4,13 +4,13 @@ import { motion } from 'motion/react';
 import { CheckCircle2, ArrowRight, Heart, Phone, MessageCircle, SlidersHorizontal, Zap } from 'lucide-react';
 import { formatSlugToTitle } from '../utils/formatters';
 import { useStore } from '../context/StoreContext';
-import { categoryNav } from '../data/navigation';
-import { useState } from 'react';
+import { categoryNav, mainNavLinks } from '../data/navigation';
+import { useState, useEffect } from 'react';
 
 export default function GenericSubCategoryPage() {
   const { category, subcategory } = useParams<{ category: string, subcategory: string }>();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const { products: storeProducts, loading } = useStore();
+  const { products: storeProducts, loading, categories: storeCategories, settings } = useStore();
   
   const categoryTitle = formatSlugToTitle(category);
   const defaultSubCategoryTitle = formatSlugToTitle(subcategory);
@@ -27,8 +27,10 @@ export default function GenericSubCategoryPage() {
     return s1 === s2 || s1.includes(s2) || s2.includes(s1);
   };
 
-  // Find products matching this subcategory (slug matching)
-  const products = storeProducts.filter(p => p.slug === subcategory || (p.category && matchCategory(p.category, subcategory || '')));
+  // Find products matching the current subcategory (slug matching)
+  const products = storeProducts.filter(p => 
+    subcategory && (p.slug === subcategory || (p.category && matchCategory(p.category, subcategory)))
+  );
 
   
   const defaultFeatures = [
@@ -41,7 +43,67 @@ export default function GenericSubCategoryPage() {
 
   const whatsappMessage = encodeURIComponent(`Hi, I am interested in your ${title} products.`);
 
-  const relatedCategories = category && categoryNav[category] ? categoryNav[category] : [];
+  let relatedCategories: { name: string; slug: string }[] = [];
+  
+  const baseNavLinks = settings?.social_links?.navigation || mainNavLinks;
+  
+  if (category === 'solar-solutions') {
+    const solarSolutionsLink = baseNavLinks.find(
+      (link: any) =>
+        link.href === '/solar-solutions' ||
+        link.name?.toLowerCase().includes('solar')
+    );
+    const dropdownCategories = solarSolutionsLink?.dropdownItems?.map((item: any) => {
+      const slug = item.href ? item.href.split('/').pop() : '';
+      return {
+        name: item.name,
+        slug: slug || ''
+      };
+    }) || [];
+
+    const dbSolarCategories = storeCategories
+      .filter(c => c.is_active !== false && (c.slug?.startsWith('solar-') || c.slug?.includes('solar')))
+      .map(c => ({ name: c.name, slug: c.slug }));
+
+    const mergedCategoriesMap = new Map<string, { name: string; slug: string }>();
+    dropdownCategories.forEach(cat => {
+      if (cat.slug) mergedCategoriesMap.set(cat.slug, cat);
+    });
+    dbSolarCategories.forEach(cat => {
+      if (cat.slug) mergedCategoriesMap.set(cat.slug, cat);
+    });
+    
+    relatedCategories = Array.from(mergedCategoriesMap.values());
+  } else if (category === 'power-solutions') {
+    const powerSolutionsLink = baseNavLinks.find(
+      (link: any) =>
+        link.href === '/power-solutions' ||
+        link.name?.toLowerCase().includes('power')
+    );
+    const dropdownCategories = powerSolutionsLink?.dropdownItems?.map((item: any) => {
+      const slug = item.href ? item.href.split('/').pop() : '';
+      return {
+        name: item.name,
+        slug: slug || ''
+      };
+    }) || [];
+
+    const dbPowerCategories = storeCategories
+      .filter(c => c.is_active !== false && !c.slug?.startsWith('solar-') && !c.slug?.includes('solar') && c.slug !== 'amaze')
+      .map(c => ({ name: c.name, slug: c.slug }));
+
+    const mergedCategoriesMap = new Map<string, { name: string; slug: string }>();
+    dropdownCategories.forEach(cat => {
+      if (cat.slug) mergedCategoriesMap.set(cat.slug, cat);
+    });
+    dbPowerCategories.forEach(cat => {
+      if (cat.slug) mergedCategoriesMap.set(cat.slug, cat);
+    });
+    
+    relatedCategories = Array.from(mergedCategoriesMap.values());
+  } else {
+    relatedCategories = category && categoryNav[category] ? categoryNav[category] : [];
+  }
 
   return (
     <>
@@ -122,21 +184,30 @@ export default function GenericSubCategoryPage() {
                {/* Categories Filter */}
                <div className="p-6 border-b border-gray-100">
                   <h5 className="font-bold text-gray-800 mb-4">{categoryTitle} Categories</h5>
-                  <div className="space-y-3">
-                    {relatedCategories.map(cat => (
-                      <div key={cat.slug} className="group">
-                        <Link 
-                           to={`/${category}/${cat.slug}`}
-                           className={`flex items-center space-x-3 text-sm transition-colors ${cat.slug === subcategory ? 'text-brand-green font-bold' : 'text-gray-600 hover:text-brand-green'}`}
-                        >
-                           <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${cat.slug === subcategory ? 'border-brand-green bg-brand-green' : 'border-gray-300 group-hover:border-brand-green'}`}>
-                              {cat.slug === subcategory && <CheckCircle2 size={12} className="text-white" />}
-                           </div>
-                           <span>{cat.name}</span>
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
+                  {relatedCategories.length === 0 ? (
+                    <div className="text-sm text-gray-500 italic">No {categoryTitle} categories available.</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {relatedCategories.map(cat => {
+                        const count = storeProducts.filter(p => 
+                          p.slug === cat.slug || (p.category && matchCategory(p.category, cat.slug))
+                        ).length;
+                        const isActive = cat.slug === subcategory;
+
+                        return (
+                          <div key={cat.slug} className="flex items-center justify-between group">
+                            <Link 
+                               to={`/${category}/${cat.slug}`}
+                               className={`text-sm transition-colors text-left focus:outline-none ${isActive ? 'text-brand-green font-bold' : 'text-gray-600 hover:text-brand-green'} cursor-pointer`}
+                            >
+                               <span>{cat.name}</span>
+                            </Link>
+                            <span className="text-xs text-gray-400 font-medium">({count})</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                </div>
 
                {/* Sort Options Mock */}

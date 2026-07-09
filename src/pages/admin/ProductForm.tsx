@@ -144,6 +144,44 @@ export default function ProductForm() {
     setMessage({ text: '', type: '' });
 
     try {
+      // Robust sanitization and validation for JSON/array fields
+      const sanitizeFeatures = (feats: any): string[] => {
+        if (!Array.isArray(feats)) return [];
+        return feats
+          .map(f => typeof f === 'string' ? f.trim() : String(f).trim())
+          .filter(f => f.length > 0);
+      };
+
+      const sanitizeSpecs = (specifications: any): { label: string; value: string }[] => {
+        if (!Array.isArray(specifications)) return [];
+        return specifications
+          .filter(s => s && typeof s === 'object')
+          .map(s => ({
+            label: typeof s.label === 'string' ? s.label.trim() : String(s.label || '').trim(),
+            value: typeof s.value === 'string' ? s.value.trim() : String(s.value || '').trim()
+          }))
+          .filter(s => s.label.length > 0 || s.value.length > 0);
+      };
+
+      const sanitizeTags = (tagList: any): string[] => {
+        if (!Array.isArray(tagList)) return [];
+        return tagList
+          .map(t => typeof t === 'string' ? t.trim() : String(t).trim())
+          .filter(t => t.length > 0);
+      };
+
+      const sanitizeGalleryImages = (images: any): string[] => {
+        if (!Array.isArray(images)) return [];
+        return images
+          .map(img => typeof img === 'string' ? img.trim() : String(img).trim())
+          .filter(img => img.length > 0);
+      };
+
+      const sanitizedFeatures = sanitizeFeatures(formData.features);
+      const sanitizedSpecs = sanitizeSpecs(formData.specs);
+      const sanitizedTags = sanitizeTags(formData.tags);
+      const sanitizedGallery = sanitizeGalleryImages(formData.gallery_images);
+
       const payload = {
         name: formData.name,
         slug: formData.slug,
@@ -157,14 +195,12 @@ export default function ProductForm() {
         description: formData.description,
         short_description: formData.short_description,
         image_url: formData.image_url,
-        gallery_images: formData.gallery_images,
-        tags: {
-          list: formData.tags,
-          features: formData.features,
-          meta_title: formData.meta_title,
-          meta_description: formData.meta_description,
-          specs: formData.specs
-        }
+        gallery_images: sanitizedGallery,
+        features: sanitizedFeatures,
+        specs: sanitizedSpecs,
+        meta_title: formData.meta_title || '',
+        meta_description: formData.meta_description || '',
+        tags: sanitizedTags
       };
 
       let error;

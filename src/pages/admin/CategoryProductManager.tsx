@@ -43,6 +43,7 @@ interface FormState {
   gallery_images: string[];
   features: string[];
   specs: { label: string; value: string }[];
+  tags: string[];
 }
 
 const initialFormState: FormState = {
@@ -57,7 +58,8 @@ const initialFormState: FormState = {
   image_url: '',
   gallery_images: [],
   features: [],
-  specs: []
+  specs: [],
+  tags: []
 };
 
 export default function CategoryProductManager() {
@@ -157,6 +159,13 @@ export default function CategoryProductManager() {
       featureList = product.tags.features;
     }
 
+    let tagList: string[] = [];
+    if (Array.isArray(product.tags)) {
+      tagList = product.tags;
+    } else if (product.tags?.list && Array.isArray(product.tags.list)) {
+      tagList = product.tags.list;
+    }
+
     setFormData({
       name: product.name || '',
       sku: product.sku || '',
@@ -169,7 +178,8 @@ export default function CategoryProductManager() {
       image_url: product.image_url || '',
       gallery_images: Array.isArray(product.gallery_images) ? product.gallery_images : [],
       features: featureList,
-      specs: specList
+      specs: specList,
+      tags: tagList
     });
     setIsFormOpen(true);
     setMessage({ text: '', type: '' });
@@ -270,6 +280,44 @@ export default function CategoryProductManager() {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
 
+      // Robust sanitization and validation for JSON/array fields
+      const sanitizeFeatures = (feats: any): string[] => {
+        if (!Array.isArray(feats)) return [];
+        return feats
+          .map(f => typeof f === 'string' ? f.trim() : String(f).trim())
+          .filter(f => f.length > 0);
+      };
+
+      const sanitizeSpecs = (specifications: any): { label: string; value: string }[] => {
+        if (!Array.isArray(specifications)) return [];
+        return specifications
+          .filter(s => s && typeof s === 'object')
+          .map(s => ({
+            label: typeof s.label === 'string' ? s.label.trim() : String(s.label || '').trim(),
+            value: typeof s.value === 'string' ? s.value.trim() : String(s.value || '').trim()
+          }))
+          .filter(s => s.label.length > 0 || s.value.length > 0);
+      };
+
+      const sanitizeTags = (tagList: any): string[] => {
+        if (!Array.isArray(tagList)) return [];
+        return tagList
+          .map(t => typeof t === 'string' ? t.trim() : String(t).trim())
+          .filter(t => t.length > 0);
+      };
+
+      const sanitizeGalleryImages = (images: any): string[] => {
+        if (!Array.isArray(images)) return [];
+        return images
+          .map(img => typeof img === 'string' ? img.trim() : String(img).trim())
+          .filter(img => img.length > 0);
+      };
+
+      const sanitizedFeatures = sanitizeFeatures(formData.features);
+      const sanitizedSpecs = sanitizeSpecs(formData.specs);
+      const sanitizedTags = sanitizeTags(formData.tags);
+      const sanitizedGallery = sanitizeGalleryImages(formData.gallery_images);
+
       const payload = {
         name: formData.name,
         slug,
@@ -283,15 +331,11 @@ export default function CategoryProductManager() {
         description: formData.description,
         short_description: formData.description.slice(0, 150),
         image_url: formData.image_url,
-        gallery_images: formData.gallery_images,
-        features: formData.features,
-        specs: formData.specs,
+        gallery_images: sanitizedGallery,
+        features: sanitizedFeatures,
+        specs: sanitizedSpecs,
         stock_status: Number(formData.stock_quantity) > 0 ? 'instock' : 'outofstock',
-        tags: {
-          list: [],
-          features: formData.features,
-          specs: formData.specs
-        }
+        tags: sanitizedTags
       };
 
       let error;

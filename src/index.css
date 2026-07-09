@@ -10,8 +10,17 @@
   --color-brand-green-dark: #00422f;
   --color-brand-green-light: #e8f4f0;
   --color-brand-lime: #7DBA26; /* Amaze lime green */
+  --color-brand-orange: #FF6B00; /* Amaze/Bharat accent orange */
   --color-brand-dark: #121212; /* Charcoal */
   --color-brand-gray: #f4f4f4; /* Light gray background */
+
+  /* Better contrast overrides for gray shades to ensure optimal readability */
+  --color-gray-300: #94a3b8;
+  --color-gray-400: #64748b;
+  --color-gray-500: #475569;
+  --color-gray-600: #334155;
+  --color-gray-700: #1e293b;
+  --color-gray-800: #0f172a;
 }
 
 @layer base {
@@ -22,12 +31,15 @@
   body {
     font-family: var(--font-sans);
     background-color: #f4f4f4;
-    color: #333333;
+    color: #1e293b; /* Shipped from #333333 to slate-800 for deeper, clearer contrast */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    color: #212529;
+    color: #0f172a; /* Shipped from #212529 to slate-900 for premium bold visibility */
   }
 }
 

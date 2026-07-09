@@ -56,7 +56,7 @@ export default function TrendingProducts() {
                   </span>
                 )}
                 <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`} className="block h-36 sm:h-52 w-full flex items-center justify-center p-2">
-                  <img src={product.image_url} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                  <img src={product.image_url} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
                 </Link>
               </div>
               <div className="p-4 sm:p-5 pt-0 flex flex-col flex-grow">

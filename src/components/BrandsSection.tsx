@@ -43,6 +43,8 @@ export default function BrandsSection() {
                     src={brand.logo_url || 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop'} 
                     alt={brand.name} 
                     className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }}
                   />
                 </div>
