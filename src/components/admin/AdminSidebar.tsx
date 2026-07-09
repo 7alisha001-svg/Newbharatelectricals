@@ -1,3 +1,4 @@
+import { useStore } from '../../context/StoreContext';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -43,6 +44,7 @@ export default function AdminSidebar({
   isOpen: boolean, 
   setIsOpen: (v: boolean) => void 
 }) {
+  const { settings } = useStore();
   const location = useLocation();
   const navigate = useNavigate();
   const [adminUser, setAdminUser] = useState<any>(null);
@@ -79,12 +81,9 @@ export default function AdminSidebar({
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
-          <div className="font-bold text-xl flex items-center gap-2">
-            <div className="w-8 h-8 bg-brand-green rounded-lg flex items-center justify-center text-white">
-              <Package size={20} />
-            </div>
-            Admin
-          </div>
+          <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
+            <img src={settings?.social_links?.footer_logo || "/logo-dark.png"} alt="New Bharat Electricals" className="h-10 w-auto object-contain" />
+          </Link>
           <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-400 hover:text-white">
             <X size={24} />
           </button>

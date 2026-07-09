@@ -1,10 +1,12 @@
+import { useStore } from '../../context/StoreContext';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, Mail, User, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, User } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 export default function AdminLogin() {
+  const { settings } = useStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -166,8 +168,10 @@ export default function AdminLogin() {
 
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
         <div className="text-center mb-8">
-          <div className="bg-brand-green/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ShieldCheck size={32} className="text-brand-green" />
+          <div className="flex justify-center mb-6">
+            <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
+              <img src={settings?.logo_url || "/logo-light.png"} alt="New Bharat Electricals" className="h-14 w-auto object-contain" />
+            </Link>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
             {adminExists ? 'Admin Portal' : 'Setup Super Admin'}

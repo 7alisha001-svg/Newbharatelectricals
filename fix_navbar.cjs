@@ -1,9 +1,9 @@
 const fs = require('fs');
-let code = fs.readFileSync('src/components/Navbar.tsx', 'utf8');
+let content = fs.readFileSync('src/components/Navbar.tsx', 'utf-8');
 
-code = code.replace(
-  "import { mainNavLinks as navLinks } from '../data/navigation';",
-  `import { useStore } from '../context/StoreContext';`
+content = content.replace(
+  'src="/logo-light.png"',
+  'src={settings?.logo_url || "/logo-light.png"}'
 );
 
-fs.writeFileSync('src/components/Navbar.tsx', code);
+fs.writeFileSync('src/components/Navbar.tsx', content);

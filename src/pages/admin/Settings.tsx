@@ -2,9 +2,12 @@ import { useStore } from '../../context/StoreContext';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Save } from 'lucide-react';
+import ImageUploader from '../../components/admin/ImageUploader';
 
 export default function Settings() {
   const [settings, setSettings] = useState<any>({
+    logo_url: '',
+    social_links: {},
     business_name: '',
     email: '',
     phone: '',
@@ -62,6 +65,27 @@ export default function Settings() {
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2 space-y-4">
+             <label className="block text-sm font-medium text-gray-700">Header Logo (Light Logo)</label>
+             <ImageUploader 
+               images={settings.logo_url ? [settings.logo_url] : []} 
+               onChange={(urls) => setSettings({...settings, logo_url: urls.length > 0 ? urls[0] : null})} 
+             />
+          </div>
+          <div className="md:col-span-2 space-y-4">
+             <label className="block text-sm font-medium text-gray-700">Footer Logo (Dark Logo)</label>
+             <ImageUploader 
+               images={settings.social_links?.footer_logo ? [settings.social_links.footer_logo] : []} 
+               onChange={(urls) => setSettings({
+                 ...settings, 
+                 social_links: {
+                   ...settings.social_links, 
+                   footer_logo: urls.length > 0 ? urls[0] : null
+                 }
+               })} 
+             />
+          </div>
+
           <div>
              <label className="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
              <input type="text" name="business_name" value={settings.business_name || ''} onChange={handleChange} className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green" />

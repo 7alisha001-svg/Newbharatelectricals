@@ -1,35 +1,27 @@
 const fs = require('fs');
+let content = fs.readFileSync('src/components/Footer.tsx', 'utf-8');
 
-let code = fs.readFileSync('src/components/Footer.tsx', 'utf8');
+// we need useStore for settings in Footer
+if (!content.includes('useStore')) {
+  content = content.replace(
+    "import React from 'react';",
+    "import React from 'react';\nimport { useStore } from '../context/StoreContext';"
+  );
+  if (!content.includes('useStore')) {
+    content = "import { useStore } from '../context/StoreContext';\n" + content;
+  }
+}
 
-code = code.replace(
-  "import { useStore } from '../context/StoreContext';",
-  "import { useStore } from '../context/StoreContext';\nimport { mainNavLinks as fallbackNavLinks } from '../data/navigation';"
+if (!content.includes('const { settings } = useStore();')) {
+  content = content.replace(
+    "export default function Footer() {",
+    "export default function Footer() {\n  const { settings } = useStore();"
+  );
+}
+
+content = content.replace(
+  'src="/logo-dark.png"',
+  'src={settings?.social_links?.footer_logo || "/logo-dark.png"}'
 );
 
-const replaceFind = `  const { categories, brands } = useStore();
-  
-  const mainNavLinks = [
-    { name: 'Home', href: '/' },
-    { 
-      name: 'Categories', 
-      href: '/categories',
-      hasDropdown: true,
-      dropdownItems: categories.map(cat => ({ name: cat.name, href: \`/\${cat.slug}\` }))
-    },
-    { 
-      name: 'Brands', 
-      href: '/brands',
-      hasDropdown: true,
-      dropdownItems: brands.map(brand => ({ name: brand.name, href: \`/brands/\${brand.slug}\` }))
-    },
-    { name: 'About Us', href: '/about-us' },
-    { name: 'Contact Us', href: '/contact' }
-  ];`;
-
-const replaceWith = `  const { settings } = useStore();
-  const mainNavLinks = settings?.social_links?.navigation || fallbackNavLinks;`;
-
-code = code.replace(replaceFind, replaceWith);
-
-fs.writeFileSync('src/components/Footer.tsx', code);
+fs.writeFileSync('src/components/Footer.tsx', content);

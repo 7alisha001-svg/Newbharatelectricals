@@ -37,7 +37,20 @@ import Navigation from './pages/admin/Navigation';
 import CategoryProductManager from './pages/admin/CategoryProductManager';
 import GoogleSheetsPage from './pages/admin/GoogleSheetsPage';
 
-import { StoreProvider } from './context/StoreContext';
+import { useStore, StoreProvider } from './context/StoreContext';
+
+
+const GlobalHead = () => {
+  const { settings } = useStore();
+  return (
+      <Helmet>
+        <title>{settings?.business_name || 'New Bharat Electricals'} | Trusted Solar & Electrical Solutions</title>
+        {settings?.logo_url && <link rel="icon" type="image/png" href={settings.logo_url} />}
+        <meta name="description" content="New Bharat Electricals provides high-quality solar solutions, inverters, batteries, and home electrical products. Powering every home and business with durable and efficient electrical systems." />
+        <meta name="keywords" content="solar panels, inverters, batteries, electrical accessories, new bharat electricals, Buduan" />
+      </Helmet>
+  );
+};
 
 const PublicLayout = () => (
 
@@ -52,14 +65,12 @@ const PublicLayout = () => (
 );
 
 export default function App() {
+  
   return (
     <HelmetProvider>
-      <Helmet>
-        <title>New Bharat Electricals | Trusted Solar & Electrical Solutions</title>
-        <meta name="description" content="New Bharat Electricals provides high-quality solar solutions, inverters, batteries, and home electrical products. Powering every home and business with durable and efficient electrical systems." />
-        <meta name="keywords" content="solar panels, inverters, batteries, electrical accessories, new bharat electricals, Buduan" />
-      </Helmet>
+      
       <StoreProvider>
+        <GlobalHead />
         <CartProvider>
           <BrowserRouter>
           <ScrollToTop />
