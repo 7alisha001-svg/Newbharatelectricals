@@ -18,11 +18,11 @@ export default function BrandsSection() {
   if (featuredBrands.length === 0) return null; // Don't show the section if no featured brands
 
   return (
-    <section id="brands" className="py-12 bg-white border-b border-gray-100">
+    <section id="brands" className="py-8 md:py-12 bg-white border-b border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
+        <div className="flex items-center justify-between mb-4 md:mb-8">
+          <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Shop by Brand
           </h2>
         </div>

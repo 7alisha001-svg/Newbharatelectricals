@@ -25,13 +25,13 @@ const reasons = [
 
 export default function WhyUs() {
   return (
-    <section className="py-10 bg-white border-t border-gray-100">
+    <section className="py-8 md:py-10 bg-white border-t border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-6">
           {reasons.map((reason) => (
             <div
               key={reason.title}
-              className="flex flex-col xl:flex-row items-center xl:items-start text-center xl:text-left gap-3 sm:gap-4 bg-[#f8f9fa] p-4 sm:p-6 rounded-xl border border-gray-100/50 hover:shadow-sm hover:border-gray-200 transition-all justify-center"
+              className="flex flex-col xl:flex-row items-center xl:items-start text-center xl:text-left gap-2 sm:gap-4 bg-[#f8f9fa] p-3 sm:p-6 rounded-xl border border-gray-100/50 hover:shadow-sm hover:border-gray-200 transition-all justify-center"
             >
               <div className="text-brand-green">
                 {reason.icon}

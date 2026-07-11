@@ -60,7 +60,7 @@ export default function Hero() {
 
   return (
     <section className="relative w-full overflow-hidden bg-[#f4f4f4] border-b border-gray-200">
-      <div className="relative w-full h-auto min-h-[500px] md:h-[550px] lg:h-[600px] group flex flex-col md:flex-row">
+      <div className="relative w-full h-auto min-h-[400px] sm:min-h-[500px] md:h-[550px] lg:h-[600px] group flex flex-col md:flex-row">
         {/* The 3D Table/Floor Background Effect */}
         <div className="absolute bottom-0 w-full h-[30%] bg-gradient-to-b from-[#e0e0e0] to-[#c5c5c5] border-t border-white/60 shadow-inner z-0"></div>
 
@@ -74,18 +74,18 @@ export default function Hero() {
             className="absolute inset-0 w-full h-full z-10"
           >
             <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8 h-full">
-              <div className="flex flex-col md:flex-row items-center h-full pt-4 md:pt-0 pb-8 md:pb-0">
+              <div className="flex flex-col md:flex-row items-center h-full pt-4 md:pt-0 pb-4 md:pb-0">
                 
                 {/* Left Content */}
-                <div className="w-full md:w-7/12 flex flex-col justify-center text-center md:text-left z-20 md:pr-8 lg:pr-12 h-1/2 md:h-full pt-6 md:pt-0 pb-6 md:pb-24">
+                <div className="w-full md:w-7/12 flex flex-col justify-center text-center md:text-left z-20 md:pr-8 lg:pr-12 h-1/2 md:h-full pt-4 md:pt-0 pb-2 md:pb-24">
                   
                   {/* Pre-title */}
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                    className="flex items-center justify-center md:justify-start gap-4 mb-3 lg:mb-4"
+                    className="flex items-center justify-center md:justify-start gap-4 mb-2 lg:mb-4"
                   >
                     <div className="hidden md:block h-0.5 w-16 bg-gray-900 shadow-sm"></div>
-                    <span className="text-gray-900 font-bold text-[10px] sm:text-xs md:text-xl lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
+                    <span className="text-gray-900 font-bold text-[9px] sm:text-xs md:text-xl lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
                       {heroSlides[currentSlide].preTitle}
                     </span>
                     <div className="hidden lg:block h-0.5 w-24 bg-gray-900 shadow-sm"></div>
@@ -94,7 +94,7 @@ export default function Hero() {
                   {/* High Impact Title */}
                   <motion.h1 
                     initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-                    className={`text-[28px] sm:text-[40px] leading-[1] sm:leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-4 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
+                    className={`text-2xl sm:text-[40px] leading-[1] sm:leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-3 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
                   >
                     {heroSlides[currentSlide].titlePart1} <span className="text-gray-900">{heroSlides[currentSlide].titlePart2}</span>
                   </motion.h1>
@@ -102,14 +102,14 @@ export default function Hero() {
                   {/* Features */}
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="flex justify-center md:justify-start gap-3 sm:gap-5 md:gap-8 lg:gap-14 mb-6 md:mb-10"
+                    className="flex justify-center md:justify-start gap-2 sm:gap-5 md:gap-8 lg:gap-14 mb-4 md:mb-10"
                   >
                     {heroSlides[currentSlide].features.map((feature, idx) => (
                       <div key={idx} className="flex flex-col items-center group/icon cursor-default">
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center mb-2 md:mb-3 shadow-[0_4px_0_0_rgba(0,0,0,0.15)] group-hover/icon:-translate-y-1 transition-transform">
-                          <feature.icon className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 text-gray-900" strokeWidth={1.5} />
+                        <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center mb-1.5 md:mb-3 shadow-[0_2px_0_0_rgba(0,0,0,0.15)] md:shadow-[0_4px_0_0_rgba(0,0,0,0.15)] group-hover/icon:-translate-y-1 transition-transform">
+                          <feature.icon className="w-4 h-4 sm:w-7 sm:h-7 md:w-9 md:h-9 text-gray-900" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[8px] sm:text-[10px] md:text-xs font-bold text-gray-900 uppercase tracking-wider md:tracking-widest leading-tight text-center whitespace-pre-line drop-shadow-sm">
+                        <span className="text-[7px] sm:text-[10px] md:text-xs font-bold text-gray-900 uppercase tracking-wider md:tracking-widest leading-tight text-center whitespace-pre-line drop-shadow-sm">
                           {feature.text}
                         </span>
                       </div>

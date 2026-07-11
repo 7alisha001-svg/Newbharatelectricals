@@ -191,7 +191,7 @@ export default function GenericCategoryPage() {
                         imageUrl: product.image_url,
                         quantity: 1
                       })}
-                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-3 sm:py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
                     >
                       <ShoppingCart size={14} className="mr-2" /> Add to Cart
                     </button>

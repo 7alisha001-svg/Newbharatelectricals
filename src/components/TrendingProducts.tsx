@@ -14,11 +14,11 @@ export default function TrendingProducts() {
   if (trendingProducts.length === 0) return null;
 
   return (
-    <section className="py-12 md:py-16 bg-white">
+    <section className="py-8 md:py-16 bg-white">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-10">
           <div>
-            <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3 mb-2">
+            <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3 mb-2">
               Trending Products
             </h2>
             <p className="text-sm text-gray-500 pl-4">Discover what's popular among our customers</p>
@@ -90,7 +90,7 @@ export default function TrendingProducts() {
                       imageUrl: product.image_url,
                       quantity: 1
                     })}
-                    className="w-full bg-gray-900 hover:bg-brand-orange text-white transition-colors py-2 sm:py-2.5 rounded font-bold tracking-wide text-[11px] sm:text-xs uppercase flex items-center justify-center shadow-sm"
+                    className="w-full bg-gray-900 hover:bg-brand-orange text-white transition-colors py-3 sm:py-2.5 rounded font-bold tracking-wide text-[11px] sm:text-xs uppercase flex items-center justify-center shadow-sm"
                   >
                     <ShoppingCart size={14} className="mr-2" /> Add to Cart
                   </button>

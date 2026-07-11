@@ -14,10 +14,10 @@ export default function FeaturedProducts() {
   if (featuredProducts.length === 0) return null;
 
   return (
-    <section className="py-12 bg-[#f4f4f4] border-b border-gray-200">
+    <section className="py-8 md:py-12 bg-[#f4f4f4] border-b border-gray-200">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
+        <div className="flex items-center justify-between mb-4 md:mb-6">
+          <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Featured Products
           </h2>
           <Link to="/power-solutions" className="text-brand-green font-bold text-sm tracking-wide uppercase hover:underline">
@@ -83,7 +83,7 @@ export default function FeaturedProducts() {
                       imageUrl: product.image_url,
                       quantity: 1
                     })}
-                    className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-1.5 sm:py-2 rounded-lg font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
+                    className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2.5 sm:py-2 rounded-lg font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
                   >
                     <ShoppingCart size={14} className="mr-1 sm:mr-2" /> <span className="hidden sm:inline">Add to Cart</span><span className="sm:hidden">Add</span>
                   </button>

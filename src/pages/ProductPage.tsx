@@ -169,14 +169,14 @@ export default function ProductPage() {
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <button 
                     onClick={handleAddToCart}
-                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-green-700 font-bold py-3 px-6 rounded-lg transition-colors uppercase tracking-wide text-sm shadow-md"
+                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-green-700 font-bold py-3.5 sm:py-3 px-6 rounded-lg transition-colors uppercase tracking-wide text-sm shadow-md"
                   >
                     <ShoppingCart size={18} className="mr-2" /> Add to Cart
                   </button>
                   <a 
                     href={`https://wa.me/919457002000?text=${whatsappMessage}`}
                     target="_blank" rel="noreferrer"
-                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3 px-6 rounded-lg transition-colors uppercase tracking-wide text-sm shadow-md"
+                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-lg transition-colors uppercase tracking-wide text-sm shadow-md"
                   >
                     <MessageCircle size={18} className="mr-2" /> Query on WhatsApp
                   </a>
