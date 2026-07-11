@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react';
 import { MapPin, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
@@ -7,6 +8,82 @@ import { mainNavLinks as fallbackNavLinks } from '../data/navigation';
 export default function Footer() {
   const { settings } = useStore();
   const mainNavLinks = settings?.social_links?.navigation || fallbackNavLinks;
+
+  const [croppedLogo, setCroppedLogo] = useState<string | null>(null);
+  const rawLogoUrl = settings?.social_links?.footer_logo || "/footer-logo-light.png";
+
+  useEffect(() => {
+    if (!rawLogoUrl) return;
+    
+    setCroppedLogo(null);
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = rawLogoUrl;
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          setCroppedLogo(rawLogoUrl);
+          return;
+        }
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const { data, width, height } = imgData;
+
+        let minX = width, minY = height, maxX = 0, maxY = 0;
+        let hasAlpha = false;
+
+        for (let y = 0; y < height; y++) {
+          for (let x = 0; x < width; x++) {
+            const alpha = data[(y * width + x) * 4 + 3];
+            if (alpha > 5) {
+              hasAlpha = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+
+        if (!hasAlpha || maxX < minX || maxY < minY) {
+          setCroppedLogo(rawLogoUrl);
+          return;
+        }
+
+        const croppedWidth = maxX - minX + 1;
+        const croppedHeight = maxY - minY + 1;
+
+        const croppedCanvas = document.createElement('canvas');
+        croppedCanvas.width = croppedWidth;
+        croppedCanvas.height = croppedHeight;
+        const croppedCtx = croppedCanvas.getContext('2d');
+        if (!croppedCtx) {
+          setCroppedLogo(rawLogoUrl);
+          return;
+        }
+
+        croppedCtx.drawImage(
+          canvas,
+          minX, minY, croppedWidth, croppedHeight,
+          0, 0, croppedWidth, croppedHeight
+        );
+
+        setCroppedLogo(croppedCanvas.toDataURL());
+      } catch (e) {
+        setCroppedLogo(rawLogoUrl);
+      }
+    };
+    img.onerror = () => {
+      setCroppedLogo(rawLogoUrl);
+    };
+  }, [rawLogoUrl]);
   return (
     <footer className="bg-brand-dark pt-6 sm:pt-8 relative text-sm border-t-4 border-brand-green">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
@@ -66,21 +143,21 @@ export default function Footer() {
 
            {/* Column 3: Contact Info */}
            <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm border-b border-gray-800/60 pb-2 w-full block text-center lg:text-left">Contact Info</h4>
-              <div className="flex justify-center lg:justify-start items-center mb-4 p-0 w-full overflow-hidden">
+              <h4 className="text-white font-black mb-2 font-heading tracking-widest uppercase text-sm border-b border-gray-800/60 pb-2 w-full block text-center lg:text-left">Contact Info</h4>
+              <div className="flex justify-center lg:justify-start items-center p-0 w-full">
                 <img 
-                  src={settings?.social_links?.footer_logo || "/footer-logo-light.png"} 
+                  src={croppedLogo || rawLogoUrl} 
                   alt={settings?.business_name || "New Bharat Electricals"} 
                   style={{ 
                     maxWidth: settings?.social_links?.footer_logo_size 
                       ? `${settings.social_links.footer_logo_size}px` 
                       : undefined 
                   }} 
-                  className={`w-full ${
+                  className={`w-auto ${
                     settings?.social_links?.footer_logo_size 
                       ? '' 
-                      : 'max-w-[320px] sm:max-w-[360px] md:max-w-[400px] lg:max-w-[440px]'
-                  } h-auto object-contain block transform scale-[1.15] -my-3 -mx-4 transition-transform duration-300 hover:scale-[1.2] origin-center lg:origin-left`} 
+                      : 'h-12 sm:h-14 md:h-16 lg:h-18'
+                  } object-contain block transition-transform duration-300 hover:scale-[1.05]`} 
                   onError={(e) => { 
                     const target = e.currentTarget;
                     if (!target.src.includes('images.unsplash.com')) {
@@ -89,7 +166,7 @@ export default function Footer() {
                   }} 
                 />
               </div>
-              <div className="flex items-start text-neutral-100 justify-center lg:justify-start w-full gap-2.5 mt-1">
+              <div className="flex items-start text-neutral-100 justify-center lg:justify-start w-full gap-2.5 mt-2">
                  <MapPin className="text-brand-lime mt-0.5 flex-shrink-0" size={18} />
                  <p className="leading-relaxed font-semibold text-sm text-center lg:text-left">
                    Near Dr Amar Singh, <br />
