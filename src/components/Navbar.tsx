@@ -29,6 +29,82 @@ export default function Navbar() {
   const location = useLocation();
   const { cartCount } = useCart();
 
+  const [croppedLogo, setCroppedLogo] = useState<string | null>(null);
+  const rawLogoUrl = settings?.logo_url || "/header-logo-dark.png";
+
+  useEffect(() => {
+    if (!rawLogoUrl) return;
+    
+    setCroppedLogo(null);
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = rawLogoUrl;
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          setCroppedLogo(rawLogoUrl);
+          return;
+        }
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const { data, width, height } = imgData;
+
+        let minX = width, minY = height, maxX = 0, maxY = 0;
+        let hasAlpha = false;
+
+        for (let y = 0; y < height; y++) {
+          for (let x = 0; x < width; x++) {
+            const alpha = data[(y * width + x) * 4 + 3];
+            if (alpha > 5) {
+              hasAlpha = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+
+        if (!hasAlpha || maxX < minX || maxY < minY) {
+          setCroppedLogo(rawLogoUrl);
+          return;
+        }
+
+        const croppedWidth = maxX - minX + 1;
+        const croppedHeight = maxY - minY + 1;
+
+        const croppedCanvas = document.createElement('canvas');
+        croppedCanvas.width = croppedWidth;
+        croppedCanvas.height = croppedHeight;
+        const croppedCtx = croppedCanvas.getContext('2d');
+        if (!croppedCtx) {
+          setCroppedLogo(rawLogoUrl);
+          return;
+        }
+
+        croppedCtx.drawImage(
+          canvas,
+          minX, minY, croppedWidth, croppedHeight,
+          0, 0, croppedWidth, croppedHeight
+        );
+
+        setCroppedLogo(croppedCanvas.toDataURL());
+      } catch (e) {
+        setCroppedLogo(rawLogoUrl);
+      }
+    };
+    img.onerror = () => {
+      setCroppedLogo(rawLogoUrl);
+    };
+  }, [rawLogoUrl]);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
@@ -74,19 +150,19 @@ export default function Navbar() {
           {/* Main Header / Logo / Search / Icons */}
           <div className="flex items-center justify-between gap-4 mb-0">
             {/* Logo */}
-            <div className="flex items-center flex-shrink-0">
-              <Link to="/" className="flex items-center group">
+            <div className="flex items-center flex-shrink-0 p-0 m-0">
+              <Link to="/" className="flex items-center group p-0 m-0">
                 <img 
-                  src={settings?.logo_url || "/header-logo-dark.png"} 
+                  src={croppedLogo || rawLogoUrl} 
                   alt={settings?.business_name || "New Bharat Electricals"} 
                   style={{ height: settings?.social_links?.header_logo_size ? `${settings.social_links.header_logo_size}px` : undefined }}
-                  className={`${settings?.social_links?.header_logo_size ? '' : 'h-14 sm:h-18 md:h-22 lg:h-26'} w-auto object-contain group-hover:-translate-y-0.5 transition-transform`}
-                 onError={(e) => { 
-                   const target = e.currentTarget;
-                   if (!target.src.includes('images.unsplash.com')) {
-                     target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
-                   }
-                 }} />
+                  className={`${settings?.social_links?.header_logo_size ? '' : 'h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20'} w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0`}
+                  onError={(e) => { 
+                    const target = e.currentTarget;
+                    if (!target.src.includes('images.unsplash.com')) {
+                      target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                    }
+                  }} />
               </Link>
             </div>
 
@@ -158,7 +234,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Categories Bottom Bar */}
-          <nav className="hidden lg:flex">
+          <nav className="hidden lg:flex mt-3">
             <ul className="flex items-center space-x-8 text-[13px] font-bold uppercase tracking-wide">
               {navLinks.map((link) => (
                 <li key={link.name} className="relative group">

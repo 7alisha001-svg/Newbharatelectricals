@@ -93,16 +93,16 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row items-center mb-3 md:mb-0 text-center sm:text-left">
                <span className="text-white font-heading font-black text-lg mb-2 sm:mb-0 sm:mr-4 tracking-tight">Connect With Us</span>
                <div className="flex gap-2">
-                 <a href="https://www.facebook.com/newbharatelectricalsbdn?mibextid=" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-brand-lime hover:text-black text-white p-2 rounded-full transition-colors"><Facebook size={16} /></a>
-                 <a href="#" className="bg-white/10 hover:bg-brand-lime hover:text-black text-white p-2 rounded-full transition-colors"><Twitter size={16} /></a>
-                 <a href="#" className="bg-white/10 hover:bg-brand-lime hover:text-black text-white p-2 rounded-full transition-colors"><Instagram size={16} /></a>
-                 <a href="#" className="bg-white/10 hover:bg-brand-lime hover:text-black text-white p-2 rounded-full transition-colors"><Linkedin size={16} /></a>
+                 <a href="https://www.facebook.com/newbharatelectricalsbdn?mibextid=" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-brand-green hover:text-white text-white p-2 rounded-full transition-colors"><Facebook size={16} /></a>
+                 <a href="#" className="bg-white/10 hover:bg-brand-green hover:text-white text-white p-2 rounded-full transition-colors"><Twitter size={16} /></a>
+                 <a href="#" className="bg-white/10 hover:bg-brand-green hover:text-white text-white p-2 rounded-full transition-colors"><Instagram size={16} /></a>
+                 <a href="#" className="bg-white/10 hover:bg-brand-green hover:text-white text-white p-2 rounded-full transition-colors"><Linkedin size={16} /></a>
                </div>
             </div>
             
             <div className="flex items-center bg-white/5 rounded-full py-1.5 px-4 border border-white/10">
                <span className="text-neutral-100 font-bold mr-3 hidden sm:block text-xs">Want to become a local dealer?</span>
-               <Link to="/contact" className="bg-brand-lime hover:bg-brand-lime/85 text-black font-extrabold py-1 px-4 rounded-full transition-colors text-[10px] uppercase tracking-widest">Partner Program</Link>
+               <Link to="/contact" className="bg-brand-green hover:bg-brand-green/90 text-white font-extrabold py-1 px-4 rounded-full transition-colors text-[10px] uppercase tracking-widest">Partner Program</Link>
             </div>
         </div>
 
@@ -167,7 +167,9 @@ export default function Footer() {
                 />
               </div>
               <div className="flex items-start text-neutral-100 justify-center lg:justify-start w-full gap-2.5 mt-2">
-                 <MapPin className="text-brand-lime mt-0.5 flex-shrink-0" size={18} />
+                 <div className="bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
+                   <MapPin className="text-white" size={16} />
+                 </div>
                  <p className="leading-relaxed font-semibold text-sm text-center lg:text-left">
                    Near Dr Amar Singh, <br />
                    Chaudhary Saray Lalpul Road, <br />
