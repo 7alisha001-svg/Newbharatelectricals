@@ -45,7 +45,7 @@ const GlobalHead = () => {
   return (
       <Helmet>
         <title>{settings?.business_name || 'New Bharat Electricals'} | Trusted Solar & Electrical Solutions</title>
-        {settings?.logo_url && <link rel="icon" type="image/png" href={settings.logo_url} />}
+        <link rel="icon" type="image/png" href="/header-logo-dark.png?v=2.0" />
         <meta name="description" content="New Bharat Electricals provides high-quality solar solutions, inverters, batteries, and home electrical products. Powering every home and business with durable and efficient electrical systems." />
         <meta name="keywords" content="solar panels, inverters, batteries, electrical accessories, new bharat electricals, Buduan" />
       </Helmet>

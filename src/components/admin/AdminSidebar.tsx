@@ -82,7 +82,7 @@ export default function AdminSidebar({
       `}>
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
           <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <img src={settings?.social_links?.footer_logo || "/logo-dark.png"} alt="New Bharat Electricals" className="h-10 w-auto object-contain" />
+            <img src="/footer-logo-light.png?v=2.0" alt="New Bharat Electricals" className="h-10 w-auto object-contain" />
           </Link>
           <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-400 hover:text-white">
             <X size={24} />

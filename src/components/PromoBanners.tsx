@@ -20,7 +20,7 @@ export default function PromoBanners() {
               className="w-full h-40 sm:h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-700"
               loading="lazy"
               decoding="async"
-              onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+              onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
           </Link>
           
           <Link to="/power-solutions" className="block relative rounded-2xl overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
@@ -38,7 +38,7 @@ export default function PromoBanners() {
               className="w-full h-40 sm:h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-700"
               loading="lazy"
               decoding="async"
-              onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+              onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
           </Link>
         </div>
       </div>

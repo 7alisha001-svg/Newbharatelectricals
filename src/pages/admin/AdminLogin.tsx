@@ -170,7 +170,7 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
-              <img src={settings?.logo_url || "/logo-light.png"} alt="New Bharat Electricals" className="h-14 w-auto object-contain" />
+              <img src="/header-logo-dark.png?v=2.0" alt="New Bharat Electricals" className="h-20 w-auto object-contain" />
             </Link>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">

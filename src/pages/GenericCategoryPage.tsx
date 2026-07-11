@@ -158,7 +158,7 @@ export default function GenericCategoryPage() {
                       src={product.image_url} 
                       alt={product.name} 
                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
-                      onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} 
+                      onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} 
                     />
                   </Link>
                 </div>

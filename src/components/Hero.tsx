@@ -137,7 +137,7 @@ export default function Hero() {
                       src={heroSlides[currentSlide].image} 
                       alt="Product Promo"
                       className="max-h-[150px] sm:max-h-[220px] md:max-h-full w-auto max-w-[95%] object-cover rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.3)] border-[4px] md:border-[6px] border-white relative z-20 group-hover:scale-105 transition-transform duration-700"
-                     onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                     onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
                   </motion.div>
 
                   {/* Mobile CTA */}

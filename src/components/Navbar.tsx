@@ -77,10 +77,15 @@ export default function Navbar() {
             <div className="flex items-center flex-shrink-0">
               <Link to="/" className="flex items-center group">
                 <img 
-                  src={settings?.logo_url || "/logo-light.png"} 
+                  src="/header-logo-dark.png?v=2.0" 
                   alt="New Bharat Electricals" 
-                  className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
-                 onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                  className="h-14 sm:h-18 md:h-22 lg:h-26 w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
+                 onError={(e) => { 
+                   const target = e.currentTarget;
+                   if (!target.src.includes('images.unsplash.com')) {
+                     target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                   }
+                 }} />
               </Link>
             </div>
 

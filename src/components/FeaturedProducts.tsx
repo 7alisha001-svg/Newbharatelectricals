@@ -54,7 +54,7 @@ export default function FeaturedProducts() {
                   </span>
                 )}
                 <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`} className="block h-32 sm:h-48 w-full bg-white flex items-center justify-center p-1 sm:p-2">
-                  <img src={product.image_url} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                  <img src={product.image_url} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
                 </Link>
               </div>
               <div className="p-3 sm:p-4 pt-0 flex flex-col flex-grow border-t border-gray-50 mt-1 sm:mt-2">

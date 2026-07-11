@@ -68,7 +68,12 @@ export default function Footer() {
            <div className="lg:col-span-2 flex flex-col items-center lg:items-start">
               <h4 className="text-white font-bold mb-1.5 font-heading tracking-wide uppercase text-xs text-center lg:text-left w-full">Contact Info</h4>
               <div className="flex justify-center lg:justify-start items-center mb-1.5 m-0 p-0 w-full">
-                <img src={settings?.social_links?.footer_logo || "/logo-dark.png"} alt="New Bharat Electricals" className="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[260px] h-auto object-contain m-0 p-0" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; e.currentTarget.onerror = null; }} />
+                <img src="/footer-logo-light.png?v=2.0" alt="New Bharat Electricals" className="w-full max-w-[240px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[360px] h-auto object-contain m-0 p-0" onError={(e) => { 
+                  const target = e.currentTarget;
+                  if (!target.src.includes('images.unsplash.com')) {
+                    target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                  }
+                }} />
               </div>
               <div className="flex items-start text-gray-200 justify-center lg:justify-start w-full">
                  <MapPin className="text-brand-green mt-0.5 mr-2 flex-shrink-0" size={15} />
