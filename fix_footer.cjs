@@ -1,27 +1,20 @@
 const fs = require('fs');
-let content = fs.readFileSync('src/components/Footer.tsx', 'utf-8');
+let content = fs.readFileSync('src/components/Footer.tsx', 'utf8');
 
-// we need useStore for settings in Footer
-if (!content.includes('useStore')) {
-  content = content.replace(
-    "import React from 'react';",
-    "import React from 'react';\nimport { useStore } from '../context/StoreContext';"
-  );
-  if (!content.includes('useStore')) {
-    content = "import { useStore } from '../context/StoreContext';\n" + content;
-  }
-}
+const target = `<img src="/footer-logo-light.png?v=2.0" alt="New Bharat Electricals" className="w-full max-w-[240px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[360px] h-auto object-contain m-0 p-0" onError={(e) => { 
+                  const target = e.currentTarget;
+                  if (!target.src.includes('images.unsplash.com')) {
+                    target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                  }
+                }} />`;
 
-if (!content.includes('const { settings } = useStore();')) {
-  content = content.replace(
-    "export default function Footer() {",
-    "export default function Footer() {\n  const { settings } = useStore();"
-  );
-}
+const replacement = `<img src={settings?.social_links?.footer_logo || "/footer-logo-light.png"} alt={settings?.business_name || "New Bharat Electricals"} style={{ maxWidth: settings?.social_links?.footer_logo_size ? \`\${settings.social_links.footer_logo_size}px\` : undefined }} className={\`w-full \${settings?.social_links?.footer_logo_size ? '' : 'max-w-[240px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[360px]'} h-auto object-contain m-0 p-0\`} onError={(e) => { 
+                  const target = e.currentTarget;
+                  if (!target.src.includes('images.unsplash.com')) {
+                    target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                  }
+                }} />`;
 
-content = content.replace(
-  'src="/logo-dark.png"',
-  'src={settings?.social_links?.footer_logo || "/logo-dark.png"}'
-);
+content = content.replace(target, replacement);
 
 fs.writeFileSync('src/components/Footer.tsx', content);

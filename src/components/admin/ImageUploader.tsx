@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Upload, X, GripVertical, Image as ImageIcon } from 'lucide-react';
+import { Upload, X, GripVertical} from 'lucide-react';
 import { uploadImage } from '../../lib/upload';
 
 interface ImageUploaderProps {
@@ -59,7 +59,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (e: React.DragEvent, idx: number) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
@@ -105,7 +105,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
                 className={`relative group bg-white border rounded-xl overflow-hidden flex flex-col cursor-grab ${idx === 0 ? 'border-brand-green ring-1 ring-brand-green' : 'border-gray-200'}`}
                 draggable
                 onDragStart={(e) => handleDragStart(e, idx)}
-                onDragOver={(e) => handleDragOver(e, idx)}
+                onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, idx)}
                 onDragEnd={() => setDraggedIdx(null)}
               >

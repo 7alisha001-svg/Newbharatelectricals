@@ -1,4 +1,4 @@
-import { Phone, MessageCircle, ChevronDown, Menu, X, Zap, Heart, User, MapPin, Search, ShoppingCart, Store, Headset } from 'lucide-react';
+import { Phone, MessageCircle, ChevronDown, Menu, X, Heart, User, MapPin, Search, ShoppingCart, Store, Headset } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
@@ -77,9 +77,10 @@ export default function Navbar() {
             <div className="flex items-center flex-shrink-0">
               <Link to="/" className="flex items-center group">
                 <img 
-                  src="/header-logo-dark.png?v=2.0" 
-                  alt="New Bharat Electricals" 
-                  className="h-14 sm:h-18 md:h-22 lg:h-26 w-auto object-contain group-hover:-translate-y-0.5 transition-transform"
+                  src={settings?.logo_url || "/header-logo-dark.png"} 
+                  alt={settings?.business_name || "New Bharat Electricals"} 
+                  style={{ height: settings?.social_links?.header_logo_size ? `${settings.social_links.header_logo_size}px` : undefined }}
+                  className={`${settings?.social_links?.header_logo_size ? '' : 'h-14 sm:h-18 md:h-22 lg:h-26'} w-auto object-contain group-hover:-translate-y-0.5 transition-transform`}
                  onError={(e) => { 
                    const target = e.currentTarget;
                    if (!target.src.includes('images.unsplash.com')) {

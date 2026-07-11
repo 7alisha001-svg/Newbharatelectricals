@@ -1,12 +1,13 @@
-import { useStore } from '../../context/StoreContext';
+
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, ShoppingCart, Package, Archive, 
-  Tags, Flag, Users, Settings, LogOut, Menu, X, Navigation as NavIcon,
+  Flag, Users, Settings, LogOut, X, Navigation as NavIcon,
   Zap, Sun, FileSpreadsheet
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { useStore } from '../../context/StoreContext';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
@@ -45,6 +46,7 @@ export default function AdminSidebar({
   setIsOpen: (v: boolean) => void 
 }) {
   const { settings } = useStore();
+  
   const location = useLocation();
   const navigate = useNavigate();
   const [adminUser, setAdminUser] = useState<any>(null);
@@ -82,7 +84,7 @@ export default function AdminSidebar({
       `}>
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
           <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <img src="/footer-logo-light.png?v=2.0" alt="New Bharat Electricals" className="h-10 w-auto object-contain" />
+            <img src={settings?.social_links?.footer_logo || "/footer-logo-light.png"} alt={settings?.business_name || "New Bharat Electricals"} className="h-10 w-auto object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('images.unsplash.com')) target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; }} />
           </Link>
           <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-400 hover:text-white">
             <X size={24} />

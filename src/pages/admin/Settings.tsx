@@ -71,6 +71,14 @@ export default function Settings() {
                images={settings.logo_url ? [settings.logo_url] : []} 
                onChange={(urls) => setSettings({...settings, logo_url: urls.length > 0 ? urls[0] : null})} 
              />
+             <div className="mt-4">
+               <label className="block text-sm font-medium text-gray-700 mb-1">Header Logo Height ({settings.social_links?.header_logo_size || 80}px)</label>
+               <input type="range" min="40" max="160" step="4"
+                 value={settings.social_links?.header_logo_size || 80}
+                 onChange={(e) => setSettings({...settings, social_links: {...settings.social_links, header_logo_size: parseInt(e.target.value)}})}
+                 className="w-full"
+               />
+             </div>
           </div>
           <div className="md:col-span-2 space-y-4">
              <label className="block text-sm font-medium text-gray-700">Footer Logo (Dark Logo)</label>
@@ -84,6 +92,14 @@ export default function Settings() {
                  }
                })} 
              />
+             <div className="mt-4">
+               <label className="block text-sm font-medium text-gray-700 mb-1">Footer Logo Max Width ({settings.social_links?.footer_logo_size || 240}px)</label>
+               <input type="range" min="100" max="500" step="10"
+                 value={settings.social_links?.footer_logo_size || 240}
+                 onChange={(e) => setSettings({...settings, social_links: {...settings.social_links, footer_logo_size: parseInt(e.target.value)}})}
+                 className="w-full"
+               />
+             </div>
           </div>
 
           <div>

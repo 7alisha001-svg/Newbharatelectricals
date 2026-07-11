@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect, } from 'react';
+import { useParams} from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
 import { 
-  ArrowLeft, Plus, Search, Edit2, Trash2, Package, 
-  Upload, X, Save, CheckCircle2, AlertCircle, RefreshCw 
+  Plus, Search, Edit2, Trash2, Package, 
+  X, Save, CheckCircle2, AlertCircle, RefreshCw 
 } from 'lucide-react';
 import ImageUploader from '../../components/admin/ImageUploader';
 
@@ -85,7 +85,7 @@ export default function CategoryProductManager() {
   const [newSpecLabel, setNewSpecLabel] = useState('');
   const [newSpecValue, setNewSpecValue] = useState('');
   
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
 
   // Fetch products and brands
   const fetchProducts = async () => {

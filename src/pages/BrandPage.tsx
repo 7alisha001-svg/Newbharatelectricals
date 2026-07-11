@@ -33,7 +33,7 @@ export default function BrandPage() {
   const brandProducts = products.filter(p => matchBrand(p.brand, currentBrand.name, currentBrand.slug));
 
   const title = currentBrand.name;
-  const bgImage = currentBrand.logo_url || 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=2500&auto=format&fit=crop';
+
 
   return (
     <>

@@ -1,20 +1,18 @@
 const fs = require('fs');
-let content = fs.readFileSync('src/pages/admin/AdminLogin.tsx', 'utf-8');
+let content = fs.readFileSync('src/pages/admin/AdminLogin.tsx', 'utf8');
+content = content.replace(/const { error: insertError, data: rpcData } = await supabase.rpc\('create_first_admin', {\n                        if \(insertError\) throw insertError;/, 
+`const { error: insertError, data: rpcData } = await supabase.rpc('create_first_admin', {
+  admin_id: currentUser.id,
+  admin_email: email,
+  admin_full_name: fullName
+});
+if (insertError) throw insertError;`);
 
-if (!content.includes('useStore')) {
-  content = "import { useStore } from '../../context/StoreContext';\n" + content;
-}
+content = content.replace(/const { error: finalSignInError } = await supabase.auth.signInWithPassword\({\n            email,\n            password,\n                    if \(finalSignInError\)/,
+`const { error: finalSignInError } = await supabase.auth.signInWithPassword({
+  email,
+  password
+});
+if (finalSignInError)`);
 
-if (!content.includes('const { settings } = useStore();')) {
-  content = content.replace(
-    "export default function AdminLogin() {",
-    "export default function AdminLogin() {\n  const { settings } = useStore();"
-  );
-}
-
-content = content.replace(
-  'src="/logo-light.png"',
-  'src={settings?.logo_url || "/logo-light.png"}'
-);
-
-fs.writeFileSync('src/pages/admin/AdminLogin.tsx', content);
+fs.writeFileSync('src/pages/admin/AdminLogin.tsx', content, 'utf8');

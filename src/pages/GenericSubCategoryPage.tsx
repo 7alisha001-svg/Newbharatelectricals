@@ -1,16 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
-import { CheckCircle2, ArrowRight, Heart, Phone, MessageCircle, SlidersHorizontal, Zap } from 'lucide-react';
+import { CheckCircle2,Heart,SlidersHorizontal, Zap } from 'lucide-react';
 import { formatSlugToTitle } from '../utils/formatters';
 import { useStore } from '../context/StoreContext';
 import { categoryNav, mainNavLinks } from '../data/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function GenericSubCategoryPage() {
   const { category, subcategory } = useParams<{ category: string, subcategory: string }>();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const { products: storeProducts, loading, categories: storeCategories, settings } = useStore();
+  const { products: storeProducts, categories: storeCategories, settings } = useStore();
   
   const categoryTitle = formatSlugToTitle(category);
   const defaultSubCategoryTitle = formatSlugToTitle(subcategory);

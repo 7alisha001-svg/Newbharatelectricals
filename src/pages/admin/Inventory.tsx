@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { AlertTriangle, TrendingUp, TrendingDown, Archive, Search } from 'lucide-react';
+import { AlertTriangle, Search } from 'lucide-react';
 
 export default function Inventory() {
   const [products, setProducts] = useState<any[]>([]);

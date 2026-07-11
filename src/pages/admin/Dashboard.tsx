@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { 
-  TrendingUp, Users, ShoppingCart, Package, 
-  AlertCircle, DollarSign, Activity, Archive
+Users, ShoppingCart, Package, 
+  AlertCircle, DollarSign, Activity
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

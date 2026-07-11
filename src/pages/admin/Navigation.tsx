@@ -1,7 +1,7 @@
 import { useStore } from '../../context/StoreContext';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Save, Plus, Trash2, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { Save, Plus, Trash2, ChevronDown, ChevronUp} from 'lucide-react';
 import { mainNavLinks as defaultNavLinks } from '../../data/navigation';
 
 export default function Navigation() {

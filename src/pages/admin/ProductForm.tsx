@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
+import { Save, ArrowLeft, X, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
 import ImageUploader from '../../components/admin/ImageUploader';
@@ -40,7 +40,7 @@ export default function ProductForm() {
 
   const [newTag, setNewTag] = useState('');
   const [newFeature, setNewFeature] = useState('');
-  const [newGalleryImage, setNewGalleryImage] = useState('');
+  
 
   useEffect(() => {
     fetchCategories();
@@ -61,7 +61,7 @@ export default function ProductForm() {
   };
 
   const fetchCategories = async () => {
-    const { data } = await supabase.from('categories').select('name').eq('is_active', true);
+    await supabase.from('categories').select('name').eq('is_active', true);
      
   };
 

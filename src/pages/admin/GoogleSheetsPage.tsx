@@ -5,7 +5,7 @@ import {
   initAuth, 
   googleSignIn, 
   logout, 
-  getAccessToken 
+  
 } from '../../lib/googleAuth';
 import { 
   listUserSpreadsheets, 
@@ -26,10 +26,10 @@ import {
   User, 
   RefreshCw, 
   ExternalLink,
-  ChevronRight,
+
   Database,
-  ArrowRight,
-  HelpCircle,
+
+
   Sparkles
 } from 'lucide-react';
 import { User as FirebaseUser } from 'firebase/auth';

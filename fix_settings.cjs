@@ -1,45 +1,13 @@
 const fs = require('fs');
-let content = fs.readFileSync('src/pages/admin/Settings.tsx', 'utf-8');
-
-// add ImageUploader import
+let content = fs.readFileSync('src/pages/admin/Settings.tsx', 'utf8');
 content = content.replace(
-  "import { Save } from 'lucide-react';",
-  "import { Save } from 'lucide-react';\nimport ImageUploader from '../../components/admin/ImageUploader';"
+  /<ImageUploader\s+images=\{settings\.logo_url \? \[settings\.logo_url\] : \[\]\}\s+onChange=\{\(urls\) => setSettings\(\{\.\.\.settings, logo_url: urls\.length > 0 \? urls\[0\] : null\}\)\}\s+\/>/g,
+  `$&\n             <div className="mt-4">\n               <label className="block text-sm font-medium text-gray-700 mb-1">Header Logo Height ({settings.social_links?.header_logo_size || 80}px)</label>\n               <input type="range" min="40" max="160" step="4"\n                 value={settings.social_links?.header_logo_size || 80}\n                 onChange={(e) => setSettings({...settings, social_links: {...settings.social_links, header_logo_size: parseInt(e.target.value)}})}\n                 className="w-full"\n               />\n             </div>`
 );
 
-// update setSettings initial state to include logo_url and social_links
 content = content.replace(
-  /const \[settings, setSettings\] = useState<any>\(\{/,
-  "const [settings, setSettings] = useState<any>({\n    logo_url: '',\n    social_links: {},"
-);
-
-// add image upload components
-const imageUploaders = `
-          <div className="md:col-span-2 space-y-4">
-             <label className="block text-sm font-medium text-gray-700">Header Logo (Light Logo)</label>
-             <ImageUploader 
-               images={settings.logo_url ? [settings.logo_url] : []} 
-               onChange={(urls) => setSettings({...settings, logo_url: urls.length > 0 ? urls[0] : null})} 
-             />
-          </div>
-          <div className="md:col-span-2 space-y-4">
-             <label className="block text-sm font-medium text-gray-700">Footer Logo (Dark Logo)</label>
-             <ImageUploader 
-               images={settings.social_links?.footer_logo ? [settings.social_links.footer_logo] : []} 
-               onChange={(urls) => setSettings({
-                 ...settings, 
-                 social_links: {
-                   ...settings.social_links, 
-                   footer_logo: urls.length > 0 ? urls[0] : null
-                 }
-               })} 
-             />
-          </div>
-`;
-
-content = content.replace(
-  /<div className="grid grid-cols-1 md:grid-cols-2 gap-6">/,
-  '<div className="grid grid-cols-1 md:grid-cols-2 gap-6">' + imageUploaders
+  /<ImageUploader\s+images=\{settings\.social_links\?\.footer_logo \? \[settings\.social_links\.footer_logo\] : \[\]\}\s+onChange=\{\(urls\) => setSettings\(\{\s+\.\.\.settings,\s+social_links: \{\s+\.\.\.settings\.social_links,\s+footer_logo: urls\.length > 0 \? urls\[0\] : null\s+\}\s+\}\)\}\s+\/>/g,
+  `$&\n             <div className="mt-4">\n               <label className="block text-sm font-medium text-gray-700 mb-1">Footer Logo Max Width ({settings.social_links?.footer_logo_size || 240}px)</label>\n               <input type="range" min="100" max="500" step="10"\n                 value={settings.social_links?.footer_logo_size || 240}\n                 onChange={(e) => setSettings({...settings, social_links: {...settings.social_links, footer_logo_size: parseInt(e.target.value)}})}\n                 className="w-full"\n               />\n             </div>`
 );
 
 fs.writeFileSync('src/pages/admin/Settings.tsx', content);

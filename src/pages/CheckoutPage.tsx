@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Check, ShieldCheck, Lock, ShoppingCart } from 'lucide-react';
+import { ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { motion } from 'motion/react';
 import { supabase } from '../lib/supabase';
@@ -34,7 +34,6 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
     setError(null);
     
-    console.log('Starting checkout process...');
     const orderId = 'ORD' + Math.floor(100000 + Math.random() * 900000);
     
     const payload = { 
@@ -52,16 +51,12 @@ export default function CheckoutPage() {
       cart_items: cart
     };
     
-    console.log('Order Payload:', payload);
     
     try {
-      console.log('Sending insert request to Supabase orders table...');
-      const { data, error: dbError } = await supabase
+      const { error: dbError } = await supabase
         .from('orders')
         .insert([payload]);
         
-      console.log('Supabase API Response - Data:', data);
-      console.log('Supabase API Response - Error:', dbError);
 
       if (dbError) {
         console.error('Supabase returned an error during insert:', dbError);
