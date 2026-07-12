@@ -33,6 +33,7 @@ import Brands from './pages/admin/Brands';
 import BrandForm from './pages/admin/BrandForm';
 import Customers from './pages/admin/Customers';
 import Settings from './pages/admin/Settings';
+import Locations from './pages/admin/Locations';
 import Navigation from './pages/admin/Navigation';
 import CategoryProductManager from './pages/admin/CategoryProductManager';
 import GoogleSheetsPage from './pages/admin/GoogleSheetsPage';
@@ -92,6 +93,7 @@ export default function App() {
               <Route path="customers" element={<Customers />} />
               <Route path="navigation" element={<Navigation />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="locations" element={<Locations />} />
               <Route path="sheets" element={<GoogleSheetsPage />} />
               <Route path="power-solutions/:subcategory" element={<CategoryProductManager />} />
               <Route path="solar-solutions/:subcategory" element={<CategoryProductManager />} />

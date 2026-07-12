@@ -203,16 +203,34 @@ export default function Footer() {
                 />
               </div>
 
-              <div className="flex items-start text-neutral-100 justify-start md:justify-center lg:justify-start w-full gap-3 mt-2">
-                 <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
-                   <MapPin className="text-brand-green md:text-white" size={16} />
-                 </div>
-                 <p className="leading-relaxed font-semibold text-sm text-left md:text-center lg:text-left">
-                   Near Dr Amar Singh, <br />
-                   Chaudhary Saray Lalpul Road, <br />
-                   Budaun HO, Budaun 243601, <br />
-                   Uttar Pradesh
-                 </p>
+              <div className="flex flex-col gap-4 mt-2">
+                <div className="flex items-start text-neutral-100 justify-start md:justify-center lg:justify-start w-full gap-3">
+                   <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
+                     <MapPin className="text-brand-green md:text-white" size={16} />
+                   </div>
+                   <div className="text-left md:text-center lg:text-left">
+                     <p className="font-bold text-sm mb-1 text-brand-green md:text-brand-green">Corporate Office</p>
+                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
+                       {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
+                        settings?.office_address || 
+                        'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun 243601,\nUttar Pradesh'}
+                     </p>
+                   </div>
+                </div>
+
+                <div className="flex items-start text-neutral-100 justify-start md:justify-center lg:justify-start w-full gap-3">
+                   <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
+                     <MapPin className="text-brand-green md:text-white" size={16} />
+                   </div>
+                   <div className="text-left md:text-center lg:text-left">
+                     <p className="font-bold text-sm mb-1 text-brand-green md:text-brand-green">Warehouse</p>
+                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
+                       {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
+                        settings?.warehouse_address || 
+                        'Loda Bahedi,\nBudaun,\nUttar Pradesh – 243601'}
+                     </p>
+                   </div>
+                </div>
               </div>
 
               {/* Mobile Extra Contact Info */}

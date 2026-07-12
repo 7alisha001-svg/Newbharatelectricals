@@ -1,9 +1,12 @@
 import { motion } from 'motion/react';
-import { Shield, Zap, Target, Users, CheckCircle2 } from 'lucide-react';
+import { Shield, Zap, Target, Users, CheckCircle2, Building, Warehouse, MapPin, Phone } from 'lucide-react';
+import { useStore } from '../context/StoreContext';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 export default function AboutUsPage() {
+  const { settings } = useStore();
+  
   return (
     <div className="bg-white min-h-screen">
       <Helmet>
@@ -157,6 +160,151 @@ export default function AboutUsPage() {
                 <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Locations Section */}
+      <section className="py-16 md:py-24 bg-gray-50 border-t border-gray-100">
+        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 uppercase tracking-tight mb-4">
+              Our Locations
+            </h2>
+            <div className="w-16 h-1 bg-brand-green mx-auto mb-6" />
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Visit our corporate office or warehouse for all your electrical and solar needs.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Office Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+            >
+              <div className="p-8 pb-6 flex-1">
+                <div className="w-16 h-16 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green mb-6">
+                  <Building size={32} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Corporate Office</h3>
+                <h4 className="text-brand-green font-semibold mb-4">{settings?.business_name || 'New Bharat Electricals'}</h4>
+                
+                <div className="flex items-start text-gray-600 mb-4 gap-3">
+                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-400" />
+                  <p className="leading-relaxed whitespace-pre-line">
+                    {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
+                     settings?.office_address || 
+                     'Near Dr Amar Singh,\nChaudhry Sarai,\nLalpul Road,\nBudaun HO,\nBudaun – 243601,\nUttar Pradesh'}
+                  </p>
+                </div>
+                
+                {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.phone && (
+                  <div className="flex items-center text-gray-600 gap-3 mb-6">
+                    <Phone size={20} className="flex-shrink-0 text-gray-400" />
+                    <a href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'office').phone}`} className="hover:text-brand-green transition-colors">
+                      {settings.social_links.locations.find((l: any) => l.type === 'office').phone}
+                    </a>
+                  </div>
+                )}
+              </div>
+              
+              <div className="w-full h-[250px] bg-gray-100 relative">
+                {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.map_embed_code ? (
+                   <div 
+                     className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+                     dangerouslySetInnerHTML={{ __html: settings.social_links.locations.find((l: any) => l.type === 'office').map_embed_code }}
+                   />
+                ) : (
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3513.3102435798993!2d79.11718047535552!3d28.02640207599026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a008c2306d1dd5%3A0xe979dcc4999f7d0c!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                )}
+              </div>
+              
+              <div className="p-6 bg-gray-50 border-t border-gray-100 flex gap-4">
+                <a 
+                  href={settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.map_link || 'https://maps.google.com/?q=New+Bharat+Electricals,Budaun'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-brand-dark text-white text-center font-bold py-3 rounded-lg hover:bg-brand-green transition-colors"
+                >
+                  Get Directions
+                </a>
+                {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.phone && (
+                   <a 
+                     href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'office').phone}`}
+                     className="flex-1 bg-white text-brand-dark border border-gray-200 text-center font-bold py-3 rounded-lg hover:border-brand-green hover:text-brand-green transition-colors"
+                   >
+                     Call Now
+                   </a>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Warehouse Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+            >
+              <div className="p-8 pb-6 flex-1">
+                <div className="w-16 h-16 bg-brand-dark/5 rounded-xl flex items-center justify-center text-brand-dark mb-6">
+                  <Warehouse size={32} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Warehouse</h3>
+                <h4 className="text-gray-500 font-semibold mb-4">Distribution & Logistics</h4>
+                
+                <div className="flex items-start text-gray-600 mb-4 gap-3">
+                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-400" />
+                  <p className="leading-relaxed whitespace-pre-line">
+                    {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
+                     settings?.warehouse_address || 
+                     'Budaun,\nLoda Bahedi,\nUttar Pradesh – 243601'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="w-full h-[250px] bg-gray-100 relative">
+                {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.map_embed_code ? (
+                   <div 
+                     className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+                     dangerouslySetInnerHTML={{ __html: settings.social_links.locations.find((l: any) => l.type === 'warehouse').map_embed_code }}
+                   />
+                ) : (
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3513.3102435798993!2d79.11718047535552!3d28.02640207599026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a008c2306d1dd5%3A0xe979dcc4999f7d0c!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                )}
+              </div>
+              
+              <div className="p-6 bg-gray-50 border-t border-gray-100">
+                <a 
+                  href={settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.map_link || 'https://maps.google.com/?q=Loda+Bahedi,Budaun'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full bg-brand-dark text-white text-center font-bold py-3 rounded-lg hover:bg-brand-green transition-colors"
+                >
+                  Get Directions
+                </a>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
