@@ -85,7 +85,7 @@ export default function Hero() {
                     className="flex items-center justify-center md:justify-start gap-4 mb-2 lg:mb-4"
                   >
                     <div className="hidden md:block h-0.5 w-16 bg-gray-900 shadow-sm"></div>
-                    <span className="text-gray-900 font-bold text-[10px] sm:text-xs md:text-xl lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
+                    <span className="text-gray-900 font-bold text-[10px] sm:text-xs md:text-lg lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
                       {heroSlides[currentSlide].preTitle}
                     </span>
                     <div className="hidden lg:block h-0.5 w-24 bg-gray-900 shadow-sm"></div>
@@ -94,7 +94,7 @@ export default function Hero() {
                   {/* High Impact Title */}
                   <motion.h1 
                     initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-                    className={`text-3xl sm:text-[40px] leading-[1.1] sm:leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-4 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
+                    className={`text-3xl sm:text-[40px] leading-[1.1] sm:leading-[0.9] md:text-[45px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-4 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
                   >
                     {heroSlides[currentSlide].titlePart1} <span className="text-gray-900">{heroSlides[currentSlide].titlePart2}</span>
                   </motion.h1>
@@ -102,12 +102,12 @@ export default function Hero() {
                   {/* Features */}
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="flex justify-center md:justify-start gap-3 sm:gap-5 md:gap-8 lg:gap-14 mb-6 md:mb-10"
+                    className="flex justify-center md:justify-start gap-3 sm:gap-5 md:gap-6 lg:gap-14 mb-6 md:mb-10"
                   >
                     {heroSlides[currentSlide].features.map((feature, idx) => (
                       <div key={idx} className="flex flex-col items-center group/icon cursor-default">
-                        <div className="w-11 h-11 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center mb-1.5 md:mb-3 shadow-[0_2px_0_0_rgba(0,0,0,0.15)] md:shadow-[0_4px_0_0_rgba(0,0,0,0.15)] group-hover/icon:-translate-y-1 transition-transform">
-                          <feature.icon className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 text-gray-900" strokeWidth={1.5} />
+                        <div className="w-11 h-11 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center mb-1.5 md:mb-3 shadow-[0_2px_0_0_rgba(0,0,0,0.15)] md:shadow-[0_4px_0_0_rgba(0,0,0,0.15)] group-hover/icon:-translate-y-1 transition-transform">
+                          <feature.icon className="w-5 h-5 sm:w-7 sm:h-7 md:w-7 md:h-7 lg:w-9 lg:h-9 text-gray-900" strokeWidth={1.5} />
                         </div>
                         <span className="text-[8px] sm:text-[10px] md:text-xs font-bold text-gray-900 uppercase tracking-wider md:tracking-widest leading-tight text-center whitespace-pre-line drop-shadow-sm">
                           {feature.text}
@@ -136,7 +136,7 @@ export default function Hero() {
                     <img 
                       src={heroSlides[currentSlide].image} 
                       alt="Product Promo"
-                      className="max-h-[150px] sm:max-h-[220px] md:max-h-full w-auto max-w-[95%] object-cover rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.3)] border-[4px] md:border-[6px] border-white relative z-20 group-hover:scale-105 transition-transform duration-700"
+                      className="max-h-[150px] sm:max-h-[220px] md:max-h-[350px] lg:max-h-full w-auto max-w-[95%] object-cover rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.3)] border-[4px] md:border-[6px] border-white relative z-20 group-hover:scale-105 transition-transform duration-700"
                      onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
                   </motion.div>
 

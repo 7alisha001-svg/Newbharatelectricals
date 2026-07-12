@@ -132,7 +132,7 @@ export default function GenericCategoryPage() {
         {categoryProducts.length === 0 ? (
           <div className="text-gray-700 font-medium py-10">No products found in this category.</div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-6">
             {categoryProducts.map((product, idx) => {
               const discountPercent = product.regular_price > product.sale_price 
                 ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)

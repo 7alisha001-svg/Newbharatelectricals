@@ -94,10 +94,10 @@ export default function ProductPage() {
         </div>
 
         <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col lg:flex-row">
+          <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col md:flex-row">
             
             {/* Left - Image Gallery */}
-            <div className="w-full lg:w-1/2 p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-gray-100 bg-gray-50/30 flex flex-col">
+            <div className="w-full md:w-1/2 p-6 sm:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
               <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
                 <img src={product.images[0]} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
               </div>
@@ -111,7 +111,7 @@ export default function ProductPage() {
             </div>
 
             {/* Right - Product Info */}
-            <div className="w-full lg:w-1/2 p-8 sm:p-10 lg:p-14 relative">
+            <div className="w-full md:w-1/2 p-6 sm:p-10 lg:p-14 relative">
               <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-800 hover:text-gray-900 transition-colors">
                 <Share2 size={24} />
               </button>

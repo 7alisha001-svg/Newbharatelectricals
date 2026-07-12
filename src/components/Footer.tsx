@@ -132,7 +132,7 @@ export default function Footer() {
         </div>
 
         {/* Main Footer Columns */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-6 md:gap-8 mb-6 md:mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-x-4 gap-y-6 md:gap-8 mb-6 md:mb-8">
            
            {/* Column 1: Useful Links */}
            <div className="col-span-1">
@@ -177,7 +177,7 @@ export default function Footer() {
            </div>
 
            {/* Column 3: Contact Info */}
-           <div className="col-span-2 md:col-span-1 lg:col-span-2 flex flex-col items-start md:items-center lg:items-start text-left md:text-center lg:text-left border-t border-gray-800/60 pt-8 mt-4 md:border-t-0 md:pt-0 md:mt-0">
+           <div className="col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-8 mt-4 md:border-t-0 md:pt-0 md:mt-0">
               <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">Contact Info</h4>
               
               <div className="hidden md:flex justify-center lg:justify-start items-center p-0 w-full mb-2">
@@ -204,11 +204,11 @@ export default function Footer() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-2 w-full">
-                <div className="flex items-start text-neutral-100 justify-start md:justify-center lg:justify-start w-full gap-3">
+                <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
                    <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
                      <MapPin className="text-brand-green md:text-white" size={16} />
                    </div>
-                   <div className="text-left md:text-center lg:text-left">
+                   <div className="text-left">
                      <p className="font-bold text-sm mb-1 text-white">Corporate Office</p>
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
                        {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
@@ -218,11 +218,11 @@ export default function Footer() {
                    </div>
                 </div>
 
-                <div className="flex items-start text-neutral-100 justify-start md:justify-center lg:justify-start w-full gap-3">
+                <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
                    <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
                      <MapPin className="text-brand-green md:text-white" size={16} />
                    </div>
-                   <div className="text-left md:text-center lg:text-left">
+                   <div className="text-left">
                      <p className="font-bold text-sm mb-1 text-white">Warehouse</p>
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
                        {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 

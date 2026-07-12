@@ -11,13 +11,13 @@ export default function About() {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center"
+            className="md:w-1/2 p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center"
           >
             <div className="inline-flex items-center space-x-2 bg-brand-green-light text-brand-green px-4 py-2 rounded-full mb-4 text-[10px] font-bold uppercase tracking-widest w-max">
               <Award size={14} />
               <span>About The Company</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-gray-900 leading-tight mb-4 uppercase">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black text-gray-900 leading-tight mb-4 uppercase">
               Leading the Way in <br/> Energy Innovation
             </h2>
             <p className="text-gray-800 text-base md:text-lg leading-relaxed font-medium tracking-wide mb-6">
