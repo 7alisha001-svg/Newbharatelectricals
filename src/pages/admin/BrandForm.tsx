@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Save, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
+import ImageUploader from '../../components/admin/ImageUploader';
 
 export default function BrandForm() {
   const { id } = useParams<{ id: string }>();
@@ -208,13 +209,15 @@ export default function BrandForm() {
               placeholder="https://..."
               value={formData.logo_url} 
               onChange={handleChange} 
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none" 
+              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none mb-4" 
             />
-            {formData.logo_url && (
-              <div className="mt-4 w-32 h-32 rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
-                <img src={formData.logo_url} alt="Preview" className="max-w-full max-h-full object-contain" onError={(e) => (e.currentTarget.style.display = 'none')} />
-              </div>
-            )}
+            <div className="mt-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Upload Brand Image (JPG, PNG, WebP) - Max 5MB</label>
+              <ImageUploader 
+                images={formData.logo_url ? [formData.logo_url] : []} 
+                onChange={(imgs) => setFormData(prev => ({ ...prev, logo_url: imgs[0] || '' }))} 
+              />
+            </div>
           </div>
 
           

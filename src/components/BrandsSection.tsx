@@ -39,14 +39,29 @@ export default function BrandsSection() {
             >
               <Link to={`/brands/${brand.slug || brand.name?.toLowerCase().replace(/[^a-z0-9]/g, '-')}`} className="flex flex-col items-center group w-full">
                 <div className="w-full aspect-[4/3] bg-white rounded-xl overflow-hidden mb-3 border border-gray-200 shadow-sm group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative flex items-center justify-center p-6">
-                  <img 
-                    src={brand.logo_url || 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop'} 
-                    alt={brand.name} 
-                    className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }}
-                  />
+                  {brand.logo_url ? (
+                    <img 
+                      src={brand.logo_url} 
+                      alt={brand.name} 
+                      className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => { 
+                        const target = e.currentTarget; 
+                        // Fallback to text if image fails to load
+                        target.style.display = 'none';
+                        if (target.nextElementSibling) {
+                          (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                        }
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-400 font-heading font-bold text-2xl uppercase tracking-wider"
+                    style={{ display: brand.logo_url ? 'none' : 'flex' }}
+                  >
+                    {brand.name ? brand.name.substring(0, 2) : 'B'}
+                  </div>
                 </div>
                 <h3 className="font-heading font-bold text-gray-800 text-center text-sm md:text-base group-hover:text-brand-green transition-colors mt-auto">
                   {brand.name}
