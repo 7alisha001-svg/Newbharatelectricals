@@ -77,7 +77,7 @@ export default function Hero() {
               <div className="flex flex-col md:flex-row items-center h-full pt-4 md:pt-0 pb-4 md:pb-0">
                 
                 {/* Left Content */}
-                <div className="w-full md:w-7/12 flex flex-col justify-center text-center md:text-left z-20 md:pr-8 lg:pr-12 h-1/2 md:h-full pt-4 md:pt-0 pb-2 md:pb-24">
+                <div className="w-full md:w-7/12 flex flex-col justify-center text-center md:text-left z-20 md:pr-8 lg:pr-12 h-auto md:h-full pt-6 md:pt-0 pb-4 md:pb-24">
                   
                   {/* Pre-title */}
                   <motion.div 
@@ -85,7 +85,7 @@ export default function Hero() {
                     className="flex items-center justify-center md:justify-start gap-4 mb-2 lg:mb-4"
                   >
                     <div className="hidden md:block h-0.5 w-16 bg-gray-900 shadow-sm"></div>
-                    <span className="text-gray-900 font-bold text-[9px] sm:text-xs md:text-xl lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
+                    <span className="text-gray-900 font-bold text-[10px] sm:text-xs md:text-xl lg:text-2xl xl:text-3xl tracking-widest sm:tracking-[0.15em] uppercase">
                       {heroSlides[currentSlide].preTitle}
                     </span>
                     <div className="hidden lg:block h-0.5 w-24 bg-gray-900 shadow-sm"></div>
@@ -94,7 +94,7 @@ export default function Hero() {
                   {/* High Impact Title */}
                   <motion.h1 
                     initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-                    className={`text-2xl sm:text-[40px] leading-[1] sm:leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-3 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
+                    className={`text-3xl sm:text-[40px] leading-[1.1] sm:leading-[0.9] md:text-[60px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-4 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
                   >
                     {heroSlides[currentSlide].titlePart1} <span className="text-gray-900">{heroSlides[currentSlide].titlePart2}</span>
                   </motion.h1>
@@ -102,14 +102,14 @@ export default function Hero() {
                   {/* Features */}
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="flex justify-center md:justify-start gap-2 sm:gap-5 md:gap-8 lg:gap-14 mb-4 md:mb-10"
+                    className="flex justify-center md:justify-start gap-3 sm:gap-5 md:gap-8 lg:gap-14 mb-6 md:mb-10"
                   >
                     {heroSlides[currentSlide].features.map((feature, idx) => (
                       <div key={idx} className="flex flex-col items-center group/icon cursor-default">
-                        <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center mb-1.5 md:mb-3 shadow-[0_2px_0_0_rgba(0,0,0,0.15)] md:shadow-[0_4px_0_0_rgba(0,0,0,0.15)] group-hover/icon:-translate-y-1 transition-transform">
-                          <feature.icon className="w-4 h-4 sm:w-7 sm:h-7 md:w-9 md:h-9 text-gray-900" strokeWidth={1.5} />
+                        <div className="w-11 h-11 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center mb-1.5 md:mb-3 shadow-[0_2px_0_0_rgba(0,0,0,0.15)] md:shadow-[0_4px_0_0_rgba(0,0,0,0.15)] group-hover/icon:-translate-y-1 transition-transform">
+                          <feature.icon className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 text-gray-900" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[7px] sm:text-[10px] md:text-xs font-bold text-gray-900 uppercase tracking-wider md:tracking-widest leading-tight text-center whitespace-pre-line drop-shadow-sm">
+                        <span className="text-[8px] sm:text-[10px] md:text-xs font-bold text-gray-900 uppercase tracking-wider md:tracking-widest leading-tight text-center whitespace-pre-line drop-shadow-sm">
                           {feature.text}
                         </span>
                       </div>
@@ -128,7 +128,7 @@ export default function Hero() {
                 </div>
                 
                 {/* Right Image Container */}
-                <div className="w-full md:w-5/12 h-1/2 md:h-full relative flex flex-col items-center justify-end md:justify-center z-10 pb-4 md:pb-0">
+                <div className="w-full md:w-5/12 h-auto md:h-full relative flex flex-col items-center justify-end md:justify-center z-10 pb-6 md:pb-0">
                   <motion.div 
                     initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
                     className="w-full h-full md:h-[80%] flex items-center justify-center relative md:translate-y-8"

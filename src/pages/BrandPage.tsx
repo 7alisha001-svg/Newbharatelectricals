@@ -57,37 +57,27 @@ export default function BrandPage() {
           </div>
         </div>
 
-        {/* Brand Hero */}
-      <section className="relative w-full h-[250px] md:h-[300px] flex items-center justify-center overflow-hidden bg-white border-b border-gray-100 mb-12">
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 lg:px-8 text-center flex flex-col items-center">
-           {currentBrand.logo_url && (
-            <motion.img 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+        {/* Brand Header */}
+        <section className="bg-gray-50/50 border-b border-gray-100 py-6 md:py-10 mb-8">
+          <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
+            <motion.h1 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              src={currentBrand.logo_url} 
-              alt={title}
-              className="h-24 md:h-32 object-contain mb-6 drop-shadow-md"
-            />
-           )}
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="text-3xl md:text-5xl font-heading font-bold mb-2 text-gray-900"
-          >
-            {title}
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-base md:text-lg text-gray-800 font-medium max-w-2xl"
-          >
-            Explore our premium range of {title} products.
-          </motion.p>
-        </div>
-      </section>
+              className="text-2xl md:text-4xl font-heading font-black mb-2 text-gray-900 uppercase tracking-tight"
+            >
+              {title}
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="text-sm md:text-base text-gray-600 font-medium max-w-2xl"
+            >
+              Explore our premium range of {title} products.
+            </motion.p>
+          </div>
+        </section>
 
       {/* Products Grid */}
       <section className="max-w-[1600px] mx-auto px-4 lg:px-8">

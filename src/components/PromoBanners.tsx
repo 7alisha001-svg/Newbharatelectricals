@@ -17,7 +17,7 @@ export default function PromoBanners() {
             <img 
               src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop" 
               alt="Solar Promotion" 
-              className="w-full h-40 sm:h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-48 sm:h-56 md:h-64 object-cover group-hover:scale-105 transition-transform duration-700"
               loading="lazy"
               decoding="async"
               onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
@@ -35,7 +35,7 @@ export default function PromoBanners() {
             <img 
               src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=800&auto=format&fit=crop" 
               alt="Inverter Promotion" 
-              className="w-full h-40 sm:h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-48 sm:h-56 md:h-64 object-cover group-hover:scale-105 transition-transform duration-700"
               loading="lazy"
               decoding="async"
               onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />

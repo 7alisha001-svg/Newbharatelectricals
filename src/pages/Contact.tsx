@@ -54,7 +54,7 @@ export default function Contact() {
       </Helmet>
       <div className="w-full bg-white">
         {/* Header */}
-        <section className="bg-brand-dark py-12 md:py-24 text-center px-4 md:px-6">
+        <section className="bg-brand-dark py-10 md:py-16 text-center px-4 md:px-6">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ export default function Contact() {
           </motion.p>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 lg:px-6 py-12 md:py-20">
+        <section className="max-w-7xl mx-auto px-4 lg:px-6 py-8 md:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
             
             {/* Contact Form */}
@@ -186,7 +186,7 @@ export default function Contact() {
         </section>
 
       {/* Our Locations Section */}
-      <section className="py-16 md:py-24 bg-gray-50 border-t border-gray-100">
+      <section className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 uppercase tracking-tight mb-4">

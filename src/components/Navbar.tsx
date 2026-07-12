@@ -155,8 +155,14 @@ export default function Navbar() {
                 <img 
                   src={croppedLogo || rawLogoUrl} 
                   alt={settings?.business_name || "New Bharat Electricals"} 
-                  style={{ height: settings?.social_links?.header_logo_size ? `${settings.social_links.header_logo_size}px` : undefined }}
-                  className={`${settings?.social_links?.header_logo_size ? '' : 'h-6 sm:h-8 md:h-14 lg:h-16 xl:h-20'} w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0`}
+                  style={{
+                    ['--desktop-logo-height' as any]: settings?.social_links?.header_logo_size ? `${settings.social_links.header_logo_size}px` : undefined
+                  }}
+                  className={`${
+                    settings?.social_links?.header_logo_size 
+                      ? 'h-9 sm:h-11 md:h-[var(--desktop-logo-height)]' 
+                      : 'h-9 sm:h-11 md:h-14 lg:h-16 xl:h-20'
+                  } w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0`}
                   onError={(e) => { 
                     const target = e.currentTarget;
                     if (!target.src.includes('images.unsplash.com')) {
@@ -216,19 +222,20 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Actions */}
-            <div className="flex items-center lg:hidden space-x-3 sm:space-x-4">
-              <button className="text-gray-800 hover:text-brand-green p-1">
+            <div className="flex items-center lg:hidden space-x-2 sm:space-x-3">
+              <button className="text-gray-800 hover:text-brand-green p-2.5 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px]" aria-label="Search">
                 <Search size={22} className="sm:w-6 sm:h-6" />
               </button>
-              <Link to="/cart" className="text-gray-800 hover:text-brand-green relative p-1">
+              <Link to="/cart" className="text-gray-800 hover:text-brand-green relative p-2.5 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px]" aria-label="Cart">
                 <ShoppingCart size={22} className="sm:w-6 sm:h-6" />
-                {cartCount > 0 && <span className="absolute top-0 right-0 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-brand-green text-white text-[8px] sm:text-[9px] font-bold rounded-full flex items-center justify-center -mt-1 -mr-1 sm:-mt-2 sm:-mr-2">{cartCount}</span>}
+                {cartCount > 0 && <span className="absolute top-1 right-1 w-4.5 h-4.5 bg-brand-green text-white text-[9px] sm:text-[10px] font-black rounded-full flex items-center justify-center shadow-sm">{cartCount}</span>}
               </Link>
               <button 
-                className="text-gray-800 hover:text-brand-green transition-colors p-1 focus:outline-none"
+                className="text-gray-800 hover:text-brand-green transition-colors p-2.5 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px] focus:outline-none"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle Menu"
               >
-                {mobileMenuOpen ? <X size={26} className="sm:w-7 sm:h-7" /> : <Menu size={26} className="sm:w-7 sm:h-7" />}
+                {mobileMenuOpen ? <X size={24} className="sm:w-6 sm:h-6" /> : <Menu size={24} className="sm:w-6 sm:h-6" />}
               </button>
             </div>
           </div>
@@ -274,7 +281,7 @@ export default function Navbar() {
 
         {/* Mobile Nav Drawer */}
         <div className={`lg:hidden bg-white border-t border-gray-100 absolute w-full transition-all duration-300 ease-in-out origin-top ${mobileMenuOpen ? 'scale-y-100 opacity-100 shadow-xl' : 'scale-y-0 opacity-0'} max-h-[85vh] overflow-y-auto`}>
-          <div className="flex flex-col p-4 sm:p-6 space-y-1">
+          <div className="flex flex-col p-4 sm:p-6 space-y-1.5">
             {navLinks.map((link) => (
               <div key={link.name} className="border-b border-gray-100 last:border-0">
                 <div className="flex flex-col">
@@ -282,21 +289,21 @@ export default function Navbar() {
                     <>
                       <button 
                         onClick={(e) => toggleMenu(link.name, e)}
-                        className={`w-full flex items-center justify-between py-2.5 sm:py-3.5 font-bold hover:text-brand-green text-[15px] tracking-tight uppercase text-left transition-colors ${
+                        className={`w-full flex items-center justify-between py-3.5 px-3 rounded-xl font-bold hover:text-brand-green text-[15px] tracking-tight uppercase text-left transition-colors min-h-[46px] hover:bg-gray-50 ${
                           (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
-                            ? 'text-brand-green' 
+                            ? 'text-brand-green bg-brand-green/5' 
                             : 'text-gray-900'
                         }`}
                       >
                         {link.name}
-                        <ChevronDown size={20} className={`transition-transform duration-200 ${expandedMenus[link.name] ? 'rotate-180 text-brand-green' : ''}`} />
+                        <ChevronDown size={20} className={`transition-transform duration-200 ${expandedMenus[link.name] ? 'rotate-180 text-brand-green' : 'text-gray-400'}`} />
                       </button>
-                      <div className={`pl-4 space-y-0 sm:space-y-1 border-l-2 border-brand-green/30 ml-2 overflow-hidden transition-all duration-300 ${expandedMenus[link.name] ? 'max-h-[500px] pb-3 sm:pb-4 opacity-100' : 'max-h-0 pb-0 opacity-0'}`}>
+                      <div className={`pl-4 space-y-1 border-l-2 border-brand-green/20 ml-5 overflow-hidden transition-all duration-300 ${expandedMenus[link.name] ? 'max-h-[500px] py-2 opacity-100' : 'max-h-0 py-0 opacity-0'}`}>
                         {link.dropdownItems?.map((item) => (
                           <Link 
                             key={item.href} 
                             to={item.href} 
-                            className={`block py-2 sm:py-3 pl-4 font-medium hover:text-brand-green transition-colors text-sm ${location.pathname === item.href ? 'text-brand-green' : 'text-gray-800 font-medium'}`}
+                            className={`block py-3 px-4 rounded-lg font-semibold hover:text-brand-green transition-colors text-sm hover:bg-gray-50 ${location.pathname === item.href ? 'text-brand-green bg-brand-green/5' : 'text-gray-700'}`}
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             {item.name}
@@ -307,9 +314,9 @@ export default function Navbar() {
                   ) : (
                     <Link 
                       to={link.href}
-                      className={`block py-2.5 sm:py-3.5 font-bold hover:text-brand-green text-[15px] tracking-tight uppercase transition-colors ${
+                      className={`block py-3.5 px-3 rounded-xl font-bold hover:text-brand-green text-[15px] tracking-tight uppercase transition-colors min-h-[46px] hover:bg-gray-50 ${
                         (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
-                          ? 'text-brand-green' 
+                          ? 'text-brand-green bg-brand-green/5' 
                           : 'text-gray-900'
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
@@ -321,16 +328,18 @@ export default function Navbar() {
               </div>
             ))}
             
-            <div className="flex flex-col gap-3 sm:gap-4 pt-4 sm:pt-6">
+            <div className="flex flex-col gap-3 sm:gap-4 pt-5 sm:pt-6">
               <Link 
                 to="/store-locator" 
-                className="flex items-center justify-center border-2 border-brand-green text-brand-green py-2.5 sm:py-3.5 rounded-2xl font-bold hover:bg-brand-green hover:text-white transition-colors uppercase text-sm tracking-wider"
+                className="flex items-center justify-center border-2 border-brand-green text-brand-green py-3 px-6 rounded-2xl font-bold hover:bg-brand-green hover:text-white transition-colors uppercase text-sm tracking-wider min-h-[46px]"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 <MapPin size={20} className="mr-2" /> Find Store
               </Link>
               <a 
                 href="tel:+919457002000" 
-                className="flex items-center justify-center border border-gray-300 text-gray-800 py-2.5 sm:py-3.5 rounded-2xl font-bold hover:border-brand-green hover:text-brand-green transition-colors uppercase text-sm tracking-wider"
+                className="flex items-center justify-center border border-gray-300 text-gray-800 py-3 px-6 rounded-2xl font-bold hover:border-brand-green hover:text-brand-green transition-colors uppercase text-sm tracking-wider min-h-[46px]"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 <Phone size={20} className="mr-2" /> Support
               </a>

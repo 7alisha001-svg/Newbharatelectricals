@@ -15,7 +15,7 @@ export default function AboutUsPage() {
       </Helmet>
 
       {/* Hero Banner */}
-      <section className="relative bg-brand-dark py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-brand-dark py-12 md:py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-r from-brand-dark to-transparent z-10" />
           <img 
@@ -50,7 +50,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Company Introduction */}
-      <section className="py-16 md:py-24">
+      <section className="py-10 md:py-16">
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div 
@@ -91,7 +91,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-16 md:py-24 bg-[#f8f9fa] border-y border-gray-100">
+      <section className="py-10 md:py-16 bg-[#f8f9fa] border-y border-gray-100">
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <motion.div 
@@ -127,7 +127,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-16 md:py-24">
+      <section className="py-10 md:py-16">
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
@@ -165,7 +165,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Locations Section */}
-      <section className="py-16 md:py-24 bg-gray-50 border-t border-gray-100">
+      <section className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
