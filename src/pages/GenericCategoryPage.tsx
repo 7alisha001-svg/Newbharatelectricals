@@ -81,9 +81,9 @@ export default function GenericCategoryPage() {
         {/* Breadcrumb Header */}
         <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
-            <div className="flex items-center text-sm font-medium text-gray-500 overflow-x-auto whitespace-nowrap hide-scrollbar">
-              <Link to="/" className="text-gray-400 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
+            <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
+              <Link to="/" className="text-gray-800 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
               <span className="text-brand-green font-bold">{title}</span>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function GenericCategoryPage() {
         </div>
 
         {categoryProducts.length === 0 ? (
-          <div className="text-gray-500 py-10">No products found in this category.</div>
+          <div className="text-gray-700 font-medium py-10">No products found in this category.</div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {categoryProducts.map((product, idx) => {
@@ -145,9 +145,9 @@ export default function GenericCategoryPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col group transition-all duration-300"
+                className="bg-white rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col group transition-all duration-300"
               >
-                <div className="p-3 sm:p-5 relative bg-white h-40 sm:h-56 flex items-center justify-center">
+                <div className="p-4 sm:p-6 relative bg-white h-40 sm:h-56 flex items-center justify-center">
                    {discountPercent > 0 && (
                     <span className="absolute top-3 left-3 bg-brand-orange text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider z-10">
                       {discountPercent}% OFF
@@ -163,7 +163,7 @@ export default function GenericCategoryPage() {
                   </Link>
                 </div>
                 
-                <div className="p-4 sm:p-5 flex flex-col flex-grow border-t border-gray-50">
+                <div className="p-4 sm:p-6 flex flex-col flex-grow border-t border-gray-50">
                    <div className="flex items-center text-[10px] sm:text-xs text-yellow-400 mb-2">
                       <Star fill="currentColor" size={12} className="mr-0.5" />
                       <Star fill="currentColor" size={12} className="mr-0.5" />
@@ -176,12 +176,12 @@ export default function GenericCategoryPage() {
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-xs text-gray-500 line-clamp-2 mb-4">{product.short_description || product.description}</p>
+                  <p className="text-xs text-gray-700 font-medium line-clamp-2 mb-4">{product.short_description || product.description}</p>
                   
                   <div className="mt-auto">
                     <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
                       <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
-                      <span className="text-xs sm:text-sm text-gray-400 line-through">₹{product.regular_price}</span>
+                      <span className="text-xs sm:text-sm text-gray-800 line-through">₹{product.regular_price}</span>
                     </div>
                     <button 
                       onClick={() => addToCart({
@@ -191,7 +191,7 @@ export default function GenericCategoryPage() {
                         imageUrl: product.image_url,
                         quantity: 1
                       })}
-                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-3 sm:py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-3 sm:py-2 rounded-2xl font-bold tracking-wide text-xs uppercase flex items-center justify-center"
                     >
                       <ShoppingCart size={14} className="mr-2" /> Add to Cart
                     </button>

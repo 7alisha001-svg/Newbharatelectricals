@@ -20,10 +20,10 @@ export default function TermsConditionsPage() {
             <h1 className="text-3xl md:text-4xl font-heading font-black text-gray-900 uppercase tracking-tight mb-4">
               Terms & Conditions
             </h1>
-            <p className="text-gray-500 text-sm">Last Updated: July 3, 2026</p>
+            <p className="text-gray-700 font-medium text-sm">Last Updated: July 3, 2026</p>
           </div>
 
-          <div className="prose prose-gray max-w-none text-gray-600 space-y-8">
+          <div className="prose prose-gray max-w-none text-gray-800 font-medium space-y-8">
             <p className="leading-relaxed text-lg">
               Welcome to <strong>New Bharat Electricals</strong>. By accessing or using our website, purchasing our products, or using our services, you agree to comply with these Terms & Conditions. If you do not agree with any part of these terms, please do not use our website or services.
             </p>
@@ -177,7 +177,7 @@ export default function TermsConditionsPage() {
               <p className="leading-relaxed">
                 If you have any questions regarding these Terms & Conditions, please contact us using the contact information provided on our website.
               </p>
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+              <div className="mt-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <p><strong>Email:</strong> newbharatelectricals00@gmail.com</p>
                 <p><strong>Phone:</strong> +91 94570 02000</p>
                 <Link to="/contact" className="inline-block mt-3 text-brand-green font-bold hover:underline">

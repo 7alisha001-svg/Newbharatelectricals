@@ -170,7 +170,7 @@ export default function Navbar() {
             <div className="hidden xl:flex items-center text-sm lg:pr-2">
               <MapPin size={24} className="text-gray-800 mr-2" strokeWidth={1.5} />
               <div className="flex flex-col leading-tight">
-                <span className="text-gray-500 text-[11px]">Deliver to</span>
+                <span className="text-gray-700 font-medium text-[11px]">Deliver to</span>
                 <span className="font-bold text-gray-900 text-xs border-b border-gray-900 hover:text-brand-green hover:border-brand-green cursor-pointer transition-colors pb-0.5">Select your location</span>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function Navbar() {
             <div className="hidden lg:flex flex-grow max-w-[700px] relative">
               <div className="relative w-full">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search size={20} className="text-gray-500" />
+                  <Search size={20} className="text-gray-700 font-medium" />
                 </div>
                 <input 
                   type="text" 
@@ -234,31 +234,31 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Categories Bottom Bar */}
-          <nav className="hidden lg:flex mt-3">
-            <ul className="flex items-center space-x-8 text-[13px] font-bold uppercase tracking-wide">
+          <nav className="hidden lg:flex mt-4">
+            <ul className="flex items-center space-x-10 text-[15px] font-bold uppercase tracking-wide">
               {navLinks.map((link) => (
                 <li key={link.name} className="relative group">
                   <Link 
                     to={link.href} 
-                    className={`flex items-center transition-colors pt-1 pb-2 border-b-2 group-hover:border-brand-green group-hover:text-brand-green ${
+                    className={`flex items-center transition-colors pt-1 pb-3 border-b-2 group-hover:border-brand-green group-hover:text-brand-green ${
                       (link.href === '/' && location.pathname === '/') || (link.href !== '/' && location.pathname.startsWith(link.href)) 
                         ? 'border-brand-green text-brand-green' 
                         : 'border-transparent text-gray-800'
                     }`}
                   >
                     {link.name}
-                    {link.hasDropdown && <ChevronDown size={14} className="ml-1.5 group-hover:rotate-180 transition-transform duration-200" />}
+                    {link.hasDropdown && <ChevronDown size={16} className="ml-2 group-hover:rotate-180 transition-transform duration-200" />}
                   </Link>
                   
                   {/* Dropdown */}
                   {link.hasDropdown && (
-                    <div className="absolute top-full left-0 w-56 bg-white shadow-xl rounded-b-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
+                    <div className="absolute top-full left-0 w-64 bg-white shadow-xl rounded-b-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
                       <div className="py-2">
                         {link.dropdownItems?.map((item) => (
                           <Link 
                             key={item.href} 
                             to={item.href} 
-                            className={`block px-4 py-2.5 text-xs font-bold hover:text-brand-green hover:bg-brand-gray transition-colors border-b border-gray-50 last:border-0 ${location.pathname === item.href ? 'text-brand-green bg-brand-gray' : 'text-gray-700'}`}
+                            className={`block px-6 py-3 text-sm font-bold hover:text-brand-green hover:bg-brand-gray transition-colors border-b border-gray-50 last:border-0 ${location.pathname === item.href ? 'text-brand-green bg-brand-gray' : 'text-gray-700'}`}
                           >
                             {item.name}
                           </Link>
@@ -296,7 +296,7 @@ export default function Navbar() {
                           <Link 
                             key={item.href} 
                             to={item.href} 
-                            className={`block py-2 sm:py-3 pl-4 font-medium hover:text-brand-green transition-colors text-sm ${location.pathname === item.href ? 'text-brand-green' : 'text-gray-600'}`}
+                            className={`block py-2 sm:py-3 pl-4 font-medium hover:text-brand-green transition-colors text-sm ${location.pathname === item.href ? 'text-brand-green' : 'text-gray-800 font-medium'}`}
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             {item.name}
@@ -324,13 +324,13 @@ export default function Navbar() {
             <div className="flex flex-col gap-3 sm:gap-4 pt-4 sm:pt-6">
               <Link 
                 to="/store-locator" 
-                className="flex items-center justify-center border-2 border-brand-green text-brand-green py-2.5 sm:py-3.5 rounded-lg font-bold hover:bg-brand-green hover:text-white transition-colors uppercase text-sm tracking-wider"
+                className="flex items-center justify-center border-2 border-brand-green text-brand-green py-2.5 sm:py-3.5 rounded-2xl font-bold hover:bg-brand-green hover:text-white transition-colors uppercase text-sm tracking-wider"
               >
                 <MapPin size={20} className="mr-2" /> Find Store
               </Link>
               <a 
                 href="tel:+919457002000" 
-                className="flex items-center justify-center border border-gray-300 text-gray-800 py-2.5 sm:py-3.5 rounded-lg font-bold hover:border-brand-green hover:text-brand-green transition-colors uppercase text-sm tracking-wider"
+                className="flex items-center justify-center border border-gray-300 text-gray-800 py-2.5 sm:py-3.5 rounded-2xl font-bold hover:border-brand-green hover:text-brand-green transition-colors uppercase text-sm tracking-wider"
               >
                 <Phone size={20} className="mr-2" /> Support
               </a>

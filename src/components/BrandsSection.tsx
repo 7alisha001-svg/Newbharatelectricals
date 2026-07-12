@@ -57,7 +57,7 @@ export default function BrandsSection() {
                     />
                   ) : null}
                   <div 
-                    className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-400 font-heading font-bold text-2xl uppercase tracking-wider"
+                    className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-800 font-heading font-bold text-2xl uppercase tracking-wider"
                     style={{ display: brand.logo_url ? 'none' : 'flex' }}
                   >
                     {brand.name ? brand.name.substring(0, 2) : 'B'}

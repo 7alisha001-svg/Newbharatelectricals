@@ -123,7 +123,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
                   <button 
                     type="button"
                     onClick={(e) => { e.stopPropagation(); removeImage(idx); }}
-                    className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-md shadow-md"
+                    className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-xl shadow-md"
                     title="Remove Image"
                   >
                     <X size={14} />

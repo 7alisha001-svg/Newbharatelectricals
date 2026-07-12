@@ -40,7 +40,7 @@ export default function WhyUs() {
                 <h3 className="font-heading font-bold text-gray-900 text-xs sm:text-sm lg:text-base uppercase tracking-wide mb-1 flex items-center justify-center xl:justify-start leading-tight">
                   {reason.title}
                 </h3>
-                <p className="text-gray-500 text-xs md:text-xs xl:text-sm">
+                <p className="text-gray-700 text-xs md:text-xs xl:text-sm font-medium tracking-wide">
                   {reason.desc}
                 </p>
               </div>

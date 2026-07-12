@@ -45,7 +45,7 @@ export default function OrderSuccessPage() {
             </motion.div>
             
             <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-gray-900 mb-2 relative z-10">Order Confirmed!</h1>
-            <p className="text-gray-600 max-w-md mx-auto relative z-10">
+            <p className="text-gray-800 font-medium max-w-md mx-auto relative z-10">
               Thank you for trusting New Bharat Electricals. Your order has been successfully placed.
             </p>
           </div>
@@ -57,16 +57,16 @@ export default function OrderSuccessPage() {
               </h3>
               <div className="space-y-4 text-sm md:text-base">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 font-medium">Order Number</span>
-                  <span className="font-black text-gray-900 bg-white px-3 py-1 rounded shadow-sm border border-gray-100">{orderDetails.orderId}</span>
+                  <span className="text-gray-700 font-medium">Order Number</span>
+                  <span className="font-black text-gray-900 bg-white px-4 py-2 rounded shadow-sm border border-gray-100">{orderDetails.orderId}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 font-medium">Date</span>
+                  <span className="text-gray-700 font-medium">Date</span>
                   <span className="font-bold text-gray-900">{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 font-medium">Payment Status</span>
-                  <span className="font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full text-xs uppercase tracking-wider">Success</span>
+                  <span className="text-gray-700 font-medium">Payment Status</span>
+                  <span className="font-bold text-green-700 bg-green-100 px-4 py-2 rounded-full text-xs uppercase tracking-wider">Success</span>
                 </div>
                 <div className="pt-3 mt-3 border-t border-gray-200 flex justify-between items-center">
                   <span className="text-gray-900 font-bold">Total Amount</span>

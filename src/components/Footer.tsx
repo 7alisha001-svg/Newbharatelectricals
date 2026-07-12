@@ -203,13 +203,13 @@ export default function Footer() {
                 />
               </div>
 
-              <div className="flex flex-col gap-4 mt-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-2 w-full">
                 <div className="flex items-start text-neutral-100 justify-start md:justify-center lg:justify-start w-full gap-3">
                    <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
                      <MapPin className="text-brand-green md:text-white" size={16} />
                    </div>
                    <div className="text-left md:text-center lg:text-left">
-                     <p className="font-bold text-sm mb-1 text-brand-green md:text-brand-green">Corporate Office</p>
+                     <p className="font-bold text-sm mb-1 text-white">Corporate Office</p>
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
                        {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
                         settings?.office_address || 
@@ -223,7 +223,7 @@ export default function Footer() {
                      <MapPin className="text-brand-green md:text-white" size={16} />
                    </div>
                    <div className="text-left md:text-center lg:text-left">
-                     <p className="font-bold text-sm mb-1 text-brand-green md:text-brand-green">Warehouse</p>
+                     <p className="font-bold text-sm mb-1 text-white">Warehouse</p>
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
                        {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
                         settings?.warehouse_address || 
@@ -300,19 +300,19 @@ export default function Footer() {
               <span className="text-gray-400">Copyright © {new Date().getFullYear()} New Bharat Electricals. All Rights Reserved.</span>
               
               <div className="flex items-center flex-wrap justify-center gap-x-2 gap-y-2 mt-2 md:mt-0">
-                <span className="hidden md:inline mx-1.5 text-gray-700">|</span> 
+                <span className="hidden md:inline mx-1.5 text-gray-500">|</span> 
                 <Link to="/terms-and-conditions" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Terms & Conditions</Link> 
-                <span className="text-gray-700 hidden md:inline">|</span> 
+                <span className="text-gray-500 hidden md:inline">|</span> 
                 <Link to="/privacy-policy" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Privacy Policy</Link> 
-                <span className="text-gray-700 hidden md:inline">|</span> 
+                <span className="text-gray-500 hidden md:inline">|</span> 
                 <Link to="/contact" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Disclaimer</Link>
-                <span className="text-gray-700 hidden md:inline">|</span> 
+                <span className="text-gray-500 hidden md:inline">|</span> 
                 <Link to="/admin" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Admin Login</Link>
               </div>
             </div>
             <div className="text-center lg:text-right mt-2 md:mt-0 leading-relaxed text-gray-400">
               Powered by advanced renewable engineering. <br className="lg:hidden" />
-              <span className="text-gray-500">Website proudly crafted with high-performance standards.</span>
+              <span className="text-gray-500 font-medium">Website proudly crafted with high-performance standards.</span>
             </div>
         </div>
 

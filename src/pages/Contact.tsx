@@ -66,7 +66,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto"
+            className="text-lg md:text-xl text-gray-800 max-w-2xl mx-auto"
           >
             Have questions about our products, dealer opportunities, or require support? We are here to help.
           </motion.p>
@@ -91,29 +91,29 @@ export default function Contact() {
                 >
                   <CheckCircle2 size={64} className="text-brand-green mb-4" />
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent Successfully!</h3>
-                  <p className="text-gray-600">Thank you for reaching out. Our team will get back to you shortly.</p>
+                  <p className="text-gray-800">Thank you for reaching out. Our team will get back to you shortly.</p>
                 </motion.div>
               ) : (
                 <form className="space-y-6" onSubmit={handleSubmit}>
                   {error && (
-                    <div className="bg-red-50 text-red-600 p-4 rounded-lg border border-red-200">
+                    <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-200">
                       {error}
                     </div>
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                      <input id="name" name="name" required type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="John Doe" />
+                      <input id="name" name="name" required type="text" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="John Doe" />
                     </div>
                     <div>
                       <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                      <input id="phone" name="phone" required type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="+91 90000 00000" />
+                      <input id="phone" name="phone" required type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="+91 90000 00000" />
                     </div>
                   </div>
 
                   <div>
                     <label htmlFor="inquiry-type" className="block text-sm font-bold text-gray-700 mb-2">Product Inquiry</label>
-                    <select id="inquiry-type" name="inquiry-type" required defaultValue="" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all text-gray-700">
+                    <select id="inquiry-type" name="inquiry-type" required defaultValue="" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all text-gray-700">
                       <option value="" disabled>Select a category...</option>
                       <option value="Power Solutions (Inverters/UPS)">Power Solutions (Inverters/UPS)</option>
                       <option value="Solar Solutions">Solar Solutions</option>
@@ -126,14 +126,14 @@ export default function Contact() {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-bold text-gray-700 mb-2">Message</label>
-                    <textarea id="message" name="message" required rows={5} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Tell us how we can help you..."></textarea>
+                    <textarea id="message" name="message" required rows={5} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Tell us how we can help you..."></textarea>
                   </div>
 
                   <div className="pt-4 flex flex-col sm:flex-row gap-4">
-                    <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-green text-white font-bold py-4 px-8 rounded-lg hover:bg-brand-green-dark transition-colors flex items-center justify-center shadow-lg shadow-brand-green/30 disabled:opacity-70">
+                    <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-green text-white font-bold py-4 px-8 rounded-2xl hover:bg-brand-green-dark transition-colors flex items-center justify-center shadow-lg shadow-brand-green/30 disabled:opacity-70">
                       {isSubmitting ? 'Sending...' : 'Send Inquiry'} {!isSubmitting && <Send size={18} className="ml-2" />}
                     </button>
-                    <a href="https://wa.me/919457002000" target="_blank" rel="noreferrer" className="sm:flex-1 bg-white border-2 border-[#25D366] text-[#25D366] font-bold py-4 px-8 rounded-lg hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center text-center">
+                    <a href="https://wa.me/919457002000" target="_blank" rel="noreferrer" className="sm:flex-1 bg-white border-2 border-[#25D366] text-[#25D366] font-bold py-4 px-8 rounded-2xl hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center text-center">
                       <MessageCircle size={18} className="mr-2" /> Quick WhatsApp
                     </a>
                   </div>
@@ -156,7 +156,7 @@ export default function Contact() {
                   </div>
                    <div>
                     <p className="font-bold text-gray-900 text-lg">Call Us</p>
-                    <p className="text-gray-500 mb-1">Mon-Sat, 9am to 8pm</p>
+                    <p className="text-gray-700 mb-1">Mon-Sat, 9am to 8pm</p>
                     <a href="tel:+919457002000" className="text-brand-green font-bold text-xl hover:text-brand-green-dark transition-colors">+91 94570 02000</a>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="font-bold text-gray-900 text-lg">Email Support</p>
-                    <p className="text-gray-500 mb-1">24/7 Priority Support</p>
+                    <p className="text-gray-700 mb-1">24/7 Priority Support</p>
                     <a href="mailto:newbharatelectricals00@gmail.com" className="text-brand-green font-medium hover:text-brand-green-dark transition-colors">newbharatelectricals00@gmail.com</a>
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default function Contact() {
 
               <div className="mt-12 bg-white p-6 rounded-2xl border border-brand-green/20">
                 <h4 className="font-bold text-gray-900 mb-2">Dealer Partnership</h4>
-                <p className="text-gray-600 text-sm mb-4">Interested in becoming a certified New Bharat Electricals distributor?</p>
+                <p className="text-gray-800 text-sm mb-4">Interested in becoming a certified New Bharat Electricals distributor?</p>
                 <button className="text-brand-green font-bold text-sm uppercase tracking-wider hover:text-brand-green-dark transition-colors flex items-center">
                   Learn More <Send size={14} className="ml-1" />
                 </button>
@@ -193,7 +193,7 @@ export default function Contact() {
               Our Locations
             </h2>
             <div className="w-16 h-1 bg-brand-green mx-auto mb-6" />
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-800 max-w-2xl mx-auto text-lg">
               Visit our corporate office or warehouse.
             </p>
           </div>
@@ -213,8 +213,8 @@ export default function Contact() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Corporate Office</h3>
                 <h4 className="text-brand-green font-semibold mb-4">{settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.business_name || settings?.business_name || 'New Bharat Electricals'}</h4>
                 
-                <div className="flex items-start text-gray-600 mb-4 gap-3">
-                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-400" />
+                <div className="flex items-start text-gray-800 mb-4 gap-3">
+                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-800" />
                   <p className="leading-relaxed whitespace-pre-line">
                     {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
                      settings?.office_address || 
@@ -223,8 +223,8 @@ export default function Contact() {
                 </div>
                 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.phone && (
-                  <div className="flex items-center text-gray-600 gap-3 mb-4">
-                    <Phone size={20} className="flex-shrink-0 text-gray-400" />
+                  <div className="flex items-center text-gray-800 gap-3 mb-4">
+                    <Phone size={20} className="flex-shrink-0 text-gray-800" />
                     <a href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'office').phone}`} className="hover:text-brand-green transition-colors">
                       {settings.social_links.locations.find((l: any) => l.type === 'office').phone}
                     </a>
@@ -232,7 +232,7 @@ export default function Contact() {
                 )}
 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.business_hours && (
-                  <div className="flex items-center text-gray-600 gap-3 mb-6">
+                  <div className="flex items-center text-gray-800 gap-3 mb-6">
                     <div className="flex items-center">
                       <span className="font-bold text-sm">Hours:</span>
                       <span className="ml-2">{settings.social_links.locations.find((l: any) => l.type === 'office').business_hours}</span>
@@ -265,7 +265,7 @@ export default function Contact() {
                   href={settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.map_link || 'https://maps.google.com/?q=New+Bharat+Electricals,Budaun'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-brand-dark text-white text-center font-bold py-3 rounded-lg hover:bg-brand-green transition-colors"
+                  className="flex-1 bg-brand-dark text-white text-center font-bold py-3 rounded-2xl hover:bg-brand-green transition-colors"
                 >
                   Get Directions
                 </a>
@@ -285,10 +285,10 @@ export default function Contact() {
                   <Warehouse size={32} />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Warehouse</h3>
-                <h4 className="text-gray-500 font-semibold mb-4">Distribution & Logistics</h4>
+                <h4 className="text-gray-700 font-semibold mb-4">Distribution & Logistics</h4>
                 
-                <div className="flex items-start text-gray-600 mb-4 gap-3">
-                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-400" />
+                <div className="flex items-start text-gray-800 mb-4 gap-3">
+                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-800" />
                   <p className="leading-relaxed whitespace-pre-line">
                     {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
                      settings?.warehouse_address || 
@@ -297,8 +297,8 @@ export default function Contact() {
                 </div>
 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.phone && (
-                  <div className="flex items-center text-gray-600 gap-3 mb-4">
-                    <Phone size={20} className="flex-shrink-0 text-gray-400" />
+                  <div className="flex items-center text-gray-800 gap-3 mb-4">
+                    <Phone size={20} className="flex-shrink-0 text-gray-800" />
                     <a href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'warehouse').phone}`} className="hover:text-brand-green transition-colors">
                       {settings.social_links.locations.find((l: any) => l.type === 'warehouse').phone}
                     </a>
@@ -306,7 +306,7 @@ export default function Contact() {
                 )}
 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.business_hours && (
-                  <div className="flex items-center text-gray-600 gap-3 mb-6">
+                  <div className="flex items-center text-gray-800 gap-3 mb-6">
                     <div className="flex items-center">
                       <span className="font-bold text-sm">Hours:</span>
                       <span className="ml-2">{settings.social_links.locations.find((l: any) => l.type === 'warehouse').business_hours}</span>
@@ -339,7 +339,7 @@ export default function Contact() {
                   href={settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.map_link || 'https://maps.google.com/?q=Loda+Bahedi,Budaun'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full bg-brand-dark text-white text-center font-bold py-3 rounded-lg hover:bg-brand-green transition-colors"
+                  className="block w-full bg-brand-dark text-white text-center font-bold py-3 rounded-2xl hover:bg-brand-green transition-colors"
                 >
                   Get Directions
                 </a>

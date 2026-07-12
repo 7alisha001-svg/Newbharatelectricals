@@ -9,11 +9,11 @@ export default function LocationsPreview() {
     <section className="py-16 md:py-24 bg-gray-50 border-t border-gray-100">
       <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 uppercase tracking-tight mb-4">
+          <h2 className="text-4xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
             Our Locations
           </h2>
-          <div className="w-16 h-1 bg-brand-green mx-auto mb-6" />
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <div className="w-20 h-1.5 bg-brand-green mx-auto mb-8" />
+          <p className="text-gray-800 max-w-2xl mx-auto text-lg md:text-xl font-medium tracking-wide">
             Visit our corporate office or warehouse.
           </p>
         </div>
@@ -30,8 +30,8 @@ export default function LocationsPreview() {
               <Building size={32} />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Corporate Office</h3>
-              <p className="text-gray-600 mb-4 line-clamp-2">
+              <h3 className="text-2xl font-black text-gray-900 mb-2">Corporate Office</h3>
+              <p className="text-gray-800 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
                  settings?.office_address || 
                  'Near Dr Amar Singh, Chaudhry Sarai, Budaun'}
@@ -59,8 +59,8 @@ export default function LocationsPreview() {
               <Warehouse size={32} />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Warehouse</h3>
-              <p className="text-gray-600 mb-4 line-clamp-2">
+              <h3 className="text-2xl font-black text-gray-900 mb-2">Warehouse</h3>
+              <p className="text-gray-800 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
                  settings?.warehouse_address || 
                  'Budaun, Loda Bahedi, Uttar Pradesh'}

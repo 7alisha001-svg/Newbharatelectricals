@@ -121,7 +121,7 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
                     className="hidden md:block relative z-20"
                   >
-                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-[#015c40] text-white font-black px-12 py-3.5 shadow-2xl hover:scale-105 transition-transform uppercase tracking-widest text-lg border border-[#015c40]/50 hover:bg-[#014430]">
+                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-brand-green text-white font-black px-12 py-4 rounded-xl shadow-2xl hover:scale-105 transition-transform uppercase tracking-widest text-lg border border-brand-green/50 hover:bg-brand-orange">
                       {heroSlides[currentSlide].ctaText}
                     </Link>
                   </motion.div>
@@ -142,7 +142,7 @@ export default function Hero() {
 
                   {/* Mobile CTA */}
                   <div className="md:hidden mt-4 relative z-30">
-                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-[#015c40] text-white font-black px-8 py-2.5 shadow-2xl hover:scale-105 transition-transform uppercase tracking-widest text-sm border border-[#015c40]/50 hover:bg-[#014430]">
+                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-brand-green text-white font-black px-8 py-3 rounded-xl shadow-2xl hover:scale-105 transition-transform uppercase tracking-widest text-sm border border-brand-green/50 hover:bg-brand-orange">
                       {heroSlides[currentSlide].ctaText}
                     </Link>
                   </div>

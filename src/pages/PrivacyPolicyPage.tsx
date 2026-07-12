@@ -20,10 +20,10 @@ export default function PrivacyPolicyPage() {
             <h1 className="text-3xl md:text-4xl font-heading font-black text-gray-900 uppercase tracking-tight mb-4">
               Privacy Policy
             </h1>
-            <p className="text-gray-500 text-sm">Last Updated: July 3, 2026</p>
+            <p className="text-gray-700 font-medium text-sm">Last Updated: July 3, 2026</p>
           </div>
 
-          <div className="prose prose-gray max-w-none text-gray-600 space-y-8">
+          <div className="prose prose-gray max-w-none text-gray-800 font-medium space-y-8">
             
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-4 uppercase tracking-wide">1. Introduction</h2>
@@ -131,7 +131,7 @@ export default function PrivacyPolicyPage() {
               <p className="leading-relaxed">
                 If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:
               </p>
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+              <div className="mt-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <p className="mb-2"><strong>New Bharat Electricals</strong></p>
                 <p><strong>Email:</strong> newbharatelectricals00@gmail.com</p>
                 <p><strong>Phone:</strong> +91 94570 02000</p>

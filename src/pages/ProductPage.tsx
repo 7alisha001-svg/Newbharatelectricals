@@ -17,15 +17,15 @@ export default function ProductPage() {
   // This is placeholder structural data.
   // It will be replaced naturally when real data is integrated into a unified data structure.
   
-  if (loading) return <div className="p-20 text-center flex justify-center items-center h-[50vh]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green"></div></div>;
+  if (loading) return <div className="p-20 text-center flex justify-center items-center h-[50vh]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-orange"></div></div>;
   
   const rawProduct = products.find(p => p.id === productId);
   if (!rawProduct) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center bg-gray-50 text-center px-4">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h2>
-        <p className="text-gray-500 mb-6">The product you are looking for does not exist or has been removed.</p>
-        <Link to="/" className="bg-brand-green text-white font-bold py-3 px-8 rounded-lg hover:bg-brand-green-dark transition-colors">Return Home</Link>
+        <p className="text-gray-700 font-medium mb-6">The product you are looking for does not exist or has been removed.</p>
+        <Link to="/" className="bg-brand-green text-white font-bold py-3 px-8 rounded-2xl hover:bg-brand-green-dark transition-colors">Return Home</Link>
       </div>
     );
   }
@@ -81,29 +81,29 @@ export default function ProductPage() {
         {/* Breadcrumb Header */}
         <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center text-sm font-medium text-gray-500 overflow-x-auto whitespace-nowrap hide-scrollbar">
-              <Link to="/" className="text-gray-400 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
-              <Link to={`/${category}`} className="text-gray-400 hover:text-brand-green">{categoryTitle}</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
-              <Link to={`/${category}/${subcategory}`} className="text-gray-400 hover:text-brand-green">{subCategoryTitle}</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
+            <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
+              <Link to="/" className="text-gray-800 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
+              <Link to={`/${category}`} className="text-gray-800 hover:text-brand-green">{categoryTitle}</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
+              <Link to={`/${category}/${subcategory}`} className="text-gray-800 hover:text-brand-green">{subCategoryTitle}</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
               <span className="text-brand-green font-bold">{product.name}</span>
             </div>
           </div>
         </div>
 
         <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col lg:flex-row">
+          <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col lg:flex-row">
             
             {/* Left - Image Gallery */}
-            <div className="w-full lg:w-1/2 p-4 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col">
+            <div className="w-full lg:w-1/2 p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-gray-100 bg-gray-50/30 flex flex-col">
               <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
                 <img src={product.images[0]} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
               </div>
               <div className="flex gap-4">
                 {product.images.map((thumb, idx) => (
-                  <button key={idx} className="w-20 h-20 border-2 border-brand-green rounded-lg overflow-hidden bg-white p-2">
+                  <button key={idx} className="w-24 h-24 border-2 border-brand-orange rounded-2xl overflow-hidden bg-white p-2">
                     <img src={thumb} alt={`Thumbnail ${idx}`} className="w-full h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
                   </button>
                 ))}
@@ -111,19 +111,19 @@ export default function ProductPage() {
             </div>
 
             {/* Right - Product Info */}
-            <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 relative">
-              <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-400 hover:text-gray-900 transition-colors">
+            <div className="w-full lg:w-1/2 p-8 sm:p-10 lg:p-14 relative">
+              <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-800 hover:text-gray-900 transition-colors">
                 <Share2 size={24} />
               </button>
               
               <h1 className="text-3xl lg:text-4xl font-heading font-bold text-gray-900 mb-2 pr-12">{product.name}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
+              <div className="flex items-center gap-4 text-sm text-gray-700 font-medium mb-6">
                  <span>SKU: <span className="font-medium text-gray-900">{product.sku}</span></span>
                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                  <span className="text-brand-green font-bold flex items-center"><CheckCircle2 size={14} className="mr-1" /> {product.stockStatus}</span>
               </div>
               
-              <p className="text-gray-600 mb-8 leading-relaxed text-sm md:text-base">
+              <p className="text-gray-800 font-medium mb-8 leading-relaxed text-sm md:text-base">
                 {product.description}
               </p>
 
@@ -143,11 +143,11 @@ export default function ProductPage() {
                 </div>
 
                 <div className="flex items-center mb-8">
-                  <span className="text-gray-600 mr-4">Quantity:</span>
+                  <span className="text-gray-800 font-medium mr-4">Quantity:</span>
                   <div className="flex items-center border border-gray-300 rounded">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-3 py-1 text-gray-600 hover:bg-gray-100 transition-colors"
+                      className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 transition-colors"
                     >
                       <Minus size={16} />
                     </button>
@@ -159,7 +159,7 @@ export default function ProductPage() {
                     />
                     <button 
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-3 py-1 text-gray-600 hover:bg-gray-100 transition-colors"
+                      className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 transition-colors"
                     >
                       <Plus size={16} />
                     </button>
@@ -169,14 +169,14 @@ export default function ProductPage() {
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <button 
                     onClick={handleAddToCart}
-                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-green-700 font-bold py-3.5 sm:py-3 px-6 rounded-lg transition-colors uppercase tracking-wide text-sm shadow-md"
+                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-green-700 font-bold py-3.5 sm:py-3 px-6 rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
                   >
                     <ShoppingCart size={18} className="mr-2" /> Add to Cart
                   </button>
                   <a 
                     href={`https://wa.me/919457002000?text=${whatsappMessage}`}
                     target="_blank" rel="noreferrer"
-                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-lg transition-colors uppercase tracking-wide text-sm shadow-md"
+                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
                   >
                     <MessageCircle size={18} className="mr-2" /> Query on WhatsApp
                   </a>
@@ -192,9 +192,9 @@ export default function ProductPage() {
                       placeholder="Enter pincode to check delivery" 
                       value={pincode}
                       onChange={(e) => setPincode(e.target.value)}
-                      className="flex-1 bg-white border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:border-brand-green text-sm"
+                      className="flex-1 bg-white border border-gray-300 rounded-l-xl px-6 py-3.5 focus:outline-none focus:border-brand-orange text-sm"
                     />
-                    <button className="bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-r-lg transition-colors text-sm">
+                    <button className="bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-r-xl px-8 transition-colors text-sm">
                       Check
                     </button>
                   </div>
@@ -204,12 +204,12 @@ export default function ProductPage() {
           </div>
 
           {/* Product Specifications Section */}
-          <div className="mt-8 sm:mt-12 bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 lg:p-12">
+          <div className="mt-8 sm:mt-12 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-6 sm:p-8 lg:p-12">
             <h2 className="text-xl sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">Product Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                {product.specifications.map((spec, idx) => (
                  <div key={idx} className="flex justify-between py-3 border-b border-gray-100 last:border-0 md:last:border-b">
-                   <span className="text-gray-500 font-medium">{spec.label}</span>
+                   <span className="text-gray-700 font-medium">{spec.label}</span>
                    <span className="text-gray-900 font-bold">{spec.value}</span>
                  </div>
                ))}

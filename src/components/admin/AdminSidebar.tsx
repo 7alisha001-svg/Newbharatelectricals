@@ -103,7 +103,7 @@ export default function AdminSidebar({
                   key={item.name}
                   to={item.href}
                   className={`
-                    flex items-center px-4 py-2.5 text-xs font-semibold rounded-xl transition-colors
+                    flex items-center px-6 py-3.5 text-xs font-semibold rounded-xl transition-colors
                     ${isActive 
                       ? 'bg-brand-green text-white font-bold' 
                       : 'text-gray-400 hover:bg-gray-800 hover:text-white'
@@ -128,7 +128,7 @@ export default function AdminSidebar({
                   key={item.name}
                   to={item.href}
                   className={`
-                    flex items-center px-4 py-2.5 text-xs font-semibold rounded-xl transition-colors
+                    flex items-center px-6 py-3.5 text-xs font-semibold rounded-xl transition-colors
                     ${isActive 
                       ? 'bg-brand-green text-white font-bold' 
                       : 'text-gray-400 hover:bg-gray-800 hover:text-white'
@@ -153,7 +153,7 @@ export default function AdminSidebar({
                   key={item.name}
                   to={item.href}
                   className={`
-                    flex items-center px-4 py-2.5 text-xs font-semibold rounded-xl transition-colors
+                    flex items-center px-6 py-3.5 text-xs font-semibold rounded-xl transition-colors
                     ${isActive 
                       ? 'bg-brand-green text-white font-bold' 
                       : 'text-gray-400 hover:bg-gray-800 hover:text-white'
@@ -176,7 +176,7 @@ export default function AdminSidebar({
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-xl transition-colors"
+            className="flex items-center w-full px-6 py-3.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-xl transition-colors"
           >
             <LogOut size={18} className="mr-3" />
             Sign Out

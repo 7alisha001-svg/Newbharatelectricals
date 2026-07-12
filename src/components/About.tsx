@@ -13,25 +13,25 @@ export default function About() {
             viewport={{ once: true }}
             className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center"
           >
-            <div className="inline-flex items-center space-x-2 bg-brand-green-light text-brand-green px-3 py-1 rounded-full mb-4 text-[10px] font-bold uppercase tracking-widest w-max">
+            <div className="inline-flex items-center space-x-2 bg-brand-green-light text-brand-green px-4 py-2 rounded-full mb-4 text-[10px] font-bold uppercase tracking-widest w-max">
               <Award size={14} />
               <span>About The Company</span>
             </div>
-            <h2 className="text-2xl md:text-4xl font-heading font-black text-gray-900 leading-tight mb-4 uppercase">
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-gray-900 leading-tight mb-4 uppercase">
               Leading the Way in <br/> Energy Innovation
             </h2>
-            <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
+            <p className="text-gray-800 text-base md:text-lg leading-relaxed font-medium tracking-wide mb-6">
               Based in the heart of UP, New Bharat Electricals has been a pioneer in transforming how homes and businesses consume energy. From rugged tubular batteries to advanced solar power units, we are dedicated to bringing reliable, clean, and continuous power to every corner of India.
             </p>
             
             <div className="flex gap-4">
               <div className="flex flex-col border-l-2 border-brand-green pl-4">
                 <span className="text-2xl font-bold text-gray-900 leading-none">15+</span>
-                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-1">Years Exp.</span>
+                <span className="text-[10px] text-gray-700 font-medium font-bold uppercase tracking-wider mt-1">Years Exp.</span>
               </div>
               <div className="flex flex-col border-l-2 border-brand-green pl-4">
                 <span className="text-2xl font-bold text-gray-900 leading-none">1M+</span>
-                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-1">Customers</span>
+                <span className="text-[10px] text-gray-700 font-medium font-bold uppercase tracking-wider mt-1">Customers</span>
               </div>
             </div>
           </motion.div>

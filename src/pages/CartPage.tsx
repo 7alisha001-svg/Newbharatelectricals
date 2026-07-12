@@ -27,7 +27,7 @@ export default function CartPage() {
                 <ShoppingCart size={40} className="text-gray-300" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-              <p className="text-gray-500 mb-8 max-w-md mx-auto">Looks like you haven't added any products to your cart yet.</p>
+              <p className="text-gray-700 font-medium mb-8 max-w-md mx-auto">Looks like you haven't added any products to your cart yet.</p>
               <Link 
                 to="/catalogue" 
                 className="bg-brand-green text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all shadow-md hover:shadow-lg inline-block uppercase tracking-wide text-sm"
@@ -43,7 +43,7 @@ export default function CartPage() {
                 className="w-full lg:w-2/3"
               >
                 <div className="border border-gray-100 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white">
-                  <div className="bg-gray-50/50 px-8 py-5 border-b border-gray-100 hidden md:flex font-bold text-gray-500 uppercase tracking-wider text-xs">
+                  <div className="bg-gray-50/50 px-8 py-5 border-b border-gray-100 hidden md:flex font-bold text-gray-700 font-medium uppercase tracking-wider text-xs">
                     <div className="w-1/2">Product</div>
                     <div className="w-1/6 text-center">Price</div>
                     <div className="w-1/6 text-center">Quantity</div>
@@ -64,24 +64,24 @@ export default function CartPage() {
                           <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-base sm:text-lg line-clamp-2 pr-6 sm:pr-0">{item.name}</Link>
                         </div>
                         
-                        <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-600 font-medium">
+                        <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-800 font-medium">
                           <span className="md:hidden">Price:</span>
                           ₹{item.price}
                         </div>
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center">
-                           <span className="md:hidden text-gray-600 font-medium">Quantity:</span>
-                           <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                           <span className="md:hidden text-gray-800 font-medium">Quantity:</span>
+                           <div className="flex items-center border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm">
                               <button 
                                 onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                className="px-3 py-2 text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                                className="px-3 py-2 text-gray-700 font-medium hover:bg-gray-50 hover:text-gray-900 transition-colors"
                               >
                                 <Minus size={14} />
                               </button>
                               <span className="w-10 text-center text-sm font-bold">{item.quantity}</span>
                               <button 
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="px-3 py-2 text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                                className="px-3 py-2 text-gray-700 font-medium hover:bg-gray-50 hover:text-gray-900 transition-colors"
                               >
                                 <Plus size={14} />
                               </button>
@@ -89,7 +89,7 @@ export default function CartPage() {
                         </div>
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center font-black text-gray-900 text-lg">
-                          <span className="md:hidden text-gray-600 font-medium text-base">Subtotal:</span>
+                          <span className="md:hidden text-gray-800 font-medium text-base">Subtotal:</span>
                           ₹{(parseFloat(item.price.replace(/,/g, '')) * item.quantity).toLocaleString()}
                         </div>
                       </div>
@@ -98,7 +98,7 @@ export default function CartPage() {
                 </div>
                 
                 <div className="mt-8">
-                  <Link to="/catalogue" className="text-gray-500 hover:text-brand-green font-bold flex items-center inline-flex transition-colors uppercase tracking-wide text-sm bg-white px-6 py-3 rounded-xl border border-gray-200 hover:border-brand-green shadow-sm">
+                  <Link to="/catalogue" className="text-gray-700 font-medium hover:text-brand-green font-bold flex items-center inline-flex transition-colors uppercase tracking-wide text-sm bg-white px-6 py-3 rounded-xl border border-gray-200 hover:border-brand-green shadow-sm">
                     <ArrowLeft size={16} className="mr-2" /> Continue Shopping
                   </Link>
                 </div>
@@ -114,11 +114,11 @@ export default function CartPage() {
                   
                   <div className="space-y-4 mb-8 text-sm md:text-base">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-500 font-medium">Subtotal</span>
+                      <span className="text-gray-700 font-medium">Subtotal</span>
                       <span className="font-bold text-gray-900">₹{cartTotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                      <span className="text-gray-500 font-medium">Shipping</span>
+                      <span className="text-gray-700 font-medium">Shipping</span>
                       <span className="font-bold text-brand-green text-xs uppercase tracking-wider bg-green-50 px-2 py-1 rounded">Calculated at checkout</span>
                     </div>
                   </div>
@@ -128,7 +128,7 @@ export default function CartPage() {
                       <span className="font-bold text-gray-900">Total</span>
                       <span className="font-black text-brand-green text-3xl tracking-tight">₹{cartTotal.toLocaleString()}</span>
                     </div>
-                    <p className="text-xs text-gray-400 text-right">Inclusive of all taxes</p>
+                    <p className="text-xs text-gray-800 text-right">Inclusive of all taxes</p>
                   </div>
                   
                   <Link 

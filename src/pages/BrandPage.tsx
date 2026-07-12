@@ -47,11 +47,11 @@ export default function BrandPage() {
         {/* Breadcrumb Header */}
         <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
-            <div className="flex items-center text-sm font-medium text-gray-500 overflow-x-auto whitespace-nowrap hide-scrollbar">
-              <Link to="/" className="text-gray-400 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
-              <Link to="/brands" className="text-gray-400 hover:text-brand-green">Brands</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-400 flex-shrink-0" />
+            <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
+              <Link to="/" className="text-gray-800 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
+              <Link to="/brands" className="text-gray-800 hover:text-brand-green">Brands</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
               <span className="text-brand-green font-bold">{title}</span>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function BrandPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-base md:text-lg text-gray-600 max-w-2xl"
+            className="text-base md:text-lg text-gray-800 font-medium max-w-2xl"
           >
             Explore our premium range of {title} products.
           </motion.p>
@@ -93,7 +93,7 @@ export default function BrandPage() {
       <section className="max-w-[1600px] mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
-            {title} Products <span className="text-sm font-normal text-gray-500 ml-2">({brandProducts.length} Products)</span>
+            {title} Products <span className="text-sm font-normal text-gray-700 font-medium ml-2">({brandProducts.length} Products)</span>
           </h2>
         </div>
 
@@ -101,7 +101,7 @@ export default function BrandPage() {
           <div className="bg-gray-50 rounded-2xl border border-gray-100 p-12 text-center flex flex-col items-center">
             <ShoppingCart className="w-16 h-16 text-gray-300 mb-4" strokeWidth={1.5} />
             <h3 className="text-xl font-bold text-gray-800 mb-2">No Products Available</h3>
-            <p className="text-gray-500 max-w-md">We are currently updating our catalogue for {title}. Please check back later or explore our other premium brands.</p>
+            <p className="text-gray-700 font-medium max-w-md">We are currently updating our catalogue for {title}. Please check back later or explore our other premium brands.</p>
             <Link to="/catalogue" className="mt-6 bg-brand-green hover:bg-brand-green-dark text-white px-6 py-2.5 rounded-xl font-medium transition-colors">
               Browse All Products
             </Link>
@@ -152,12 +152,12 @@ export default function BrandPage() {
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-xs text-gray-500 line-clamp-2 mb-4">{product.short_description || product.description}</p>
+                  <p className="text-xs text-gray-700 font-medium line-clamp-2 mb-4">{product.short_description || product.description}</p>
                   
                   <div className="mt-auto">
                     <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
                       <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
-                      <span className="text-xs sm:text-sm text-gray-400 line-through">₹{product.regular_price}</span>
+                      <span className="text-xs sm:text-sm text-gray-800 line-through">₹{product.regular_price}</span>
                     </div>
                     <button 
                       onClick={() => addToCart({
@@ -167,7 +167,7 @@ export default function BrandPage() {
                         imageUrl: product.image_url,
                         quantity: 1
                       })}
-                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-lg font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-2xl font-bold tracking-wide text-xs uppercase flex items-center justify-center"
                     >
                       <ShoppingCart size={14} className="mr-2" /> Add to Cart
                     </button>

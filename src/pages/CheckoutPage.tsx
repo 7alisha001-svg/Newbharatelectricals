@@ -81,7 +81,7 @@ export default function CheckoutPage() {
            <ShoppingCart size={40} className="text-gray-300" />
         </div>
         <h2 className="text-2xl font-bold font-heading mb-4 text-gray-900">Your Checkout is Empty</h2>
-        <Link to="/catalogue" className="text-white bg-brand-green px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors uppercase tracking-wide text-sm shadow-md">Return to Shop</Link>
+        <Link to="/catalogue" className="text-white bg-brand-green px-6 py-3 rounded-2xl font-bold hover:bg-green-700 transition-colors uppercase tracking-wide text-sm shadow-md">Return to Shop</Link>
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function CheckoutPage() {
       <div className="bg-gray-50/50 min-h-screen py-12">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex items-center text-sm text-gray-500 mb-10 font-bold uppercase tracking-wider">
+          <div className="flex items-center text-sm text-gray-700 font-medium mb-10 font-bold uppercase tracking-wider">
              <Link to="/cart" className="hover:text-brand-green transition-colors">Cart</Link>
              <span className="mx-3 text-gray-300">/</span>
              <span className="text-gray-900">Checkout</span>
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
                   </label>
                 </div>
                 
-                <div className="mt-8 pt-6 border-t border-gray-100 flex items-center text-sm font-medium text-gray-500">
+                <div className="mt-8 pt-6 border-t border-gray-100 flex items-center text-sm font-medium text-gray-700 font-medium">
                    <Lock size={16} className="mr-2 text-green-600" />
                    100% Secure Payment processing verified by Norton & McAfee.
                 </div>
@@ -242,7 +242,7 @@ export default function CheckoutPage() {
                       <div className="w-20 h-20 bg-gray-50 rounded-xl border border-gray-100 bg-center bg-contain bg-no-repeat flex-shrink-0" style={{ backgroundImage: `url(${item.imageUrl})` }}></div>
                       <div className="flex-1 py-1">
                         <h4 className="font-bold text-sm leading-tight text-gray-900 line-clamp-2 group-hover:text-brand-green transition-colors">{item.name}</h4>
-                        <div className="text-gray-500 text-sm mt-2 font-medium">Qty: <span className="text-gray-900">{item.quantity}</span></div>
+                        <div className="text-gray-700 font-medium text-sm mt-2 font-medium">Qty: <span className="text-gray-900">{item.quantity}</span></div>
                       </div>
                       <div className="font-black text-sm py-1">₹{(parseFloat(item.price.replace(/,/g, '')) * item.quantity).toLocaleString()}</div>
                     </div>
@@ -250,11 +250,11 @@ export default function CheckoutPage() {
                 </div>
                 
                 <div className="border-t border-gray-100 pt-6 pb-4 space-y-4 text-sm md:text-base">
-                  <div className="flex justify-between text-gray-500 font-medium">
+                  <div className="flex justify-between text-gray-700 font-medium">
                     <span>Subtotal</span>
                     <span className="font-bold text-gray-900">₹{cartTotal.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center text-gray-500 font-medium border-b border-gray-100 pb-6">
+                  <div className="flex justify-between items-center text-gray-700 font-medium border-b border-gray-100 pb-6">
                     <span>Shipping</span>
                     <span className="font-bold text-brand-green bg-green-50 px-2 py-1 rounded text-xs uppercase tracking-wider">Free</span>
                   </div>
