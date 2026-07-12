@@ -1,5 +1,5 @@
 const sharp = require('sharp');
-const pngToIco = require('png-to-ico');
+const pngToIco = require('png-to-ico').default || require('png-to-ico');
 const fs = require('fs');
 
 async function main() {
