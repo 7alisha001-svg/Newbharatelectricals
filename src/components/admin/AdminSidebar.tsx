@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, ShoppingCart, Package, Archive, 
   Flag, Users, Settings, LogOut, X, Navigation as NavIcon, MapPin,
-  Zap, Sun, FileSpreadsheet
+  Zap, Sun, FileSpreadsheet, MessageCircle
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
@@ -17,6 +16,7 @@ const navigation = [
   { name: 'Brands', href: '/admin/brands', icon: Flag },
   { name: 'Brand Slider', href: '/admin/brand-slider', icon: Flag },
   { name: 'Customers', href: '/admin/customers', icon: Users },
+  { name: 'Quotes', href: '/admin/quotes', icon: MessageCircle },
   { name: 'Navigation', href: '/admin/navigation', icon: NavIcon },
   { name: 'Locations', href: '/admin/locations', icon: MapPin },
   { name: 'Google Sheets', href: '/admin/sheets', icon: FileSpreadsheet },

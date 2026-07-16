@@ -9,9 +9,12 @@ import CompanyStats from '../components/CompanyStats';
 import Testimonials from '../components/Testimonials';
 import LocationsPreview from '../components/LocationsPreview';
 
+import QuotePopup from '../components/QuotePopup';
+
 export default function Home() {
   return (
     <>
+      <QuotePopup />
       <Hero />
       <BrandsSection />
       <FeaturedProducts />

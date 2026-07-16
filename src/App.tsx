@@ -33,6 +33,7 @@ import Brands from './pages/admin/Brands';
 import BrandSliderAdmin from './pages/admin/BrandSliderAdmin';
 import BrandForm from './pages/admin/BrandForm';
 import Customers from './pages/admin/Customers';
+import Quotes from './pages/admin/Quotes';
 import Settings from './pages/admin/Settings';
 import Locations from './pages/admin/Locations';
 import Navigation from './pages/admin/Navigation';
@@ -97,6 +98,7 @@ export default function App() {
               <Route path="brands/:id/edit" element={<BrandForm />} />
               <Route path="brand-slider" element={<BrandSliderAdmin />} />
               <Route path="customers" element={<Customers />} />
+              <Route path="quotes" element={<Quotes />} />
               <Route path="navigation" element={<Navigation />} />
               <Route path="settings" element={<Settings />} />
               <Route path="locations" element={<Locations />} />
