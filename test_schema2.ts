@@ -7,9 +7,7 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function test() {
-  const { data: brands, error: err1 } = await supabase.from('brands').select('*').limit(1);
-  console.log('brands:', brands, err1);
-  const { data: slider, error: err2 } = await supabase.from('brand_slider').select('*').limit(1);
-  console.log('brand_slider:', slider, err2);
+  const { data, error } = await supabase.from('brands').select('*').limit(1);
+  console.log('brands columns:', data ? Object.keys(data[0]) : null);
 }
 test();
