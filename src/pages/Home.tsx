@@ -5,6 +5,7 @@ import PromoBanners from '../components/PromoBanners';
 import TrendingProducts from '../components/TrendingProducts';
 import About from '../components/About';
 import WhyUs from '../components/WhyUs';
+import CompanyStats from '../components/CompanyStats';
 import Testimonials from '../components/Testimonials';
 import LocationsPreview from '../components/LocationsPreview';
 
@@ -18,6 +19,7 @@ export default function Home() {
       <TrendingProducts />
       <Testimonials />
       <WhyUs />
+      <CompanyStats />
       <About />
       <LocationsPreview />
     </>

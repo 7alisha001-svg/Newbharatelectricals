@@ -1,21 +1,50 @@
-import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 export default function BrandsSection() {
   const { brands, settings, loading } = useStore();
 
   if (loading) return null;
 
-  // Retrieve featured brands from settings
-  const featuredBrandSlugs = settings?.social_links?.featured_brands || [];
-  
-  // Filter brands based on the featured slugs and limit to 5
-  const featuredBrands = brands
-    .filter(brand => featuredBrandSlugs.includes(brand.slug))
-    .slice(0, 5);
+  const sliderData = settings?.social_links?.brand_slider;
+  let items = [];
+  let config = {
+    autoplay: true,
+    speed: 3000,
+    infinite: true,
+    desktop: 5,
+    tablet: 3,
+    mobile: 2,
+    spacing: 24
+  };
 
-  if (featuredBrands.length === 0) return null; // Don't show the section if no featured brands
+  if (sliderData?.items && sliderData.items.length > 0) {
+    items = sliderData.items.filter((item: any) => item.is_enabled).sort((a: any, b: any) => a.order - b.order);
+    if (sliderData.config) {
+      config = { ...config, ...sliderData.config };
+    }
+  } else {
+    // Fallback to old featured brands logic
+    const featuredBrandSlugs = settings?.social_links?.featured_brands || [];
+    const featuredBrands = brands
+      .filter(brand => featuredBrandSlugs.includes(brand.slug))
+      .slice(0, 10);
+      
+    items = featuredBrands.map((b, idx) => ({
+      id: b.id,
+      name: b.name,
+      logo_url: b.logo_url,
+      link: `/brands/${b.slug || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+      is_enabled: true,
+      order: idx
+    }));
+  }
+
+  if (items.length === 0) return null;
 
   return (
     <section id="brands" className="py-8 md:py-12 bg-white border-b border-gray-100">
@@ -23,52 +52,66 @@ export default function BrandsSection() {
         
         <div className="flex items-center justify-between mb-4 md:mb-8">
           <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
-            Shop by Brand
+            Shop by Brands
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-4 md:gap-6 w-full">
-          {featuredBrands.map((brand, idx) => (
-            <motion.div 
-              key={brand.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="w-full flex"
-            >
-              <Link to={`/brands/${brand.slug || brand.name?.toLowerCase().replace(/[^a-z0-9]/g, '-')}`} className="flex flex-col items-center group w-full">
-                <div className="w-full aspect-[4/3] bg-white rounded-xl overflow-hidden mb-3 border border-gray-200 shadow-sm group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative flex items-center justify-center p-6">
-                  {brand.logo_url ? (
-                    <img 
-                      src={brand.logo_url} 
-                      alt={brand.name} 
-                      className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => { 
-                        const target = e.currentTarget; 
-                        // Fallback to text if image fails to load
-                        target.style.display = 'none';
-                        if (target.nextElementSibling) {
-                          (target.nextElementSibling as HTMLElement).style.display = 'flex';
-                        }
-                      }}
-                    />
-                  ) : null}
-                  <div 
-                    className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-800 font-heading font-bold text-2xl uppercase tracking-wider"
-                    style={{ display: brand.logo_url ? 'none' : 'flex' }}
-                  >
-                    {brand.name ? brand.name.substring(0, 2) : 'B'}
+        <div className="w-full relative px-2 md:px-6">
+          <Swiper
+            modules={[Autoplay, Navigation]}
+            spaceBetween={config.spacing}
+            slidesPerView={config.mobile}
+            loop={config.infinite && items.length >= config.desktop}
+            autoplay={config.autoplay ? {
+              delay: config.speed,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true
+            } : false}
+            navigation
+            breakpoints={{
+              768: {
+                slidesPerView: config.tablet,
+              },
+              1024: {
+                slidesPerView: config.desktop,
+              },
+            }}
+            className="w-full h-full py-4 !px-4 md:!px-8"
+          >
+            {items.map((brand: any) => (
+              <SwiperSlide key={brand.id} className="flex h-auto">
+                <Link to={brand.link || '#'} className="flex flex-col items-center group w-full h-full">
+                  <div className="w-full aspect-[4/3] bg-white rounded-xl overflow-hidden mb-3 border border-gray-200 shadow-sm group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative flex items-center justify-center p-6">
+                    {brand.logo_url ? (
+                      <img 
+                        src={brand.logo_url} 
+                        alt={brand.name} 
+                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => { 
+                          const target = e.currentTarget; 
+                          target.style.display = 'none';
+                          if (target.nextElementSibling) {
+                            (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                          }
+                        }}
+                      />
+                    ) : null}
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-800 font-heading font-bold text-2xl uppercase tracking-wider"
+                      style={{ display: brand.logo_url ? 'none' : 'flex' }}
+                    >
+                      {brand.name ? brand.name.substring(0, 2) : 'B'}
+                    </div>
                   </div>
-                </div>
-                <h3 className="font-heading font-bold text-gray-800 text-center text-sm md:text-base group-hover:text-brand-green transition-colors mt-auto">
-                  {brand.name}
-                </h3>
-              </Link>
-            </motion.div>
-          ))}
+                  <h3 className="font-heading font-bold text-gray-800 text-center text-sm md:text-base group-hover:text-brand-green transition-colors mt-auto">
+                    {brand.name}
+                  </h3>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         
       </div>

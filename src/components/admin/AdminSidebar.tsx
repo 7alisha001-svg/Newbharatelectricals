@@ -15,6 +15,7 @@ const navigation = [
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Inventory', href: '/admin/inventory', icon: Archive },
   { name: 'Brands', href: '/admin/brands', icon: Flag },
+  { name: 'Brand Slider', href: '/admin/brand-slider', icon: Flag },
   { name: 'Customers', href: '/admin/customers', icon: Users },
   { name: 'Navigation', href: '/admin/navigation', icon: NavIcon },
   { name: 'Locations', href: '/admin/locations', icon: MapPin },

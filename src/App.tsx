@@ -30,6 +30,7 @@ import Inventory from './pages/admin/Inventory';
 import Categories from './pages/admin/Categories';
 import CategoryForm from './pages/admin/CategoryForm';
 import Brands from './pages/admin/Brands';
+import BrandSliderAdmin from './pages/admin/BrandSliderAdmin';
 import BrandForm from './pages/admin/BrandForm';
 import Customers from './pages/admin/Customers';
 import Settings from './pages/admin/Settings';
@@ -94,6 +95,7 @@ export default function App() {
               <Route path="brands" element={<Brands />} />
               <Route path="brands/new" element={<BrandForm />} />
               <Route path="brands/:id/edit" element={<BrandForm />} />
+              <Route path="brand-slider" element={<BrandSliderAdmin />} />
               <Route path="customers" element={<Customers />} />
               <Route path="navigation" element={<Navigation />} />
               <Route path="settings" element={<Settings />} />
