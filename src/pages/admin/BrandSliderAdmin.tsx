@@ -132,7 +132,7 @@ export default function BrandSliderAdmin() {
       )}
 
       {isEditingConfig && (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div className="bg-white p-6 rounded-2xl shadow-md border-none">
           <h2 className="text-lg font-bold mb-4">Slider Configuration</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <div>
@@ -233,7 +233,7 @@ export default function BrandSliderAdmin() {
       )}
 
       {!isFormOpen && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -270,7 +270,7 @@ export default function BrandSliderAdmin() {
                       <td className="p-4">
                         <button 
                           onClick={() => toggleItem(item.id)}
-                          className={`px-3 py-1 text-xs font-medium rounded-full ${item.is_enabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}
+                          className={`px-3 py-1 text-xs font-medium rounded-full ${item.is_enabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}
                         >
                           {item.is_enabled ? 'Active' : 'Disabled'}
                         </button>
@@ -335,7 +335,7 @@ function BrandForm({ item, onSave, onCancel }: { item: any, onSave: (item: any) 
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+    <div className="bg-white p-6 rounded-2xl shadow-md border-none">
       <h2 className="text-lg font-bold mb-4">{item.name ? 'Edit Brand' : 'Add Brand'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
         <div>

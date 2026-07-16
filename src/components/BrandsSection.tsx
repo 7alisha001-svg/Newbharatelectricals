@@ -50,7 +50,7 @@ export default function BrandsSection() {
   const animationDuration = repeatedItems.length * baseSpeedPerItem;
 
   return (
-    <section id="brands" className="py-8 md:py-12 bg-white border-b border-gray-100 overflow-hidden">
+    <section id="brands" className="py-8 md:py-12 bg-white border-none overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
         <div className="flex items-center justify-between mb-6 md:mb-10">
@@ -97,13 +97,13 @@ export default function BrandsSection() {
                       />
                     ) : null}
                     <div 
-                      className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-800 font-heading font-bold text-xl md:text-2xl uppercase tracking-wider"
+                      className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-900 font-heading font-bold text-xl md:text-2xl uppercase tracking-wider"
                       style={{ display: brand.logo_url ? 'none' : 'flex' }}
                     >
                       {brand.name ? brand.name.substring(0, 2) : 'B'}
                     </div>
                   </div>
-                  <h3 className="font-heading font-bold text-gray-800 text-center text-sm md:text-base group-hover:text-brand-green transition-colors mt-auto">
+                  <h3 className="font-heading font-bold text-gray-900 text-center text-sm md:text-base group-hover:text-brand-green transition-colors mt-auto">
                     {brand.name}
                   </h3>
                 </Link>

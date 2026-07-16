@@ -17,6 +17,7 @@ const navigation = [
   { name: 'Brand Slider', href: '/admin/brand-slider', icon: Flag },
   { name: 'Customers', href: '/admin/customers', icon: Users },
   { name: 'Quotes', href: '/admin/quotes', icon: MessageCircle },
+  { name: 'Leads', href: '/admin/leads', icon: Users },
   { name: 'Navigation', href: '/admin/navigation', icon: NavIcon },
   { name: 'Locations', href: '/admin/locations', icon: MapPin },
   { name: 'Google Sheets', href: '/admin/sheets', icon: FileSpreadsheet },
@@ -84,11 +85,21 @@ export default function AdminSidebar({
         fixed lg:sticky top-0 left-0 h-screen bg-gray-900 text-white w-64 z-50 transition-transform duration-300 ease-in-out flex flex-col
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div className="flex items-center justify-between p-6 border-b border-gray-800">
-          <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <img src={settings?.social_links?.footer_logo || "/footer-logo-light.png"} alt={settings?.business_name || "New Bharat Electricals"} className="h-10 w-auto object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('images.unsplash.com')) target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; }} />
+        <div className="flex items-center justify-between py-3 px-5 border-b border-gray-800">
+          <Link to="/" className="flex items-center hover:opacity-100 transition-opacity p-0 m-0 overflow-visible">
+            <img 
+              src={settings?.social_links?.footer_logo || "/footer-logo-light.png"} 
+              alt={settings?.business_name || "New Bharat Electricals"} 
+              className="h-[64px] w-auto object-contain scale-[1.25] transform-gpu origin-left -my-1 -mx-0.5 filter drop-shadow-md" 
+              onError={(e) => { 
+                const target = e.currentTarget; 
+                if (!target.src.includes('images.unsplash.com')) {
+                  target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; 
+                }
+              }} 
+            />
           </Link>
-          <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-400 hover:text-white">
+          <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-400 hover:text-white p-2">
             <X size={24} />
           </button>
         </div>

@@ -122,7 +122,7 @@ export default function CategoryForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Category Name *</label>
@@ -214,7 +214,7 @@ export default function CategoryForm() {
         </div>
 
         <div className="pt-6 border-t border-gray-100 flex justify-end gap-3">
-          <Link to="/admin/categories" className="px-6 py-2 text-gray-600 font-medium hover:bg-gray-50 rounded-xl transition-colors">
+          <Link to="/admin/categories" className="px-6 py-2 text-gray-700 font-medium hover:bg-gray-50 rounded-xl transition-colors">
             Cancel
           </Link>
           <button type="submit" disabled={loading} className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-6 rounded-xl transition-colors flex items-center shadow-lg shadow-brand-green/20 disabled:opacity-70">

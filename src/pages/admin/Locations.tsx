@@ -107,7 +107,7 @@ export default function Locations() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {locations.map((loc, index) => (
-          <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div key={index} className="bg-white p-6 rounded-2xl shadow-md border-none">
             <h2 className="text-lg font-bold text-gray-900 mb-4 capitalize">{loc.type === 'office' ? 'Corporate Office' : 'Warehouse'}</h2>
             
             <div className="space-y-4">

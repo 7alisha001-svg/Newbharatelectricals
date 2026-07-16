@@ -272,7 +272,7 @@ export default function ProductForm() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
@@ -316,7 +316,7 @@ export default function ProductForm() {
         </div>
 
         {/* Pricing & Inventory */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">Pricing & Inventory</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -335,7 +335,7 @@ export default function ProductForm() {
         </div>
 
         {/* Descriptions */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">Descriptions</h2>
           
           <div>
@@ -350,7 +350,7 @@ export default function ProductForm() {
         </div>
 
         {/* Images */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">Images</h2>
           
           <ImageUploader 
@@ -370,7 +370,7 @@ export default function ProductForm() {
         </div>
 
         {/* Features & Tags */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">Features & Tags</h2>
           
           <div>
@@ -407,7 +407,7 @@ export default function ProductForm() {
         </div>
 
         {/* Specifications */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold text-gray-900">Specifications</h2>
             <button type="button" onClick={addSpec} className="text-brand-green hover:text-brand-green-dark text-sm font-medium flex items-center">
@@ -427,7 +427,7 @@ export default function ProductForm() {
         </div>
 
         {/* SEO */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
           <h2 className="text-lg font-bold text-gray-900">SEO</h2>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
@@ -440,7 +440,7 @@ export default function ProductForm() {
         </div>
 
         <div className="flex justify-end gap-3 sticky bottom-4 bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-gray-200 shadow-xl">
-          <Link to="/admin/products" className="px-6 py-2 text-gray-600 font-medium hover:bg-gray-50 rounded-xl transition-colors">
+          <Link to="/admin/products" className="px-6 py-2 text-gray-700 font-medium hover:bg-gray-50 rounded-xl transition-colors">
             Cancel
           </Link>
           <button type="submit" disabled={loading} className="bg-brand-green hover:bg-brand-green-dark text-white font-medium py-2 px-6 rounded-xl transition-colors flex items-center shadow-lg shadow-brand-green/20 disabled:opacity-70">

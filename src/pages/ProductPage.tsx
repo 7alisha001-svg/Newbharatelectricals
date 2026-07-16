@@ -82,12 +82,12 @@ export default function ProductPage() {
         <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
-              <Link to="/" className="text-gray-800 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
-              <Link to={`/${category}`} className="text-gray-800 hover:text-brand-green">{categoryTitle}</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
-              <Link to={`/${category}/${subcategory}`} className="text-gray-800 hover:text-brand-green">{subCategoryTitle}</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
+              <Link to="/" className="text-gray-900 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-900 flex-shrink-0" />
+              <Link to={`/${category}`} className="text-gray-900 hover:text-brand-green">{categoryTitle}</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-900 flex-shrink-0" />
+              <Link to={`/${category}/${subcategory}`} className="text-gray-900 hover:text-brand-green">{subCategoryTitle}</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-900 flex-shrink-0" />
               <span className="text-brand-green font-bold">{product.name}</span>
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function ProductPage() {
 
             {/* Right - Product Info */}
             <div className="w-full md:w-1/2 p-6 sm:p-10 lg:p-14 relative">
-              <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-800 hover:text-gray-900 transition-colors">
+              <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-900 hover:text-gray-900 transition-colors">
                 <Share2 size={24} />
               </button>
               
@@ -123,7 +123,7 @@ export default function ProductPage() {
                  <span className="text-brand-green font-bold flex items-center"><CheckCircle2 size={14} className="mr-1" /> {product.stockStatus}</span>
               </div>
               
-              <p className="text-gray-800 font-medium mb-8 leading-relaxed text-sm md:text-base">
+              <p className="text-gray-900 font-medium mb-8 leading-relaxed text-sm md:text-base">
                 {product.description}
               </p>
 
@@ -143,11 +143,11 @@ export default function ProductPage() {
                 </div>
 
                 <div className="flex items-center mb-8">
-                  <span className="text-gray-800 font-medium mr-4">Quantity:</span>
+                  <span className="text-gray-900 font-medium mr-4">Quantity:</span>
                   <div className="flex items-center border border-gray-300 rounded">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 transition-colors"
+                      className="px-4 py-2 text-gray-900 font-medium hover:bg-gray-100 transition-colors"
                     >
                       <Minus size={16} />
                     </button>
@@ -159,7 +159,7 @@ export default function ProductPage() {
                     />
                     <button 
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 transition-colors"
+                      className="px-4 py-2 text-gray-900 font-medium hover:bg-gray-100 transition-colors"
                     >
                       <Plus size={16} />
                     </button>
@@ -169,7 +169,7 @@ export default function ProductPage() {
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <button 
                     onClick={handleAddToCart}
-                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-green-700 font-bold py-3.5 sm:py-3 px-6 rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
+                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm"
                   >
                     <ShoppingCart size={18} className="mr-2" /> Add to Cart
                   </button>

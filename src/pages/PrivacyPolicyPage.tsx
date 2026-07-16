@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12"
+          className="bg-white rounded-2xl shadow-md border-none p-8 md:p-12"
         >
           <div className="mb-10 border-b border-gray-100 pb-8">
             <h1 className="text-3xl md:text-4xl font-heading font-black text-gray-900 uppercase tracking-tight mb-4">
@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-gray-700 font-medium text-sm">Last Updated: July 3, 2026</p>
           </div>
 
-          <div className="prose prose-gray max-w-none text-gray-800 font-medium space-y-8">
+          <div className="prose prose-gray max-w-none text-gray-900 font-medium space-y-8">
             
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-4 uppercase tracking-wide">1. Introduction</h2>

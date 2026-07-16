@@ -34,7 +34,7 @@ export default function Customers() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <div className="relative max-w-md">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -57,7 +57,7 @@ export default function Customers() {
             customers.map((customer) => (
               <div key={customer.id} className="border border-gray-200 rounded-xl p-5 hover:border-brand-green/30 transition-colors shadow-sm">
                  <h3 className="font-bold text-gray-900 text-lg mb-4">{customer.full_name}</h3>
-                 <div className="space-y-2 text-sm text-gray-600">
+                 <div className="space-y-2 text-sm text-gray-700">
                    <div className="flex items-center"><Mail size={16} className="mr-2 text-gray-400" /> {customer.email}</div>
                    <div className="flex items-center"><Phone size={16} className="mr-2 text-gray-400" /> {customer.phone || 'No phone'}</div>
                    <div className="flex items-center"><Calendar size={16} className="mr-2 text-gray-400" /> Joined {new Date(customer.created_at).toLocaleDateString()}</div>

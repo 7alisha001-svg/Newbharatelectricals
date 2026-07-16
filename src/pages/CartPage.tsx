@@ -64,13 +64,13 @@ export default function CartPage() {
                           <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-base sm:text-lg line-clamp-2 pr-6 sm:pr-0">{item.name}</Link>
                         </div>
                         
-                        <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-800 font-medium">
+                        <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-900 font-medium">
                           <span className="md:hidden">Price:</span>
                           ₹{item.price}
                         </div>
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center">
-                           <span className="md:hidden text-gray-800 font-medium">Quantity:</span>
+                           <span className="md:hidden text-gray-900 font-medium">Quantity:</span>
                            <div className="flex items-center border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm">
                               <button 
                                 onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
@@ -89,7 +89,7 @@ export default function CartPage() {
                         </div>
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center font-black text-gray-900 text-lg">
-                          <span className="md:hidden text-gray-800 font-medium text-base">Subtotal:</span>
+                          <span className="md:hidden text-gray-900 font-medium text-base">Subtotal:</span>
                           ₹{(parseFloat(item.price.replace(/,/g, '')) * item.quantity).toLocaleString()}
                         </div>
                       </div>
@@ -128,7 +128,7 @@ export default function CartPage() {
                       <span className="font-bold text-gray-900">Total</span>
                       <span className="font-black text-brand-green text-3xl tracking-tight">₹{cartTotal.toLocaleString()}</span>
                     </div>
-                    <p className="text-xs text-gray-800 text-right">Inclusive of all taxes</p>
+                    <p className="text-xs text-gray-900 text-right">Inclusive of all taxes</p>
                   </div>
                   
                   <Link 

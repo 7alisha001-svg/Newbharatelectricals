@@ -34,14 +34,14 @@ const stats = [
 
 export default function CompanyStats() {
   return (
-    <section className="py-12 md:py-16 lg:py-20 bg-gray-50/50 border-b border-gray-100">
+    <section className="py-12 md:py-16 lg:py-20 bg-gray-50/50 border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black text-gray-900 mb-4 uppercase tracking-tight">
             Our Achievements
           </h2>
-          <p className="text-base md:text-lg text-gray-600 font-medium">
+          <p className="text-base md:text-lg text-gray-700 font-medium">
             Delivering trusted solar and electrical solutions with proven expertise and measurable results.
           </p>
         </div>

@@ -13,7 +13,7 @@ export default function StoreLocator() {
         {/* Header */}
         <section className="bg-brand-gray py-12 md:py-20 border-b border-gray-200 text-center px-4">
           <h1 className="text-3xl md:text-5xl font-heading font-bold text-gray-900 mb-4">Store Locator</h1>
-          <p className="text-gray-800 font-medium max-w-xl mx-auto text-sm md:text-base">Find our authorized dealer and flagship store in Budaun, Uttar Pradesh.</p>
+          <p className="text-gray-900 font-medium max-w-xl mx-auto text-sm md:text-base">Find our authorized dealer and flagship store in Budaun, Uttar Pradesh.</p>
         </section>
 
         <section className="max-w-7xl mx-auto px-4 lg:px-6 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
@@ -34,7 +34,7 @@ export default function StoreLocator() {
                 <MapPin className="text-brand-green mt-1 mr-4 flex-shrink-0" size={24} />
                 <div>
                   <p className="font-bold text-gray-900">Address</p>
-                  <p className="text-gray-800 font-medium mt-1">Near Dr Amar Singh,<br />Chaudhary Saray Lalpul Road,<br />Budaun HO, Budaun 243601,<br />Uttar Pradesh</p>
+                  <p className="text-gray-900 font-medium mt-1">Near Dr Amar Singh,<br />Chaudhary Saray Lalpul Road,<br />Budaun HO, Budaun 243601,<br />Uttar Pradesh</p>
                 </div>
               </li>
               
@@ -42,7 +42,7 @@ export default function StoreLocator() {
                 <Clock className="text-brand-green mt-1 mr-4 flex-shrink-0" size={24} />
                 <div>
                   <p className="font-bold text-gray-900">Working Hours</p>
-                  <p className="text-gray-800 font-medium mt-1">Monday - Saturday: 9:00 AM - 8:00 PM<br />Sunday: Closed</p>
+                  <p className="text-gray-900 font-medium mt-1">Monday - Saturday: 9:00 AM - 8:00 PM<br />Sunday: Closed</p>
                 </div>
               </li>
             </ul>

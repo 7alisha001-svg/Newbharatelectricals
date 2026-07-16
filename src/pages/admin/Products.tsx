@@ -61,7 +61,7 @@ export default function Products() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <div className="relative max-w-md">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -113,7 +113,7 @@ export default function Products() {
                       </div>
                     </td>
                     <td className="p-4 font-medium text-brand-green">{product.brand || '-'}</td>
-                    <td className="p-4 text-gray-600 text-xs font-medium">{product.category || '-'}</td>
+                    <td className="p-4 text-gray-700 text-xs font-medium">{product.category || '-'}</td>
                     <td className="p-4 font-medium text-gray-900">₹{product.regular_price?.toLocaleString()}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
@@ -126,7 +126,7 @@ export default function Products() {
                     </td>
                     <td className="p-4">
                       <span className={`inline-block w-2 h-2 rounded-full mr-2 ${product.status === 'publish' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
-                      <span className="text-xs text-gray-600">{product.status === 'publish' ? 'Active' : 'Draft'}</span>
+                      <span className="text-xs text-gray-700">{product.status === 'publish' ? 'Active' : 'Draft'}</span>
                     </td>
                     <td className="p-4 text-xs text-gray-500">
                       {new Date(product.created_at).toLocaleDateString('en-GB')}

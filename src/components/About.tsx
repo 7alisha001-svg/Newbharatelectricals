@@ -3,9 +3,9 @@ import { Award } from 'lucide-react';
 
 export default function About() {
   return (
-    <section id="about" className="py-8 bg-brand-gray border-b border-gray-200">
+    <section id="about" className="py-8 bg-brand-gray border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="bg-white rounded-xl overflow-hidden shadow-sm flex flex-col md:flex-row border border-gray-100">
+        <div className="bg-white rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col md:flex-row border-none">
           
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -20,7 +20,7 @@ export default function About() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black text-gray-900 leading-tight mb-4 uppercase">
               Leading the Way in <br/> Energy Innovation
             </h2>
-            <p className="text-gray-800 text-base md:text-lg leading-relaxed font-medium tracking-wide mb-6">
+            <p className="text-gray-900 text-base md:text-lg leading-relaxed font-medium tracking-wide mb-6">
               Based in the heart of UP, New Bharat Electricals has been a pioneer in transforming how homes and businesses consume energy. From rugged tubular batteries to advanced solar power units, we are dedicated to bringing reliable, clean, and continuous power to every corner of India.
             </p>
             

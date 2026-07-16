@@ -62,10 +62,10 @@ export default function AboutUsPage() {
               <h2 className="text-4xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-4">
                 Welcome to <span className="text-brand-green">New Bharat Electricals</span>
               </h2>
-              <p className="text-gray-800 leading-relaxed text-lg md:text-xl font-medium tracking-wide">
+              <p className="text-gray-900 leading-relaxed text-lg md:text-xl font-medium tracking-wide">
                 New Bharat Electricals is a leading provider of comprehensive electrical and solar solutions. With years of industry experience, we are dedicated to delivering high-quality products that meet the diverse needs of our residential, commercial, and industrial clients.
               </p>
-              <p className="text-gray-800 leading-relaxed text-lg md:text-xl font-medium tracking-wide mt-4">
+              <p className="text-gray-900 leading-relaxed text-lg md:text-xl font-medium tracking-wide mt-4">
                 Our extensive product range includes premium inverters, durable batteries, advanced solar panels, and essential electrical accessories. We partner with top brands and manufacturers to ensure that every product we offer stands for reliability, efficiency, and longevity.
               </p>
               <div className="pt-4">
@@ -98,12 +98,12 @@ export default function AboutUsPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group"
+              className="bg-white p-8 md:p-12 rounded-2xl shadow-md border-none relative overflow-hidden group"
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-brand-green transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
               <Target size={48} className="text-brand-green mb-6" />
               <h3 className="text-3xl font-heading font-black text-gray-900 uppercase tracking-tight mb-5">Our Mission</h3>
-              <p className="text-gray-800 leading-relaxed text-lg md:text-xl font-medium tracking-wide">
+              <p className="text-gray-900 leading-relaxed text-lg md:text-xl font-medium tracking-wide">
                 To empower our customers with innovative, reliable, and energy-efficient electrical solutions. We strive to provide exceptional service, foster sustainable practices, and contribute to the growth and development of the communities we serve.
               </p>
             </motion.div>
@@ -134,7 +134,7 @@ export default function AboutUsPage() {
               Why Choose Us
             </h2>
             <div className="w-20 h-1.5 bg-brand-green mx-auto mb-8" />
-            <p className="text-gray-800 max-w-2xl mx-auto text-lg md:text-xl font-medium tracking-wide">
+            <p className="text-gray-900 max-w-2xl mx-auto text-lg md:text-xl font-medium tracking-wide">
               We stand apart through our dedication to excellence and our customer-first approach.
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function AboutUsPage() {
                   <feature.icon size={36} />
                 </div>
                 <h3 className="text-2xl font-black text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-800 leading-relaxed text-lg font-medium tracking-wide">{feature.desc}</p>
+                <p className="text-gray-900 leading-relaxed text-lg font-medium tracking-wide">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -172,7 +172,7 @@ export default function AboutUsPage() {
               Our Locations
             </h2>
             <div className="w-20 h-1.5 bg-brand-green mx-auto mb-8" />
-            <p className="text-gray-800 max-w-2xl mx-auto text-lg md:text-xl font-medium tracking-wide">
+            <p className="text-gray-900 max-w-2xl mx-auto text-lg md:text-xl font-medium tracking-wide">
               Visit our corporate office or warehouse for all your electrical and solar needs.
             </p>
           </div>
@@ -183,7 +183,7 @@ export default function AboutUsPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+              className="bg-white rounded-2xl shadow-md border-none overflow-hidden flex flex-col"
             >
               <div className="p-8 pb-6 flex-1">
                 <div className="w-16 h-16 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green mb-6">
@@ -192,7 +192,7 @@ export default function AboutUsPage() {
                 <h3 className="text-3xl font-black text-gray-900 mb-2">Corporate Office</h3>
                 <h4 className="text-brand-green font-bold text-lg mb-4">{settings?.business_name || 'New Bharat Electricals'}</h4>
                 
-                <div className="flex items-start text-gray-800 mb-4 gap-3">
+                <div className="flex items-start text-gray-900 mb-4 gap-3">
                   <MapPin size={24} className="mt-1 flex-shrink-0 text-brand-green" />
                   <p className="leading-relaxed text-lg font-medium tracking-wide whitespace-pre-line">
                     {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
@@ -202,7 +202,7 @@ export default function AboutUsPage() {
                 </div>
                 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.phone && (
-                  <div className="flex items-center text-gray-800 gap-3 mb-6 text-lg font-medium tracking-wide">
+                  <div className="flex items-center text-gray-900 gap-3 mb-6 text-lg font-medium tracking-wide">
                     <Phone size={24} className="flex-shrink-0 text-brand-green" />
                     <a href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'office').phone}`} className="hover:text-brand-green transition-colors">
                       {settings.social_links.locations.find((l: any) => l.type === 'office').phone}
@@ -256,16 +256,16 @@ export default function AboutUsPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+              className="bg-white rounded-2xl shadow-md border-none overflow-hidden flex flex-col"
             >
               <div className="p-8 pb-6 flex-1">
                 <div className="w-16 h-16 bg-brand-dark/5 rounded-xl flex items-center justify-center text-brand-dark mb-6">
                   <Warehouse size={32} />
                 </div>
                 <h3 className="text-3xl font-black text-gray-900 mb-2">Warehouse</h3>
-                <h4 className="text-gray-800 font-medium font-bold text-lg mb-4">Distribution & Logistics</h4>
+                <h4 className="text-gray-900 font-medium font-bold text-lg mb-4">Distribution & Logistics</h4>
                 
-                <div className="flex items-start text-gray-800 mb-4 gap-3">
+                <div className="flex items-start text-gray-900 mb-4 gap-3">
                   <MapPin size={24} className="mt-1 flex-shrink-0 text-brand-green" />
                   <p className="leading-relaxed text-lg font-medium tracking-wide whitespace-pre-line">
                     {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 

@@ -37,7 +37,7 @@ export default function Testimonials() {
           <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Customer Reviews
           </h2>
-          <p className="text-gray-800 text-base md:text-lg font-medium tracking-wide">
+          <p className="text-gray-900 text-base md:text-lg font-medium tracking-wide">
             Trust built on excellence and reliability.
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function Testimonials() {
                 ))}
               </div>
               
-              <p className="text-gray-800 mb-6 leading-relaxed relative z-10 text-base font-medium tracking-wide">
+              <p className="text-gray-900 mb-6 leading-relaxed relative z-10 text-base font-medium tracking-wide">
                 "{testimonial.content}"
               </p>
               
@@ -70,7 +70,7 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 text-sm group-hover:text-brand-green transition-colors">{testimonial.name}</h4>
-                  <p className="text-xs text-gray-800 font-medium">{testimonial.role} • {testimonial.location}</p>
+                  <p className="text-xs text-gray-900 font-medium">{testimonial.role} • {testimonial.location}</p>
                 </div>
               </div>
             </motion.div>

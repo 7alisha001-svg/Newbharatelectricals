@@ -53,7 +53,7 @@ export default function Orders() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -104,7 +104,7 @@ export default function Orders() {
                 orders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                     <td className="p-4 font-medium text-gray-900">{order.order_id}</td>
-                    <td className="p-4 text-gray-600">
+                    <td className="p-4 text-gray-700">
                       {order.first_name} {order.last_name}
                       <div className="text-xs text-gray-400">{order.email}</div>
                     </td>

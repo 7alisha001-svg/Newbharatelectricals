@@ -19,6 +19,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsConditionsPage from './pages/TermsConditionsPage';
 import BrandPage from './pages/BrandPage';
 import ScrollToTop from './components/ScrollToTop';
+import LeadCapturePopup from './components/LeadCapturePopup';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './pages/admin/AdminLayout';
@@ -34,6 +35,7 @@ import BrandSliderAdmin from './pages/admin/BrandSliderAdmin';
 import BrandForm from './pages/admin/BrandForm';
 import Customers from './pages/admin/Customers';
 import Quotes from './pages/admin/Quotes';
+import Leads from './pages/admin/Leads';
 import Settings from './pages/admin/Settings';
 import Locations from './pages/admin/Locations';
 import Navigation from './pages/admin/Navigation';
@@ -68,6 +70,7 @@ const PublicLayout = () => (
     </main>
     <Footer />
     <WhatsAppFab />
+    <LeadCapturePopup />
   </div>
 );
 
@@ -99,6 +102,7 @@ export default function App() {
               <Route path="brand-slider" element={<BrandSliderAdmin />} />
               <Route path="customers" element={<Customers />} />
               <Route path="quotes" element={<Quotes />} />
+              <Route path="leads" element={<Leads />} />
               <Route path="navigation" element={<Navigation />} />
               <Route path="settings" element={<Settings />} />
               <Route path="locations" element={<Locations />} />

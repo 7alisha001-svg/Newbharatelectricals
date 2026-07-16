@@ -162,10 +162,10 @@ export default function QuotePopup() {
                     <CheckCircle2 size={32} className="text-green-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Thank you!</h3>
-                  <p className="text-base text-gray-600">Your enquiry has been submitted successfully.<br/>Our team will contact you shortly.</p>
+                  <p className="text-base text-gray-700">Your enquiry has been submitted successfully.<br/>Our team will contact you shortly.</p>
                   <button 
                     onClick={closePopup}
-                    className="mt-6 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2.5 px-6 rounded-xl transition-colors"
+                    className="mt-6 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2.5 px-6 rounded-xl transition-colors"
                   >
                     Close Window
                   </button>
@@ -240,7 +240,7 @@ export default function QuotePopup() {
                       type="button" 
                       onClick={closePopup}
                       disabled={loading}
-                      className="w-full text-center text-gray-500 hover:text-gray-800 font-medium py-2 transition-colors text-sm"
+                      className="w-full text-center text-gray-500 hover:text-gray-900 font-medium py-2 transition-colors text-sm"
                     >
                       Maybe Later
                     </button>

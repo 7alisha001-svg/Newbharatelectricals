@@ -45,7 +45,7 @@ export default function OrderSuccessPage() {
             </motion.div>
             
             <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-gray-900 mb-2 relative z-10">Order Confirmed!</h1>
-            <p className="text-gray-800 font-medium max-w-md mx-auto relative z-10">
+            <p className="text-gray-900 font-medium max-w-md mx-auto relative z-10">
               Thank you for trusting New Bharat Electricals. Your order has been successfully placed.
             </p>
           </div>
@@ -58,7 +58,7 @@ export default function OrderSuccessPage() {
               <div className="space-y-4 text-sm md:text-base">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700 font-medium">Order Number</span>
-                  <span className="font-black text-gray-900 bg-white px-4 py-2 rounded shadow-sm border border-gray-100">{orderDetails.orderId}</span>
+                  <span className="font-black text-gray-900 bg-white px-4 py-2 rounded shadow-md border-none">{orderDetails.orderId}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700 font-medium">Date</span>

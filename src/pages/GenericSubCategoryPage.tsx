@@ -115,7 +115,7 @@ export default function GenericSubCategoryPage() {
         {/* Search Header Banner */}
       <section className="bg-brand-gray py-6 border-b border-gray-200">
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
-           <div className="text-xl font-heading font-bold text-gray-800">{categoryTitle} &gt; {title}</div>
+           <div className="text-xl font-heading font-bold text-gray-900">{categoryTitle} &gt; {title}</div>
            <div className="flex items-center text-sm font-medium text-gray-700 font-medium mt-2">
             <Link to="/" className="hover:text-brand-green transition-colors">Home</Link>
             <span className="mx-2">/</span>
@@ -161,7 +161,7 @@ export default function GenericSubCategoryPage() {
       <section className="py-10 max-w-[1600px] mx-auto px-4 lg:px-8">
         
         {/* Mobile Filter Toggle */}
-        <div className="lg:hidden flex items-center justify-between mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+        <div className="lg:hidden flex items-center justify-between mb-6 bg-white p-4 rounded-2xl shadow-md border-none">
            <h3 className="font-bold text-gray-900">Products ({products.length})</h3>
            <button 
              onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
@@ -183,7 +183,7 @@ export default function GenericSubCategoryPage() {
                
                {/* Categories Filter */}
                <div className="p-6 border-b border-gray-100">
-                  <h5 className="font-bold text-gray-800 mb-4">{categoryTitle} Categories</h5>
+                  <h5 className="font-bold text-gray-900 mb-4">{categoryTitle} Categories</h5>
                   {relatedCategories.length === 0 ? (
                     <div className="text-sm text-gray-700 font-medium italic">No {categoryTitle} categories available.</div>
                   ) : (
@@ -198,11 +198,11 @@ export default function GenericSubCategoryPage() {
                           <div key={cat.slug} className="flex items-center justify-between group">
                             <Link 
                                to={`/${category}/${cat.slug}`}
-                               className={`text-sm transition-colors text-left focus:outline-none ${isActive ? 'text-brand-green font-bold' : 'text-gray-800 font-medium hover:text-brand-green'} cursor-pointer`}
+                               className={`text-sm transition-colors text-left focus:outline-none ${isActive ? 'text-brand-green font-bold' : 'text-gray-900 font-medium hover:text-brand-green'} cursor-pointer`}
                             >
                                <span>{cat.name}</span>
                             </Link>
-                            <span className="text-xs text-gray-800 font-medium">({count})</span>
+                            <span className="text-xs text-gray-900 font-medium">({count})</span>
                           </div>
                         );
                       })}
@@ -212,21 +212,21 @@ export default function GenericSubCategoryPage() {
 
                {/* Sort Options Mock */}
                <div className="p-6">
-                  <h5 className="font-bold text-gray-800 mb-4">Sort By</h5>
+                  <h5 className="font-bold text-gray-900 mb-4">Sort By</h5>
                   <div className="space-y-3">
-                    <label className="flex items-center space-x-3 text-sm text-gray-800 font-medium cursor-pointer">
+                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
                       <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" defaultChecked />
                       <span>Recommended</span>
                     </label>
-                    <label className="flex items-center space-x-3 text-sm text-gray-800 font-medium cursor-pointer">
+                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
                       <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" />
                       <span>New Arrivals</span>
                     </label>
-                    <label className="flex items-center space-x-3 text-sm text-gray-800 font-medium cursor-pointer">
+                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
                       <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" />
                       <span>Capacity: Low to High</span>
                     </label>
-                    <label className="flex items-center space-x-3 text-sm text-gray-800 font-medium cursor-pointer">
+                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
                       <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" />
                       <span>Capacity: High to Low</span>
                     </label>
@@ -275,7 +275,7 @@ export default function GenericSubCategoryPage() {
                           <h3 className="font-heading font-bold text-sm sm:text-lg text-brand-dark mb-2 sm:mb-3 group-hover:text-brand-orange transition-colors leading-tight line-clamp-2">{product.name}</h3>
                         </Link>
                         
-                        <div className="flex items-center justify-between mb-3 sm:mb-4 text-[11px] sm:text-xs text-gray-800 font-medium bg-gray-50 px-2 py-1 rounded">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4 text-[11px] sm:text-xs text-gray-900 font-medium bg-gray-50 px-2 py-1 rounded">
                            <span className="flex items-center text-yellow-500">
                              ★ 5.0 Rating
                            </span>
@@ -296,10 +296,10 @@ export default function GenericSubCategoryPage() {
                         <div className="mt-auto border-t border-gray-100 pt-3 sm:pt-5">
                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-5">
                              <div>
-                               <p className="text-[9px] sm:text-[10px] text-gray-800 uppercase tracking-wide font-bold">Offer Price</p>
+                               <p className="text-[9px] sm:text-[10px] text-gray-900 uppercase tracking-wide font-bold">Offer Price</p>
                                <p className="text-gray-900 font-black text-base sm:text-xl leading-none mt-1">Get Quote</p>
                              </div>
-                             <p className="hidden sm:block text-xs text-gray-600 font-medium text-right max-w-[50%] leading-tight">Inclusive of all taxes</p>
+                             <p className="hidden sm:block text-xs text-gray-700 font-medium text-right max-w-[50%] leading-tight">Inclusive of all taxes</p>
                            </div>
                            
                            <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-3 sm:mt-0">
@@ -336,19 +336,19 @@ export default function GenericSubCategoryPage() {
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
            <div className="max-w-4xl">
               <h2 className="text-2xl font-heading font-bold text-gray-900 mb-4">{title} - Detailed Overview</h2>
-              <p className="text-gray-800 font-medium mb-6 leading-relaxed">
+              <p className="text-gray-900 font-medium mb-6 leading-relaxed">
                 {description} Our {categoryTitle.toLowerCase()} segment is recognized nationwide for incorporating modern electronics with rugged, heavy-duty industrial components to guarantee uninterrupted performance. Every unit undergoes rigorous quality testing.
               </p>
               <h3 className="text-xl font-heading font-bold text-gray-900 mb-3">Key Benefits</h3>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                 {features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-gray-800 font-medium">
+                  <li key={idx} className="flex items-start text-sm text-gray-900 font-medium">
                     <CheckCircle2 className="text-brand-green mr-2 flex-shrink-0" size={16} />
                     {feature}
                   </li>
                 ))}
               </ul>
-              <p className="text-sm text-gray-800">Disclaimer: Technical specifications are subject to change. Always refer to the official product catalogue or contact our dealer network in Budaun to confirm capacities and dimensions prior to purchase.</p>
+              <p className="text-sm text-gray-900">Disclaimer: Technical specifications are subject to change. Always refer to the official product catalogue or contact our dealer network in Budaun to confirm capacities and dimensions prior to purchase.</p>
            </div>
         </div>
       </section>

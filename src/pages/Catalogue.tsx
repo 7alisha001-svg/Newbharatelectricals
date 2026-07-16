@@ -30,7 +30,7 @@ export default function Catalogue() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-gray-800 max-w-2xl mx-auto text-lg"
+            className="text-gray-900 max-w-2xl mx-auto text-lg"
           >
             Download our latest product brochures and technical specification sheets.
           </motion.p>
@@ -44,7 +44,7 @@ export default function Catalogue() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start hover:shadow-md transition-shadow"
+                className="bg-white p-6 rounded-xl shadow-md border-none flex items-start hover:shadow-md transition-shadow"
               >
                 <div className="bg-brand-gray p-4 rounded-2xl text-brand-green mr-4 sm:mr-6 flex-shrink-0">
                   <FileText size={32} />
@@ -53,7 +53,7 @@ export default function Catalogue() {
                   <h3 className="font-heading font-bold text-gray-900 text-lg mb-1">{cat.title}</h3>
                   <p className="text-gray-700 font-medium text-sm mb-4">{cat.desc}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono text-gray-800 bg-gray-100 px-2 py-1 rounded">{cat.type} • {cat.size}</span>
+                    <span className="text-xs font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">{cat.type} • {cat.size}</span>
                     <button className="flex items-center text-brand-green font-semibold text-sm hover:text-brand-green-dark transition-colors">
                       Download <Download size={14} className="ml-1" />
                     </button>
@@ -63,9 +63,9 @@ export default function Catalogue() {
             ))}
           </div>
 
-          <div className="mt-20 text-center bg-white p-12 rounded-2xl shadow-sm border border-gray-100">
+          <div className="mt-20 text-center bg-white p-12 rounded-2xl shadow-md border-none">
             <h2 className="text-2xl font-heading font-bold text-gray-900 mb-4">Looking for something specific?</h2>
-            <p className="text-gray-800 font-medium mb-8 max-w-lg mx-auto">Browse our categories online to see the latest available products and solutions.</p>
+            <p className="text-gray-900 font-medium mb-8 max-w-lg mx-auto">Browse our categories online to see the latest available products and solutions.</p>
             <Link to="/power-solutions" className="inline-flex items-center bg-brand-green text-white font-bold py-3 px-8 rounded-2xl hover:bg-brand-green-dark transition-colors">
               View Online Products <ArrowRight size={18} className="ml-2" />
             </Link>

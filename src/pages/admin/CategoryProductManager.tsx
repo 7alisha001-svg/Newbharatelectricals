@@ -391,7 +391,7 @@ export default function CategoryProductManager() {
       </div>
 
       {/* Main Table view */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <div className="relative max-w-md">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -463,7 +463,7 @@ export default function CategoryProductManager() {
                     </td>
                     <td className="p-4">
                       <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium ${
-                        product.status === 'publish' ? 'text-emerald-700 bg-emerald-50' : 'text-gray-600 bg-gray-100'
+                        product.status === 'publish' ? 'text-emerald-700 bg-emerald-50' : 'text-gray-700 bg-gray-100'
                       }`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${product.status === 'publish' ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
                         {product.status === 'publish' ? 'Active' : 'Draft'}
@@ -526,7 +526,7 @@ export default function CategoryProductManager() {
                   </div>
 
                   {/* Body Form Fields */}
-                  <div className="flex-1 space-y-6 px-6 py-6 text-sm text-gray-600">
+                  <div className="flex-1 space-y-6 px-6 py-6 text-sm text-gray-700">
                     {message.text && (
                       <div className={`p-4 rounded-xl flex items-start gap-2.5 ${message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-100' : 'bg-red-50 text-red-800 border border-red-100'}`}>
                         {message.type === 'success' ? <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-emerald-500" /> : <AlertCircle size={18} className="flex-shrink-0 mt-0.5 text-red-500" />}
@@ -566,7 +566,7 @@ export default function CategoryProductManager() {
                             <button 
                               type="button" 
                               onClick={generateSKU}
-                              className="px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-semibold text-gray-600 transition-colors flex items-center gap-1"
+                              className="px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 transition-colors flex items-center gap-1"
                               title="Generate Random SKU"
                             >
                               <RefreshCw size={12} /> Gen
@@ -715,7 +715,7 @@ export default function CategoryProductManager() {
                       {formData.features.length > 0 && (
                         <ul className="space-y-2 mt-2 bg-gray-50 p-3 rounded-2xl border border-gray-100">
                           {formData.features.map((feat, idx) => (
-                            <li key={idx} className="flex justify-between items-center bg-white px-3 py-1.5 rounded-lg border border-gray-200/50 text-xs text-gray-800">
+                            <li key={idx} className="flex justify-between items-center bg-white px-3 py-1.5 rounded-lg border border-gray-200/50 text-xs text-gray-900">
                               <span className="font-medium flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
                                 {feat}
@@ -778,7 +778,7 @@ export default function CategoryProductManager() {
                               {formData.specs.map((spec, idx) => (
                                 <tr key={idx} className="text-gray-700">
                                   <td className="py-2 font-medium text-gray-900">{spec.label}</td>
-                                  <td className="py-2 text-gray-600">{spec.value}</td>
+                                  <td className="py-2 text-gray-700">{spec.value}</td>
                                   <td className="py-2 text-right">
                                     <button 
                                       type="button" 

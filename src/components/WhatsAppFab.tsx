@@ -29,7 +29,7 @@ export default function WhatsAppFab() {
       <WhatsAppIcon size={32} className="text-white drop-shadow-md" />
       
       {/* Tooltip bubble */}
-      <span className="absolute right-full mr-4 bg-white text-gray-800 text-sm font-bold py-2 px-4 rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap hidden md:block">
+      <span className="absolute right-full mr-4 bg-white text-gray-900 text-sm font-bold py-2 px-4 rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap hidden md:block">
         Message us on WhatsApp
         <div className="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-l-[8px] border-l-white border-b-[8px] border-b-transparent"></div>
       </span>

@@ -119,7 +119,7 @@ export default function Footer() {
                 }
               }} 
             />
-            <p className="text-gray-400 text-sm mb-6 max-w-[280px] leading-relaxed">
+            <p className="text-gray-200 text-sm mb-6 max-w-[280px] leading-relaxed">
               Powering Every Home & Business with premium electrical and solar solutions.
             </p>
             <div className="flex gap-4 mb-6">
@@ -210,7 +210,7 @@ export default function Footer() {
                    </div>
                    <div className="text-left">
                      <p className="font-bold text-sm mb-1 text-white">Corporate Office</p>
-                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
+                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
                        {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
                         settings?.office_address || 
                         'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun 243601,\nUttar Pradesh'}
@@ -224,7 +224,7 @@ export default function Footer() {
                    </div>
                    <div className="text-left">
                      <p className="font-bold text-sm mb-1 text-white">Warehouse</p>
-                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-300">
+                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
                        {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
                         settings?.warehouse_address || 
                         'Loda Bahedi,\nBudaun,\nUttar Pradesh – 243601'}
@@ -295,24 +295,24 @@ export default function Footer() {
         </div>
         
         {/* Bottom Copyright */}
-        <div className="border-t border-gray-800 py-6 md:py-4 flex flex-col lg:flex-row justify-between items-center text-xs text-neutral-200 font-semibold gap-4 md:gap-3">
+        <div className="border-t border-gray-800 py-6 md:py-4 flex flex-col lg:flex-row justify-between items-center text-xs text-neutral-100 font-semibold gap-4 md:gap-3">
             <div className="text-center lg:text-left leading-relaxed flex flex-col md:flex-row md:flex-wrap justify-center lg:justify-start items-center space-y-3 md:space-y-0">
-              <span className="text-gray-400">Copyright © {new Date().getFullYear()} New Bharat Electricals. All Rights Reserved.</span>
+              <span className="text-gray-200">Copyright © {new Date().getFullYear()} New Bharat Electricals. All Rights Reserved.</span>
               
               <div className="flex items-center flex-wrap justify-center gap-x-2 gap-y-2 mt-2 md:mt-0">
-                <span className="hidden md:inline mx-1.5 text-gray-500">|</span> 
-                <Link to="/terms-and-conditions" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Terms & Conditions</Link> 
-                <span className="text-gray-500 hidden md:inline">|</span> 
-                <Link to="/privacy-policy" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Privacy Policy</Link> 
-                <span className="text-gray-500 hidden md:inline">|</span> 
-                <Link to="/contact" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Disclaimer</Link>
-                <span className="text-gray-500 hidden md:inline">|</span> 
-                <Link to="/admin" className="hover:text-brand-green transition-colors text-gray-400 md:text-neutral-200">Admin Login</Link>
+                <span className="hidden md:inline mx-1.5 text-gray-300">|</span> 
+                <Link to="/terms-and-conditions" className="hover:text-brand-green transition-colors text-gray-200 md:text-neutral-100">Terms & Conditions</Link> 
+                <span className="text-gray-300 hidden md:inline">|</span> 
+                <Link to="/privacy-policy" className="hover:text-brand-green transition-colors text-gray-200 md:text-neutral-100">Privacy Policy</Link> 
+                <span className="text-gray-300 hidden md:inline">|</span> 
+                <Link to="/contact" className="hover:text-brand-green transition-colors text-gray-200 md:text-neutral-100">Disclaimer</Link>
+                <span className="text-gray-300 hidden md:inline">|</span> 
+                <Link to="/admin" className="hover:text-brand-green transition-colors text-gray-200 md:text-neutral-100">Admin Login</Link>
               </div>
             </div>
-            <div className="text-center lg:text-right mt-2 md:mt-0 leading-relaxed text-gray-400">
+            <div className="text-center lg:text-right mt-2 md:mt-0 leading-relaxed text-gray-200">
               Powered by advanced renewable engineering. <br className="lg:hidden" />
-              <span className="text-gray-500 font-medium">Website proudly crafted with high-performance standards.</span>
+              <span className="text-gray-300 font-medium">Website proudly crafted with high-performance standards.</span>
             </div>
         </div>
 

@@ -59,10 +59,10 @@ export default function Hero() {
   }, [heroSlides.length]);
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#f4f4f4] border-b border-gray-200">
+    <section className="relative w-full overflow-hidden bg-[#f4f4f4] border-none">
       <div className="relative w-full h-auto min-h-[400px] sm:min-h-[500px] md:h-[550px] lg:h-[600px] group flex flex-col md:flex-row">
         {/* The 3D Table/Floor Background Effect */}
-        <div className="absolute bottom-0 w-full h-[30%] bg-gradient-to-b from-[#e0e0e0] to-[#c5c5c5] border-t border-white/60 shadow-inner z-0"></div>
+        <div className="absolute bottom-0 w-full h-[30%] bg-gradient-to-t from-gray-200 to-transparent opacity-60 z-0"></div>
 
         <AnimatePresence mode="wait">
           <motion.div 
@@ -94,7 +94,7 @@ export default function Hero() {
                   {/* High Impact Title */}
                   <motion.h1 
                     initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-                    className={`text-3xl sm:text-[40px] leading-[1.1] sm:leading-[0.9] md:text-[45px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-4 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
+                    className={`text-3xl sm:text-[40px] leading-tight sm:leading-none tracking-tight md:text-[45px] lg:text-[75px] xl:text-[90px] font-heading font-black uppercase mb-4 sm:mb-6 md:mb-12 drop-shadow-sm ${heroSlides[currentSlide].themeText}`}
                   >
                     {heroSlides[currentSlide].titlePart1} <span className="text-gray-900">{heroSlides[currentSlide].titlePart2}</span>
                   </motion.h1>
@@ -121,7 +121,7 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
                     className="hidden md:block relative z-20"
                   >
-                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-brand-green text-white font-black px-12 py-4 rounded-xl shadow-2xl hover:scale-105 transition-transform uppercase tracking-widest text-lg border border-brand-green/50 hover:bg-brand-orange">
+                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-brand-green text-white font-bold px-10 py-4 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all uppercase tracking-widest text-base border-none hover:bg-brand-orange">
                       {heroSlides[currentSlide].ctaText}
                     </Link>
                   </motion.div>
@@ -142,7 +142,7 @@ export default function Hero() {
 
                   {/* Mobile CTA */}
                   <div className="md:hidden mt-4 relative z-30">
-                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-brand-green text-white font-black px-8 py-3 rounded-xl shadow-2xl hover:scale-105 transition-transform uppercase tracking-widest text-sm border border-brand-green/50 hover:bg-brand-orange">
+                    <Link to={heroSlides[currentSlide].ctaLink} className="inline-block bg-brand-green text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all uppercase tracking-wider text-sm border-none hover:bg-brand-orange">
                       {heroSlides[currentSlide].ctaText}
                     </Link>
                   </div>
@@ -161,13 +161,13 @@ export default function Hero() {
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 max-w-[1640px] mx-auto px-2 lg:px-4 flex justify-between pointer-events-none z-40">
           <button 
             onClick={() => setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))}
-            className="pointer-events-auto bg-white/90 hover:bg-white text-gray-800 border border-gray-200 shadow-xl p-3 md:p-4 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
+            className="pointer-events-auto bg-white/90 hover:bg-white text-gray-900 border border-gray-200 shadow-xl p-3 md:p-4 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
           >
             <ChevronLeft size={28} strokeWidth={1.5} />
           </button>
           <button 
             onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
-            className="pointer-events-auto bg-white/90 hover:bg-white text-gray-800 border border-gray-200 shadow-xl p-3 md:p-4 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
+            className="pointer-events-auto bg-white/90 hover:bg-white text-gray-900 border border-gray-200 shadow-xl p-3 md:p-4 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
           >
             <ChevronRight size={28} strokeWidth={1.5} />
           </button>

@@ -48,7 +48,7 @@ export default function Brands() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -71,7 +71,7 @@ export default function Brands() {
                     <td className="p-4 text-gray-500">{brand.slug}</td>
                     <td className="p-4">
                       <span className={`inline-block w-2 h-2 rounded-full mr-2 ${brand.is_active ? 'bg-green-500' : 'bg-gray-300'}`}></span>
-                      <span className="text-xs text-gray-600">{brand.is_active ? 'Active' : 'Inactive'}</span>
+                      <span className="text-xs text-gray-700">{brand.is_active ? 'Active' : 'Inactive'}</span>
                     </td>
                     <td className="p-4 text-right">
                       <Link to={`/admin/brands/${brand.id}/edit`} className="text-gray-400 hover:text-brand-green p-2 rounded-lg hover:bg-brand-green/10 transition-colors mr-1 inline-block">

@@ -77,7 +77,7 @@ export default function CheckoutPage() {
   if (cart.length === 0) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center bg-gray-50">
-        <div className="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+        <div className="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center mb-6 shadow-md border-none">
            <ShoppingCart size={40} className="text-gray-300" />
         </div>
         <h2 className="text-2xl font-bold font-heading mb-4 text-gray-900">Your Checkout is Empty</h2>
@@ -201,8 +201,8 @@ export default function CheckoutPage() {
                       <input type="radio" name="paymentMethod" value="card" checked={formData.paymentMethod === 'card'} onChange={handleInputChange} className="hidden" />
                       <span className="font-bold text-gray-900 flex-1">Credit / Debit Card (Stripe)</span>
                       <div className="flex gap-2 flex-shrink-0">
-                         <div className="w-10 h-6 bg-gray-50 border border-gray-200 rounded text-[9px] flex items-center justify-center font-bold text-gray-800">VISA</div>
-                         <div className="w-10 h-6 bg-gray-50 border border-gray-200 rounded text-[9px] flex items-center justify-center font-bold text-gray-800">MC</div>
+                         <div className="w-10 h-6 bg-gray-50 border border-gray-200 rounded text-[9px] flex items-center justify-center font-bold text-gray-900">VISA</div>
+                         <div className="w-10 h-6 bg-gray-50 border border-gray-200 rounded text-[9px] flex items-center justify-center font-bold text-gray-900">MC</div>
                       </div>
                     </div>
                   </label>

@@ -13,7 +13,7 @@ export default function LocationsPreview() {
             Our Locations
           </h2>
           <div className="w-16 h-1 bg-brand-green mx-auto mb-4" />
-          <p className="text-gray-800 max-w-2xl mx-auto text-base md:text-lg font-medium tracking-wide">
+          <p className="text-gray-900 max-w-2xl mx-auto text-base md:text-lg font-medium tracking-wide">
             Visit our corporate office or warehouse.
           </p>
         </div>
@@ -24,14 +24,14 @@ export default function LocationsPreview() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
+            className="bg-white rounded-2xl shadow-md border-none p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
           >
             <div className="w-16 h-16 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green flex-shrink-0">
               <Building size={32} />
             </div>
             <div className="flex-1">
               <h3 className="text-2xl font-black text-gray-900 mb-2">Corporate Office</h3>
-              <p className="text-gray-800 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
+              <p className="text-gray-900 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
                  settings?.office_address || 
                  'Near Dr Amar Singh, Chaudhry Sarai, Budaun'}
@@ -53,14 +53,14 @@ export default function LocationsPreview() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
+            className="bg-white rounded-2xl shadow-md border-none p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
           >
             <div className="w-16 h-16 bg-brand-dark/5 rounded-xl flex items-center justify-center text-brand-dark flex-shrink-0">
               <Warehouse size={32} />
             </div>
             <div className="flex-1">
               <h3 className="text-2xl font-black text-gray-900 mb-2">Warehouse</h3>
-              <p className="text-gray-800 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
+              <p className="text-gray-900 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
                  settings?.warehouse_address || 
                  'Budaun, Loda Bahedi, Uttar Pradesh'}

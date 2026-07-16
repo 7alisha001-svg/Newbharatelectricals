@@ -543,7 +543,7 @@ export default function GoogleSheetsPage() {
               </div>
             )}
             <div className="text-left">
-              <p className="text-xs font-bold text-gray-800 line-clamp-1">{user.displayName || 'Google Account'}</p>
+              <p className="text-xs font-bold text-gray-900 line-clamp-1">{user.displayName || 'Google Account'}</p>
               <p className="text-[10px] text-gray-500 line-clamp-1">{user.email}</p>
             </div>
             <button 
@@ -571,7 +571,7 @@ export default function GoogleSheetsPage() {
       )}
 
       {!user ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center flex flex-col items-center max-w-xl mx-auto space-y-6">
+        <div className="bg-white rounded-2xl shadow-md border-none p-8 text-center flex flex-col items-center max-w-xl mx-auto space-y-6">
           <div className="w-16 h-16 bg-gradient-to-tr from-green-50 to-emerald-100 rounded-full flex items-center justify-center border border-green-200">
             <FileSpreadsheet className="w-8 h-8 text-brand-green" />
           </div>
@@ -612,7 +612,7 @@ export default function GoogleSheetsPage() {
               className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
                 activeTab === 'export'
                   ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
-                  : 'border-transparent text-gray-500 hover:text-gray-800'
+                  : 'border-transparent text-gray-500 hover:text-gray-900'
               }`}
             >
               <Download size={16} />
@@ -623,7 +623,7 @@ export default function GoogleSheetsPage() {
               className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
                 activeTab === 'import'
                   ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
-                  : 'border-transparent text-gray-500 hover:text-gray-800'
+                  : 'border-transparent text-gray-500 hover:text-gray-900'
               }`}
             >
               <Upload size={16} />
@@ -633,7 +633,7 @@ export default function GoogleSheetsPage() {
 
           {/* TAB 1: EXPORT */}
           {activeTab === 'export' && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">Export Product Catalog</h3>
                 <p className="text-gray-500 text-sm mt-1">
@@ -750,7 +750,7 @@ export default function GoogleSheetsPage() {
           {/* TAB 2: IMPORT */}
           {activeTab === 'import' && (
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+              <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">Import Products from Google Sheets</h3>
                   <p className="text-gray-500 text-sm mt-1">
@@ -825,7 +825,7 @@ export default function GoogleSheetsPage() {
 
               {/* SHEET PREVIEW CONTAINER */}
               {sheetRows.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+                <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
                   <div>
                     <h3 className="text-base font-bold text-gray-900">Spreadsheet Data Preview</h3>
                     <p className="text-gray-500 text-xs mt-0.5">
@@ -836,7 +836,7 @@ export default function GoogleSheetsPage() {
                   <div className="overflow-x-auto border border-gray-100 rounded-xl">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="bg-gray-50 text-gray-600 uppercase border-b border-gray-100">
+                        <tr className="bg-gray-50 text-gray-700 uppercase border-b border-gray-100">
                           {sheetRows[0].slice(0, 8).map((header, idx) => (
                             <th key={idx} className="p-3 font-semibold">{header}</th>
                           ))}
@@ -909,7 +909,7 @@ export default function GoogleSheetsPage() {
 
               {/* IMPORT SUMMARY RESULTS */}
               {importResult && (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+                <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 text-emerald-700">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                     Import Complete
@@ -925,7 +925,7 @@ export default function GoogleSheetsPage() {
                     </div>
                     <div className="bg-gray-100/50 p-4 rounded-xl border border-gray-200">
                       <p className="text-2xl font-black text-gray-700">{importResult.skipped}</p>
-                      <p className="text-xs font-semibold text-gray-600 uppercase mt-0.5">Skipped</p>
+                      <p className="text-xs font-semibold text-gray-700 uppercase mt-0.5">Skipped</p>
                     </div>
                   </div>
 

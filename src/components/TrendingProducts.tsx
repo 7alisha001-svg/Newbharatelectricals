@@ -68,17 +68,17 @@ export default function TrendingProducts() {
                     <Star fill="currentColor" size={14} className="mr-0.5 sm:w-4 sm:h-4" />
                     <Star fill="currentColor" size={14} className="text-gray-200 mr-1" />
                   </div>
-                  <span className="text-[10px] sm:text-[11px] text-gray-800 font-medium bg-gray-100 px-2 py-1 rounded-md uppercase">{product.category || 'Product'}</span>
+                  <span className="text-[10px] sm:text-[11px] text-gray-900 font-medium bg-gray-100 px-2 py-1 rounded-md uppercase">{product.category || 'Product'}</span>
                 </div>
                 <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`}>
-                  <h3 className="text-sm sm:text-lg font-bold text-gray-800 leading-snug mb-3 group-hover:text-brand-orange transition-colors line-clamp-2">
+                  <h3 className="text-sm sm:text-lg font-bold text-gray-900 leading-snug mb-3 group-hover:text-brand-orange transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                 </Link>
                 <div className="mt-auto pt-4 border-t border-gray-100">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex flex-col">
-                      <span className="text-xs sm:text-sm text-gray-800 line-through mb-0.5 leading-none">₹{product.regular_price}</span>
+                      <span className="text-xs sm:text-sm text-gray-900 line-through mb-0.5 leading-none">₹{product.regular_price}</span>
                       <span className="text-lg sm:text-xl font-bold text-brand-dark leading-none">₹{product.sale_price}</span>
                     </div>
                   </div>

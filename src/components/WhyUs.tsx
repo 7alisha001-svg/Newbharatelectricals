@@ -53,7 +53,7 @@ export default function WhyUs() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ delay: 0.1 }}
-            className="text-base md:text-lg text-gray-600 font-medium leading-relaxed"
+            className="text-base md:text-lg text-gray-700 font-medium leading-relaxed"
           >
             We provide reliable solar and electrical solutions with a strong focus on quality, innovation, customer satisfaction, and long-term performance.
           </motion.p>
@@ -75,7 +75,7 @@ export default function WhyUs() {
               <h3 className="font-heading font-bold text-gray-900 text-xl lg:text-2xl mb-3 tracking-tight group-hover:text-brand-green transition-colors duration-300">
                 {reason.title}
               </h3>
-              <p className="text-gray-600 text-base leading-relaxed font-medium">
+              <p className="text-gray-700 text-base leading-relaxed font-medium">
                 {reason.desc}
               </p>
             </motion.div>

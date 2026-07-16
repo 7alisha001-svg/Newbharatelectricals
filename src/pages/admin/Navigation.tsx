@@ -209,7 +209,7 @@ export default function Navigation() {
 
         <button 
           onClick={addMenuItem}
-          className="mt-6 flex items-center justify-center w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-brand-green hover:text-brand-green font-medium transition-colors"
+          className="mt-6 flex items-center justify-center w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-700 hover:border-brand-green hover:text-brand-green font-medium transition-colors"
         >
           <Plus size={18} className="mr-2" />
           Add Main Menu Item

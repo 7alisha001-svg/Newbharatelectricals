@@ -156,7 +156,7 @@ export default function Dashboard() {
                   recentOrders.map((order) => (
                     <tr key={order.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50">
                       <td className="py-4 font-medium text-gray-900">{order.order_id}</td>
-                      <td className="py-4 text-gray-600">{order.first_name} {order.last_name}</td>
+                      <td className="py-4 text-gray-700">{order.first_name} {order.last_name}</td>
                       <td className="py-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
@@ -207,11 +207,11 @@ export default function Dashboard() {
             </h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <span className="text-gray-600 text-sm">Categories</span>
+                <span className="text-gray-700 text-sm">Categories</span>
                 <span className="font-bold text-gray-900">{stats.categories}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-600 text-sm">Brands</span>
+                <span className="text-gray-700 text-sm">Brands</span>
                 <span className="font-bold text-gray-900">{stats.brands}</span>
               </div>
             </div>

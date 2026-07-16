@@ -82,8 +82,8 @@ export default function GenericCategoryPage() {
         <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
             <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
-              <Link to="/" className="text-gray-800 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
-              <ChevronRight size={14} className="mx-2 text-gray-800 flex-shrink-0" />
+              <Link to="/" className="text-gray-900 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
+              <ChevronRight size={14} className="mx-2 text-gray-900 flex-shrink-0" />
               <span className="text-brand-green font-bold">{title}</span>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function GenericCategoryPage() {
                       <Star fill="currentColor" size={12} className="text-gray-200" />
                     </div>
                   <Link to={`/${currentCategory.slug}/all/${product.id}`}>
-                    <h3 className="font-bold text-gray-800 text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
+                    <h3 className="font-bold text-gray-900 text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
                       {product.name}
                     </h3>
                   </Link>
@@ -181,7 +181,7 @@ export default function GenericCategoryPage() {
                   <div className="mt-auto">
                     <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
                       <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
-                      <span className="text-xs sm:text-sm text-gray-800 line-through">₹{product.regular_price}</span>
+                      <span className="text-xs sm:text-sm text-gray-900 line-through">₹{product.regular_price}</span>
                     </div>
                     <button 
                       onClick={() => addToCart({

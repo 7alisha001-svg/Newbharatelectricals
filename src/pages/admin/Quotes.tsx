@@ -93,7 +93,7 @@ export default function Quotes() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-md border-none overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between">
           <div className="relative max-w-md w-full">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -146,13 +146,13 @@ export default function Quotes() {
                     </td>
                     <td className="p-4">
                       <div className="font-bold text-gray-900 mb-1">{inquiry.name}</div>
-                      <div className="flex flex-col gap-1 text-gray-600 text-xs">
+                      <div className="flex flex-col gap-1 text-gray-700 text-xs">
                         <div className="flex items-center"><Phone size={12} className="mr-1" /> {inquiry.phone}</div>
                         {inquiry.email !== 'N/A' && <div className="flex items-center"><Mail size={12} className="mr-1" /> {inquiry.email}</div>}
                       </div>
                     </td>
                     <td className="p-4 max-w-xs">
-                      <p className="text-gray-600 line-clamp-3">{inquiry.parsed_message || <span className="italic text-gray-400">No message</span>}</p>
+                      <p className="text-gray-700 line-clamp-3">{inquiry.parsed_message || <span className="italic text-gray-400">No message</span>}</p>
                     </td>
                     <td className="p-4">
                       <select

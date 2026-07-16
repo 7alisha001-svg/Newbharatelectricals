@@ -66,7 +66,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl text-gray-800 max-w-2xl mx-auto"
+            className="text-lg md:text-xl text-gray-900 max-w-2xl mx-auto"
           >
             Have questions about our products, dealer opportunities, or require support? We are here to help.
           </motion.p>
@@ -91,7 +91,7 @@ export default function Contact() {
                 >
                   <CheckCircle2 size={64} className="text-brand-green mb-4" />
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent Successfully!</h3>
-                  <p className="text-gray-800">Thank you for reaching out. Our team will get back to you shortly.</p>
+                  <p className="text-gray-900">Thank you for reaching out. Our team will get back to you shortly.</p>
                 </motion.div>
               ) : (
                 <form className="space-y-6" onSubmit={handleSubmit}>
@@ -175,7 +175,7 @@ export default function Contact() {
 
               <div className="mt-12 bg-white p-6 rounded-2xl border border-brand-green/20">
                 <h4 className="font-bold text-gray-900 mb-2">Dealer Partnership</h4>
-                <p className="text-gray-800 text-sm mb-4">Interested in becoming a certified New Bharat Electricals distributor?</p>
+                <p className="text-gray-900 text-sm mb-4">Interested in becoming a certified New Bharat Electricals distributor?</p>
                 <button className="text-brand-green font-bold text-sm uppercase tracking-wider hover:text-brand-green-dark transition-colors flex items-center">
                   Learn More <Send size={14} className="ml-1" />
                 </button>
@@ -193,7 +193,7 @@ export default function Contact() {
               Our Locations
             </h2>
             <div className="w-16 h-1 bg-brand-green mx-auto mb-6" />
-            <p className="text-gray-800 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-900 max-w-2xl mx-auto text-lg">
               Visit our corporate office or warehouse.
             </p>
           </div>
@@ -204,7 +204,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+              className="bg-white rounded-2xl shadow-md border-none overflow-hidden flex flex-col"
             >
               <div className="p-8 pb-6 flex-1">
                 <div className="w-16 h-16 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green mb-6">
@@ -213,8 +213,8 @@ export default function Contact() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Corporate Office</h3>
                 <h4 className="text-brand-green font-semibold mb-4">{settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.business_name || settings?.business_name || 'New Bharat Electricals'}</h4>
                 
-                <div className="flex items-start text-gray-800 mb-4 gap-3">
-                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-800" />
+                <div className="flex items-start text-gray-900 mb-4 gap-3">
+                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-900" />
                   <p className="leading-relaxed whitespace-pre-line">
                     {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
                      settings?.office_address || 
@@ -223,8 +223,8 @@ export default function Contact() {
                 </div>
                 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.phone && (
-                  <div className="flex items-center text-gray-800 gap-3 mb-4">
-                    <Phone size={20} className="flex-shrink-0 text-gray-800" />
+                  <div className="flex items-center text-gray-900 gap-3 mb-4">
+                    <Phone size={20} className="flex-shrink-0 text-gray-900" />
                     <a href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'office').phone}`} className="hover:text-brand-green transition-colors">
                       {settings.social_links.locations.find((l: any) => l.type === 'office').phone}
                     </a>
@@ -232,7 +232,7 @@ export default function Contact() {
                 )}
 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.business_hours && (
-                  <div className="flex items-center text-gray-800 gap-3 mb-6">
+                  <div className="flex items-center text-gray-900 gap-3 mb-6">
                     <div className="flex items-center">
                       <span className="font-bold text-sm">Hours:</span>
                       <span className="ml-2">{settings.social_links.locations.find((l: any) => l.type === 'office').business_hours}</span>
@@ -278,7 +278,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+              className="bg-white rounded-2xl shadow-md border-none overflow-hidden flex flex-col"
             >
               <div className="p-8 pb-6 flex-1">
                 <div className="w-16 h-16 bg-brand-dark/5 rounded-xl flex items-center justify-center text-brand-dark mb-6">
@@ -287,8 +287,8 @@ export default function Contact() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Warehouse</h3>
                 <h4 className="text-gray-700 font-semibold mb-4">Distribution & Logistics</h4>
                 
-                <div className="flex items-start text-gray-800 mb-4 gap-3">
-                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-800" />
+                <div className="flex items-start text-gray-900 mb-4 gap-3">
+                  <MapPin size={20} className="mt-1 flex-shrink-0 text-gray-900" />
                   <p className="leading-relaxed whitespace-pre-line">
                     {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
                      settings?.warehouse_address || 
@@ -297,8 +297,8 @@ export default function Contact() {
                 </div>
 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.phone && (
-                  <div className="flex items-center text-gray-800 gap-3 mb-4">
-                    <Phone size={20} className="flex-shrink-0 text-gray-800" />
+                  <div className="flex items-center text-gray-900 gap-3 mb-4">
+                    <Phone size={20} className="flex-shrink-0 text-gray-900" />
                     <a href={`tel:${settings.social_links.locations.find((l: any) => l.type === 'warehouse').phone}`} className="hover:text-brand-green transition-colors">
                       {settings.social_links.locations.find((l: any) => l.type === 'warehouse').phone}
                     </a>
@@ -306,7 +306,7 @@ export default function Contact() {
                 )}
 
                 {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.business_hours && (
-                  <div className="flex items-center text-gray-800 gap-3 mb-6">
+                  <div className="flex items-center text-gray-900 gap-3 mb-6">
                     <div className="flex items-center">
                       <span className="font-bold text-sm">Hours:</span>
                       <span className="ml-2">{settings.social_links.locations.find((l: any) => l.type === 'warehouse').business_hours}</span>

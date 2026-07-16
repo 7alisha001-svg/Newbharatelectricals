@@ -14,7 +14,7 @@ export default function FeaturedProducts() {
   if (featuredProducts.length === 0) return null;
 
   return (
-    <section className="py-8 md:py-12 bg-[#f4f4f4] border-b border-gray-200">
+    <section className="py-8 md:py-12 bg-[#f4f4f4] border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="flex items-center justify-between mb-4 md:mb-6">
           <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
@@ -66,13 +66,13 @@ export default function FeaturedProducts() {
                   <Star fill="currentColor" size={14} className="text-gray-200 mr-0.5 sm:mr-1" />
                 </div>
                 <Link to={`/${categorySlug}/${subcategorySlug}/${product.id}`}>
-                  <h3 className="text-sm sm:text-lg font-bold text-gray-800 leading-snug mb-3 sm:mb-4 group-hover:text-brand-orange transition-colors line-clamp-2">
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug mb-3 sm:mb-4 group-hover:text-brand-orange transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                 </Link>
                 <div className="mt-auto pt-4 border-t border-gray-100">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 sm:mb-5">
-                    <span className="text-[11px] sm:text-sm text-gray-800 line-through mb-0.5 sm:mb-0">₹{product.regular_price}</span>
+                    <span className="text-[11px] sm:text-sm text-gray-900 line-through mb-0.5 sm:mb-0">₹{product.regular_price}</span>
                     <span className="text-lg sm:text-xl font-bold text-gray-900">₹{product.sale_price}</span>
                   </div>
                   <button 
@@ -83,7 +83,7 @@ export default function FeaturedProducts() {
                       imageUrl: product.image_url,
                       quantity: 1
                     })}
-                    className="w-full bg-brand-green/10 hover:bg-brand-orange text-brand-green hover:text-white border border-brand-green/20 hover:border-brand-orange transition-colors py-3 sm:py-3.5 rounded-xl font-bold tracking-wide text-xs sm:text-sm uppercase flex items-center justify-center shadow-sm hover:shadow-md"
+                    className="w-full bg-brand-green hover:bg-brand-orange text-white border-none transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg py-3 sm:py-3.5 rounded-xl font-bold tracking-wide text-xs sm:text-sm uppercase flex items-center justify-center shadow-sm hover:shadow-md"
                   >
                     <ShoppingCart size={16} className="mr-1.5 sm:mr-2" /> Add to Cart
                   </button>
