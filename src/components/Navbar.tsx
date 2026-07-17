@@ -30,7 +30,9 @@ export default function Navbar() {
   const { cartCount } = useCart();
 
   const [croppedLogo, setCroppedLogo] = useState<string | null>(null);
-  const rawLogoUrl = settings?.logo_url || "/header-logo-dark.png";
+  const rawLogoUrl = settings?.logo_url && !settings.logo_url.includes('settings/header-logo-dark.png') 
+    ? settings.logo_url 
+    : "/header-logo-dark.png";
 
   useEffect(() => {
     if (!rawLogoUrl) return;
@@ -165,8 +167,8 @@ export default function Navbar() {
                   } w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0`}
                   onError={(e) => { 
                     const target = e.currentTarget;
-                    if (!target.src.includes('images.unsplash.com')) {
-                      target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                    if (target.src !== '/header-logo-dark.png') {
+                      target.src = '/header-logo-dark.png';
                     }
                   }} />
               </Link>

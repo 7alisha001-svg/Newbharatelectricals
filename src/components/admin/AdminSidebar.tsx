@@ -93,8 +93,8 @@ export default function AdminSidebar({
               className="h-[64px] w-auto object-contain scale-[1.25] transform-gpu origin-left -my-1 -mx-0.5 filter drop-shadow-md" 
               onError={(e) => { 
                 const target = e.currentTarget; 
-                if (!target.src.includes('images.unsplash.com')) {
-                  target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; 
+                if (target.src !== '/footer-logo-light.png') {
+                  target.src = '/footer-logo-light.png'; 
                 }
               }} 
             />

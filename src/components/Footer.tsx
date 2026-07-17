@@ -114,8 +114,8 @@ export default function Footer() {
               className="h-12 w-auto object-contain mb-4"
               onError={(e) => { 
                 const target = e.currentTarget;
-                if (!target.src.includes('images.unsplash.com')) {
-                  target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                if (target.src !== '/footer-logo-light.png') {
+                  target.src = '/footer-logo-light.png';
                 }
               }} 
             />
@@ -196,8 +196,8 @@ export default function Footer() {
                   } object-contain block transition-transform duration-300 hover:scale-[1.05]`} 
                   onError={(e) => { 
                     const target = e.currentTarget;
-                    if (!target.src.includes('images.unsplash.com')) {
-                      target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                    if (target.src !== '/footer-logo-light.png') {
+                      target.src = '/footer-logo-light.png';
                     }
                   }} 
                 />

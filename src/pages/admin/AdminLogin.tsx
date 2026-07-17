@@ -18,7 +18,11 @@ export default function AdminLogin() {
     const checkAdminStatus = async () => {
       try {
         const { data: settingsData } = await supabase.from('settings').select('logo_url').eq('id', 'global').single();
-        if (settingsData?.logo_url) setLogoUrl(settingsData.logo_url);
+        if (settingsData?.logo_url && !settingsData.logo_url.includes('settings/header-logo-dark.png')) {
+          setLogoUrl(settingsData.logo_url);
+        } else {
+          setLogoUrl('/header-logo-dark.png');
+        }
 
         const { data, error } = await supabase.rpc('check_if_admin_exists');
         if (error) {
@@ -136,7 +140,7 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
-              <img src={logoUrl || "/header-logo-dark.png"} alt="New Bharat Electricals" className="h-20 w-auto object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('images.unsplash.com')) target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; }} />
+              <img src={logoUrl || "/header-logo-dark.png"} alt="New Bharat Electricals" className="h-20 w-auto object-contain" onError={(e) => { const target = e.currentTarget; if (target.src !== '/header-logo-dark.png') target.src = '/header-logo-dark.png'; }} />
             </Link>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
