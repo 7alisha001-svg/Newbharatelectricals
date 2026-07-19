@@ -88,6 +88,22 @@ export default function QuotePopup() {
       
       if (error) throw error;
       
+      try {
+        await fetch('/api/inquiries/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            name: formData.name, 
+            phone: formData.phone, 
+            email: formData.email, 
+            inquiryType: 'Quote Request', 
+            message: formData.message 
+          })
+        });
+      } catch (err) {
+        console.warn('Failed to send email:', err);
+      }
+
       setSubmitted(true);
       
       setTimeout(() => {

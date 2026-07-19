@@ -16,7 +16,7 @@ export default function BrandsSection() {
       .sort((a: any, b: any) => a.order - b.order);
   } else {
     // Fallback to old featured brands logic
-    const featuredBrandSlugs = settings?.social_links?.featured_brands || [];
+    const rawSlugs = settings?.social_links?.featured_brands; const featuredBrandSlugs = Array.isArray(rawSlugs) ? rawSlugs : [];
     const featuredBrands = brands
       .filter(brand => featuredBrandSlugs.includes(brand.slug))
       .slice(0, 10);

@@ -38,7 +38,7 @@ export default function AdminLayout() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
         setIsAuthenticated(false);
-        navigate('/admin');
+        navigate('/admin-login');
       }
     });
 
@@ -50,7 +50,7 @@ export default function AdminLayout() {
   }
 
   if (isAuthenticated === false) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/admin-login" replace />;
   }
 
   return (

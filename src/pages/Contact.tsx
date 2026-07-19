@@ -35,6 +35,16 @@ export default function Contact() {
 
       if (dbError) throw dbError;
 
+      try {
+        await fetch('/api/inquiries/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, email: 'N/A', inquiryType, message })
+        });
+      } catch (err) {
+        console.warn('Failed to send email:', err);
+      }
+
       setSubmitted(true);
       form.reset();
       setTimeout(() => setSubmitted(false), 5000);
@@ -168,7 +178,7 @@ export default function Contact() {
                   <div>
                     <p className="font-bold text-gray-900 text-lg">Email Support</p>
                     <p className="text-gray-700 mb-1">24/7 Priority Support</p>
-                    <a href="mailto:newbharatelectricals00@gmail.com" className="text-brand-green font-medium hover:text-brand-green-dark transition-colors">newbharatelectricals00@gmail.com</a>
+                    <a href="mailto:info@newbharatelectricals.com" className="text-brand-green font-medium hover:text-brand-green-dark transition-colors">info@newbharatelectricals.com</a>
                   </div>
                 </div>
               </div>

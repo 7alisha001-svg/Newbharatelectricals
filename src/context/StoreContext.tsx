@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
 interface Settings {
@@ -79,6 +79,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<Settings | null>(null);
 
+  const fetchTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debouncedFetchData = () => {
+    if (fetchTimeout.current) clearTimeout(fetchTimeout.current);
+    fetchTimeout.current = setTimeout(fetchData, 1000);
+  };
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -108,28 +113,28 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const catSub = supabase
       .channel('categories_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
-        fetchData(); // Simplest way to ensure fully fresh data
+        debouncedFetchData(); // Simplest way to ensure fully fresh data
       })
       .subscribe();
 
     const brandSub = supabase
       .channel('brands_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'brands' }, () => {
-        fetchData();
+        debouncedFetchData();
       })
       .subscribe();
 
     const settingsSub = supabase
       .channel('settings_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => {
-        fetchData();
+        debouncedFetchData();
       })
       .subscribe();
 
     const prodSub = supabase
       .channel('products_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
-        fetchData();
+        debouncedFetchData();
       })
       .subscribe();
 

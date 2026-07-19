@@ -5,16 +5,26 @@ import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { mainNavLinks as fallbackNavLinks } from '../data/navigation';
 
+const croppedFooterLogoCache: Record<string, string> = {};
+
 export default function Footer() {
   const { settings } = useStore();
-  const mainNavLinks = settings?.social_links?.navigation || fallbackNavLinks;
+  const mainNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : fallbackNavLinks);
 
-  const [croppedLogo, setCroppedLogo] = useState<string | null>(null);
   const rawLogoUrl = settings?.social_links?.footer_logo || "/footer-logo-light.png";
+
+  const [croppedLogo, setCroppedLogo] = useState<string | null>(() => {
+    return croppedFooterLogoCache[rawLogoUrl] || null;
+  });
 
   useEffect(() => {
     if (!rawLogoUrl) return;
     
+    if (croppedFooterLogoCache[rawLogoUrl]) {
+      setCroppedLogo(croppedFooterLogoCache[rawLogoUrl]);
+      return;
+    }
+
     setCroppedLogo(null);
 
     const img = new Image();
@@ -25,6 +35,7 @@ export default function Footer() {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         if (!ctx) {
+          croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
           setCroppedLogo(rawLogoUrl);
           return;
         }
@@ -53,6 +64,7 @@ export default function Footer() {
         }
 
         if (!hasAlpha || maxX < minX || maxY < minY) {
+          croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
           setCroppedLogo(rawLogoUrl);
           return;
         }
@@ -65,6 +77,7 @@ export default function Footer() {
         croppedCanvas.height = croppedHeight;
         const croppedCtx = croppedCanvas.getContext('2d');
         if (!croppedCtx) {
+          croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
           setCroppedLogo(rawLogoUrl);
           return;
         }
@@ -75,12 +88,16 @@ export default function Footer() {
           0, 0, croppedWidth, croppedHeight
         );
 
-        setCroppedLogo(croppedCanvas.toDataURL());
+        const dataUrl = croppedCanvas.toDataURL();
+        croppedFooterLogoCache[rawLogoUrl] = dataUrl;
+        setCroppedLogo(dataUrl);
       } catch (e) {
+        croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
         setCroppedLogo(rawLogoUrl);
       }
     };
     img.onerror = () => {
+      croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
       setCroppedLogo(rawLogoUrl);
     };
   }, [rawLogoUrl]);
@@ -245,7 +262,7 @@ export default function Footer() {
                     <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
                        <Mail className="text-brand-green" size={16} />
                     </div>
-                    <a href="mailto:newbharatelectricals00@gmail.com" className="leading-relaxed font-semibold text-sm hover:text-brand-green break-all block py-1">newbharatelectricals00@gmail.com</a>
+                    <a href="mailto:info@newbharatelectricals.com" className="leading-relaxed font-semibold text-sm hover:text-brand-green break-all block py-1">info@newbharatelectricals.com</a>
                  </div>
                  <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
                     <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
@@ -272,7 +289,7 @@ export default function Footer() {
                  </div>
                  <div className="flex flex-col items-center sm:items-start">
                    <span className="text-gray-300 text-xs uppercase font-extrabold tracking-wider mb-1">Email Support</span>
-                   <a href="mailto:newbharatelectricals00@gmail.com" className="text-white font-bold hover:text-brand-green transition-colors duration-200">newbharatelectricals00@gmail.com</a>
+                   <a href="mailto:info@newbharatelectricals.com" className="text-white font-bold hover:text-brand-green transition-colors duration-200">info@newbharatelectricals.com</a>
                  </div>
                  
                  {/* Payment Methods Mockup */}

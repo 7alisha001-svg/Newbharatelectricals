@@ -133,7 +133,7 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="mt-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <p className="mb-2"><strong>New Bharat Electricals</strong></p>
-                <p><strong>Email:</strong> newbharatelectricals00@gmail.com</p>
+                <p><strong>Email:</strong> info@newbharatelectricals.com</p>
                 <p><strong>Phone:</strong> +91 94570 02000</p>
                 <Link to="/contact" className="inline-block mt-4 text-brand-green font-bold hover:underline">
                   Contact Us &rarr;

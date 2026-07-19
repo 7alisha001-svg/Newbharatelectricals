@@ -178,7 +178,7 @@ export default function TermsConditionsPage() {
                 If you have any questions regarding these Terms & Conditions, please contact us using the contact information provided on our website.
               </p>
               <div className="mt-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <p><strong>Email:</strong> newbharatelectricals00@gmail.com</p>
+                <p><strong>Email:</strong> info@newbharatelectricals.com</p>
                 <p><strong>Phone:</strong> +91 94570 02000</p>
                 <Link to="/contact" className="inline-block mt-3 text-brand-green font-bold hover:underline">
                   Contact Us &rarr;

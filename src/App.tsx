@@ -1,3 +1,5 @@
+import ErrorBoundary from './components/ErrorBoundary';
+import React, { Suspense } from 'react';
 import { Routes, Route, BrowserRouter, Outlet } from 'react-router-dom';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
@@ -5,42 +7,42 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import WhatsAppFab from './components/WhatsAppFab';
 import Home from './pages/Home';
-import GenericCategoryPage from './pages/GenericCategoryPage';
-import GenericSubCategoryPage from './pages/GenericSubCategoryPage';
-import ProductPage from './pages/ProductPage';
-import Catalogue from './pages/Catalogue';
-import StoreLocator from './pages/StoreLocator';
-import Contact from './pages/Contact';
-import CartPage from './pages/CartPage';
-import CheckoutPage from './pages/CheckoutPage';
-import OrderSuccessPage from './pages/OrderSuccessPage';
-import AboutUsPage from './pages/AboutUsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import TermsConditionsPage from './pages/TermsConditionsPage';
-import BrandPage from './pages/BrandPage';
+const GenericCategoryPage = React.lazy(() => import('./pages/GenericCategoryPage'));
+const GenericSubCategoryPage = React.lazy(() => import('./pages/GenericSubCategoryPage'));
+const ProductPage = React.lazy(() => import('./pages/ProductPage'));
+const Catalogue = React.lazy(() => import('./pages/Catalogue'));
+const StoreLocator = React.lazy(() => import('./pages/StoreLocator'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const CartPage = React.lazy(() => import('./pages/CartPage'));
+const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
+const OrderSuccessPage = React.lazy(() => import('./pages/OrderSuccessPage'));
+const AboutUsPage = React.lazy(() => import('./pages/AboutUsPage'));
+const PrivacyPolicyPage = React.lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsConditionsPage = React.lazy(() => import('./pages/TermsConditionsPage'));
+const BrandPage = React.lazy(() => import('./pages/BrandPage'));
 import ScrollToTop from './components/ScrollToTop';
 import LeadCapturePopup from './components/LeadCapturePopup';
 
-import AdminLogin from './pages/admin/AdminLogin';
-import AdminLayout from './pages/admin/AdminLayout';
-import Dashboard from './pages/admin/Dashboard';
-import Orders from './pages/admin/Orders';
-import Products from './pages/admin/Products';
-import ProductForm from './pages/admin/ProductForm';
-import Inventory from './pages/admin/Inventory';
-import Categories from './pages/admin/Categories';
-import CategoryForm from './pages/admin/CategoryForm';
-import Brands from './pages/admin/Brands';
-import BrandSliderAdmin from './pages/admin/BrandSliderAdmin';
-import BrandForm from './pages/admin/BrandForm';
-import Customers from './pages/admin/Customers';
-import Quotes from './pages/admin/Quotes';
-import Leads from './pages/admin/Leads';
-import Settings from './pages/admin/Settings';
-import Locations from './pages/admin/Locations';
-import Navigation from './pages/admin/Navigation';
-import CategoryProductManager from './pages/admin/CategoryProductManager';
-import GoogleSheetsPage from './pages/admin/GoogleSheetsPage';
+const AdminLogin = React.lazy(() => import('./pages/admin/AdminLogin'));
+const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
+const Dashboard = React.lazy(() => import('./pages/admin/Dashboard'));
+const Orders = React.lazy(() => import('./pages/admin/Orders'));
+const Products = React.lazy(() => import('./pages/admin/Products'));
+const ProductForm = React.lazy(() => import('./pages/admin/ProductForm'));
+const Inventory = React.lazy(() => import('./pages/admin/Inventory'));
+const Categories = React.lazy(() => import('./pages/admin/Categories'));
+const CategoryForm = React.lazy(() => import('./pages/admin/CategoryForm'));
+const Brands = React.lazy(() => import('./pages/admin/Brands'));
+const BrandSliderAdmin = React.lazy(() => import('./pages/admin/BrandSliderAdmin'));
+const BrandForm = React.lazy(() => import('./pages/admin/BrandForm'));
+const Customers = React.lazy(() => import('./pages/admin/Customers'));
+const Quotes = React.lazy(() => import('./pages/admin/Quotes'));
+const Leads = React.lazy(() => import('./pages/admin/Leads'));
+const Settings = React.lazy(() => import('./pages/admin/Settings'));
+const Locations = React.lazy(() => import('./pages/admin/Locations'));
+const Navigation = React.lazy(() => import('./pages/admin/Navigation'));
+const CategoryProductManager = React.lazy(() => import('./pages/admin/CategoryProductManager'));
+const GoogleSheetsPage = React.lazy(() => import('./pages/admin/GoogleSheetsPage'));
 
 import { useStore, StoreProvider } from './context/StoreContext';
 
@@ -84,8 +86,9 @@ export default function App() {
         <CartProvider>
           <BrowserRouter>
           <ScrollToTop />
+          <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div></div>}>
           <Routes>
-            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="orders" element={<Orders />} />
@@ -129,6 +132,7 @@ export default function App() {
               <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />
             </Route>
           </Routes>
+          </Suspense>
         </BrowserRouter>
         </CartProvider>
       </StoreProvider>

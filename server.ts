@@ -78,12 +78,12 @@ async function startServer() {
 
     try {
       const transporter = await getEmailTransporter();
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@newbharatelectricals.com";
+      const adminEmail = process.env.ADMIN_EMAIL || "info@newbharatelectricals.com";
       const nowString = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
       // 1. Email to website administrator
       const adminMailOptions = {
-        from: '"New Bharat Lead Capture" <leads@newbharatelectricals.com>',
+        from: '"New Bharat Lead Capture" <info@newbharatelectricals.com>',
         to: adminEmail,
         subject: `⚡ [NEW LEAD] Consultation Request: ${name} (${interestedIn})`,
         html: `
@@ -139,7 +139,7 @@ async function startServer() {
       // 2. Email confirmation to customer (if email is provided)
       if (email && email !== "N/A" && email.includes("@")) {
         const customerMailOptions = {
-          from: '"New Bharat Electricals" <no-reply@newbharatelectricals.com>',
+          from: '"New Bharat Electricals" <info@newbharatelectricals.com>',
           to: email,
           subject: "Thank You for Contacting New Bharat Electricals!",
           html: `
@@ -186,6 +186,73 @@ async function startServer() {
       console.error("[SMTP-ERROR] Error sending lead notification emails:", err);
       // Still return 200/success to the client because the database entry is already saved
       res.status(200).json({ success: true, error: "Lead stored but notification email failed to send" });
+    }
+  });
+
+  // API Route: Send Email Notification for Inquiries
+  app.post("/api/inquiries/notify", async (req, res) => {
+    const { name, phone, email, inquiryType, message } = req.body;
+
+    if (!name || !phone) {
+      return res.status(400).json({ error: "Missing required inquiry fields" });
+    }
+
+    try {
+      const transporter = await getEmailTransporter();
+      const adminEmail = process.env.ADMIN_EMAIL || "info@newbharatelectricals.com";
+      const nowString = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+      const adminMailOptions = {
+        from: '"New Bharat Inquiries" <info@newbharatelectricals.com>',
+        to: adminEmail,
+        subject: `📩 [NEW INQUIRY] ${inquiryType || 'General'}: ${name}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div style="background-color: #059669; padding: 24px; text-align: center; color: white;">
+              <h2 style="margin: 0; font-size: 24px; font-weight: bold;">New Inquiry Received!</h2>
+            </div>
+            <div style="padding: 24px; background-color: #ffffff;">
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                <tr><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-weight: bold; width: 150px;">Name</td><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6;">${name}</td></tr>
+                <tr><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-weight: bold;">Phone</td><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6;">${phone}</td></tr>
+                <tr><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-weight: bold;">Email</td><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6;">${email || 'N/A'}</td></tr>
+                <tr><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-weight: bold;">Type</td><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6;">${inquiryType || 'N/A'}</td></tr>
+                <tr><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-weight: bold;">Message</td><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6;">${message || 'N/A'}</td></tr>
+                <tr><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-weight: bold;">Logged At</td><td style="padding: 10px 0; border-bottom: 1px solid #f3f4f6;">${nowString}</td></tr>
+              </table>
+            </div>
+          </div>
+        `
+      };
+
+      await transporter.sendMail(adminMailOptions);
+
+      if (email && email !== "N/A" && email.includes("@")) {
+        const customerMailOptions = {
+          from: '"New Bharat Electricals" <info@newbharatelectricals.com>',
+          to: email,
+          subject: "Thank You for Contacting New Bharat Electricals!",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden;">
+              <div style="background-color: #ea580c; padding: 24px; text-align: center; color: white;">
+                <h2 style="margin: 0; font-size: 22px; font-weight: bold;">Inquiry Received!</h2>
+              </div>
+              <div style="padding: 24px; background-color: #ffffff; color: #374151;">
+                <p>Dear ${name},</p>
+                <p>Thank you for contacting New Bharat Electricals. We have received your inquiry.</p>
+                <p>One of our representatives will contact you shortly.</p>
+                <p>Best regards,<br><b>New Bharat Electricals</b></p>
+              </div>
+            </div>
+          `
+        };
+        await transporter.sendMail(customerMailOptions);
+      }
+
+      res.status(200).json({ success: true });
+    } catch (err: any) {
+      console.error("[SMTP-ERROR] Error sending inquiry emails:", err);
+      res.status(200).json({ success: true, error: "Email failed" });
     }
   });
 

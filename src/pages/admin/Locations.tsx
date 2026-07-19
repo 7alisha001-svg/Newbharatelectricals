@@ -21,7 +21,7 @@ const defaultOffice: LocationData = {
   business_name: 'New Bharat Electricals',
   address: 'Near Dr Amar Singh,\nChaudhry Sarai,\nLalpul Road,\nBudaun HO,\nBudaun – 243601,\nUttar Pradesh',
   phone: '+91 94570 02000',
-  email: 'newbharatelectricals00@gmail.com',
+  email: 'info@newbharatelectricals.com',
   business_hours: 'Mon - Sat: 10:00 AM - 7:00 PM',
   map_embed_code: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3513.3102435798993!2d79.11718047535552!3d28.02640207599026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a008c2306d1dd5%3A0xe979dcc4999f7d0c!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
   map_link: 'https://maps.google.com/?q=New+Bharat+Electricals,Budaun',

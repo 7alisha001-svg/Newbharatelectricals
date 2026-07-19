@@ -5,14 +5,16 @@ import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { mainNavLinks } from '../data/navigation';
 
+const croppedNavbarLogoCache: Record<string, string> = {};
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { settings, brands } = useStore();
   
   // Build dynamic navLinks based on settings or fallback
-  const baseNavLinks = settings?.social_links?.navigation || mainNavLinks;
-  const navLinks = baseNavLinks.map((link: any) => {
+  const baseNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : mainNavLinks);
+  const navLinks = (Array.isArray(baseNavLinks) ? baseNavLinks : mainNavLinks).map((link: any) => {
     if (link.name === 'Brands') {
       return {
         ...link,
@@ -29,14 +31,22 @@ export default function Navbar() {
   const location = useLocation();
   const { cartCount } = useCart();
 
-  const [croppedLogo, setCroppedLogo] = useState<string | null>(null);
   const rawLogoUrl = settings?.logo_url && !settings.logo_url.includes('settings/header-logo-dark.png') 
     ? settings.logo_url 
     : "/header-logo-dark.png";
 
+  const [croppedLogo, setCroppedLogo] = useState<string | null>(() => {
+    return croppedNavbarLogoCache[rawLogoUrl] || null;
+  });
+
   useEffect(() => {
     if (!rawLogoUrl) return;
     
+    if (croppedNavbarLogoCache[rawLogoUrl]) {
+      setCroppedLogo(croppedNavbarLogoCache[rawLogoUrl]);
+      return;
+    }
+
     setCroppedLogo(null);
 
     const img = new Image();
@@ -47,6 +57,7 @@ export default function Navbar() {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         if (!ctx) {
+          croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
           setCroppedLogo(rawLogoUrl);
           return;
         }
@@ -75,6 +86,7 @@ export default function Navbar() {
         }
 
         if (!hasAlpha || maxX < minX || maxY < minY) {
+          croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
           setCroppedLogo(rawLogoUrl);
           return;
         }
@@ -87,6 +99,7 @@ export default function Navbar() {
         croppedCanvas.height = croppedHeight;
         const croppedCtx = croppedCanvas.getContext('2d');
         if (!croppedCtx) {
+          croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
           setCroppedLogo(rawLogoUrl);
           return;
         }
@@ -97,12 +110,16 @@ export default function Navbar() {
           0, 0, croppedWidth, croppedHeight
         );
 
-        setCroppedLogo(croppedCanvas.toDataURL());
+        const dataUrl = croppedCanvas.toDataURL();
+        croppedNavbarLogoCache[rawLogoUrl] = dataUrl;
+        setCroppedLogo(dataUrl);
       } catch (e) {
+        croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
         setCroppedLogo(rawLogoUrl);
       }
     };
     img.onerror = () => {
+      croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
       setCroppedLogo(rawLogoUrl);
     };
   }, [rawLogoUrl]);
