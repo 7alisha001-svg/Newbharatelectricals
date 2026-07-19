@@ -16,13 +16,44 @@ export default function Navbar() {
   const baseNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : mainNavLinks);
   const navLinks = (Array.isArray(baseNavLinks) ? baseNavLinks : mainNavLinks).map((link: any) => {
     if (link.name === 'Brands') {
+      const targetBrandsOrder = [
+        { name: 'AMAZE', slug: 'amaze' },
+        { name: 'OKAYA', slug: 'okaya' },
+        { name: 'LIVGUARD', slug: 'livguard' },
+        { name: 'SMARTEN', slug: 'smarten' },
+        { name: 'INDPOWER', slug: 'indpower' },
+        { name: 'SERVOKON', slug: 'servokon' },
+        { name: 'ADDO by Eastman', slug: 'addo-by-eastman' },
+        { name: 'MASSIMO', slug: 'massimo' },
+        { name: 'ADANI', slug: 'adani' },
+        { name: 'WAAREE', slug: 'waaree' },
+        { name: 'KENT', slug: 'kent' }
+      ];
+
+      const orderedDropdownItems = targetBrandsOrder.map(target => {
+        const dbBrand = brands?.find(b => {
+          const dbSlug = b.slug?.toLowerCase() || '';
+          const targetSlug = target.slug.toLowerCase();
+          const dbName = b.name?.toLowerCase().replace(/[^a-z0-9]/g, '') || '';
+          const targetName = target.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+          
+          return dbSlug === targetSlug || 
+                 (targetSlug === 'waaree' && dbSlug === 'waree') || 
+                 dbName === targetName ||
+                 dbName.includes(targetName) || 
+                 targetName.includes(dbName);
+        });
+
+        return {
+          name: target.name,
+          href: `/brands/${dbBrand?.slug || target.slug}`
+        };
+      });
+
       return {
         ...link,
         hasDropdown: true,
-        dropdownItems: brands.filter(b => b.is_active !== false).map(b => ({
-          name: b.name,
-          href: `/brands/${b.slug || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-')}`
-        }))
+        dropdownItems: orderedDropdownItems
       };
     }
     return link;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ShieldCheck, ShoppingCart } from 'lucide-react';
+import { ShieldCheck, ShoppingCart, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { motion } from 'motion/react';
 import { supabase } from '../lib/supabase';
