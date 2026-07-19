@@ -1,14 +1,21 @@
-import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export default function TermsConditionsPage() {
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Terms & Conditions", url: "/terms-and-conditions" }
+  ];
+
   return (
     <div className="bg-[#f8f9fa] min-h-screen py-12 md:py-20">
-      <Helmet>
-        <title>Terms & Conditions | New Bharat Electricals</title>
-        <meta name="description" content="Terms and Conditions for using the New Bharat Electricals website and purchasing our products." />
-      </Helmet>
+      <SEO 
+        title="Terms & Conditions of Service"
+        description="Review the Terms & Conditions governing New Bharat Electricals. Outlines procurement clauses, licensed commercial contracting rules, and warranty policy specifications."
+        keywords="New Bharat terms of service, commercial contract clauses, warranty rules"
+        breadcrumbs={breadcrumbs}
+      />
 
       <div className="max-w-[800px] mx-auto px-4 lg:px-8">
         <motion.div 

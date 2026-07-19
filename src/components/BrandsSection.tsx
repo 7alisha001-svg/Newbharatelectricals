@@ -3,45 +3,110 @@ import { useStore } from '../context/StoreContext';
 import { motion } from 'motion/react';
 
 export default function BrandsSection() {
-  const { brands, settings, loading } = useStore();
+  const { brands } = useStore();
 
-  if (loading) return null;
+  const defaultBrands = [
+    {
+      id: 'brand-amaze',
+      name: 'AMAZE',
+      slug: 'amaze',
+      logo_url: 'https://ftxyuhwejcqxoyhmkczl.supabase.co/storage/v1/object/public/logos/amaze.png',
+      link: '/brands/amaze'
+    },
+    {
+      id: 'brand-okaya',
+      name: 'OKAYA',
+      slug: 'okaya',
+      logo_url: 'https://okayapower.com/assets/images/logo.png',
+      link: '/brands/okaya'
+    },
+    {
+      id: 'brand-livguard',
+      name: 'LIVGUARD',
+      slug: 'livguard',
+      logo_url: 'https://www.livguard.com/wp-content/themes/livguard/images/logo.png',
+      link: '/brands/livguard'
+    },
+    {
+      id: 'brand-smarten',
+      name: 'SMARTEN',
+      slug: 'smarten',
+      logo_url: 'https://smarten.in/assets/images/logo.png',
+      link: '/brands/smarten'
+    },
+    {
+      id: 'brand-indpower',
+      name: 'INDPOWER',
+      slug: 'indpower',
+      logo_url: '', // Explicit placeholder card since there's no official logo URL hotlinking
+      link: '/brands/indpower'
+    },
+    {
+      id: 'brand-servokon',
+      name: 'SERVOKON',
+      slug: 'servokon',
+      logo_url: 'https://www.servokon.com/images/logo.png',
+      link: '/brands/servokon'
+    },
+    {
+      id: 'brand-addo',
+      name: 'ADDO by Eastman',
+      slug: 'addo-by-eastman',
+      logo_url: 'https://addobatteries.com/wp-content/uploads/2021/04/logo.png',
+      link: '/brands/addo-by-eastman'
+    },
+    {
+      id: 'brand-massimo',
+      name: 'MASSIMO',
+      slug: 'massimo',
+      logo_url: 'https://www.massimobatteries.com/wp-content/uploads/2022/07/massimo-logo.png',
+      link: '/brands/massimo'
+    },
+    {
+      id: 'brand-adani',
+      name: 'ADANI',
+      slug: 'adani',
+      logo_url: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Adani_Group_logo.svg',
+      link: '/brands/adani'
+    },
+    {
+      id: 'brand-waaree',
+      name: 'WAAREE',
+      slug: 'waaree',
+      logo_url: 'https://www.waaree.com/images/logo.png',
+      link: '/brands/waaree'
+    },
+    {
+      id: 'brand-kent',
+      name: 'KENT',
+      slug: 'kent',
+      logo_url: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Kent_RO_Systems_Logo.png',
+      link: '/brands/kent'
+    }
+  ];
 
-  const sliderData = settings?.social_links?.brand_slider;
-  let items = [];
-
-  if (sliderData?.items && sliderData.items.length > 0) {
-    items = sliderData.items
-      .filter((item: any) => item.is_enabled)
-      .sort((a: any, b: any) => a.order - b.order);
-  } else {
-    // Fallback to old featured brands logic
-    const rawSlugs = settings?.social_links?.featured_brands; const featuredBrandSlugs = Array.isArray(rawSlugs) ? rawSlugs : [];
-    const featuredBrands = brands
-      .filter(brand => featuredBrandSlugs.includes(brand.slug))
-      .slice(0, 10);
-      
-    items = featuredBrands.map((b, idx) => ({
-      id: b.id,
-      name: b.name,
-      logo_url: b.logo_url,
-      link: `/brands/${b.slug || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
-      is_enabled: true,
-      order: idx
-    }));
-  }
-
-  if (items.length === 0) return null;
+  // Map each brand to check if there is a matching brand from the database
+  const items = defaultBrands.map(defBrand => {
+    const dbBrand = brands?.find(b => 
+      b.slug?.toLowerCase() === defBrand.slug || 
+      b.name?.toLowerCase().replace(/[^a-z0-9]/g, '') === defBrand.name.toLowerCase().replace(/[^a-z0-9]/g, '')
+    );
+    
+    return {
+      id: dbBrand?.id || defBrand.id,
+      name: dbBrand?.name || defBrand.name,
+      slug: dbBrand?.slug || defBrand.slug,
+      logo_url: dbBrand?.logo_url || defBrand.logo_url,
+      link: `/brands/${dbBrand?.slug || defBrand.slug}`
+    };
+  });
 
   // We need enough items to fill the screen twice to ensure a seamless infinite loop.
-  // Assuming each item is ~200px wide, a 1920px screen holds ~10 items.
-  // So a base set of at least 12 items is safe.
   const MIN_ITEMS = 12;
   const loopMultiplier = Math.ceil(MIN_ITEMS / items.length);
   const repeatedItems = Array(loopMultiplier).fill(items).flat();
   
   // For the continuous marquee, duplicate the fully populated set exactly once.
-  // We will animate the parent container from x: "0%" to x: "-50%".
   const sliderItems = [...repeatedItems, ...repeatedItems];
 
   // Calculate duration based on the number of unique items in one half, 
@@ -60,7 +125,7 @@ export default function BrandsSection() {
         </div>
 
         <div className="w-full relative overflow-hidden group">
-          {/* Fading edges for a premium look (optional but recommended for a premium slider) */}
+          {/* Fading edges for a premium look */}
           <div className="absolute top-0 left-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
           <div className="absolute top-0 right-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
@@ -84,7 +149,7 @@ export default function BrandsSection() {
                       <img 
                         src={brand.logo_url} 
                         alt={brand.name} 
-                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                        className="max-w-[85%] max-h-[80%] object-contain group-hover:scale-110 transition-transform duration-500"
                         loading="lazy"
                         decoding="async"
                         onError={(e) => { 
@@ -97,10 +162,13 @@ export default function BrandsSection() {
                       />
                     ) : null}
                     <div 
-                      className="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-900 font-heading font-bold text-xl md:text-2xl uppercase tracking-wider"
+                      className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 text-slate-800 font-heading font-black text-center p-4 border border-gray-100 rounded-xl"
                       style={{ display: brand.logo_url ? 'none' : 'flex' }}
                     >
-                      {brand.name ? brand.name.substring(0, 2) : 'B'}
+                      <span className="text-[10px] tracking-widest text-brand-green uppercase font-black mb-1">BRAND</span>
+                      <span className="text-sm md:text-base font-extrabold uppercase tracking-tight text-gray-900 leading-tight">
+                        {brand.name}
+                      </span>
                     </div>
                   </div>
                   <h3 className="font-heading font-bold text-gray-900 text-center text-sm md:text-base group-hover:text-brand-green transition-colors mt-auto">

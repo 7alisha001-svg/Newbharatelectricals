@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '../components/SEO';
 
 export default function AboutUsPage() {
   const { settings } = useStore();
@@ -118,13 +118,19 @@ export default function AboutUsPage() {
     { value: "100%", label: "Customer Commitment" },
   ];
 
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "About Us", url: "/about-us" }
+  ];
+
   return (
     <div className="bg-white min-h-screen">
-      <Helmet>
-        <title>About Us | New Bharat Electricals</title>
-        <meta name="description" content="Discover the story of New Bharat Electricals. Learn about our founder Mazhar Hussain, our expert team, and our commitment to premium electrical and solar solutions." />
-        <meta name="keywords" content="Electrical Solutions, Solar Solutions, Power Solutions, Inverters, Batteries, Solar Panels, Budaun Electrical Store, New Bharat Electricals, Mazhar Hussain" />
-      </Helmet>
+      <SEO 
+        title="About Us, Owner & Core Values"
+        description="Discover the story of New Bharat Electricals Budaun. Founded by Mazhar Hussain, we have grown to become Uttar Pradesh's premier certified electrical contractor and Amaze battery distributor."
+        keywords="New Bharat history, Mazhar Hussain electrical engineer, Budaun electrical contracting history, certified electricians team"
+        breadcrumbs={breadcrumbs}
+      />
 
       {/* Hero Banner */}
       <section className="relative bg-brand-dark py-16 md:py-28 lg:py-36 overflow-hidden">

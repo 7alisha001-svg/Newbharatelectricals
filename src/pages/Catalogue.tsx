@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
-import { Helmet } from 'react-helmet-async';
 import { Download, FileText, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export default function Catalogue() {
   const catalogues = [
@@ -11,12 +11,19 @@ export default function Catalogue() {
     { title: "Electrical Accessories", desc: "Switches, cables, and connectors", type: "PDF", size: "5.5 MB" }
   ];
 
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Product Catalogues", url: "/catalogue" }
+  ];
+
   return (
     <>
-      <Helmet>
-        <title>Product Catalogues | New Bharat Electricals</title>
-        <meta name="description" content="Download our latest product brochures and technical specification sheets for power solutions, solar accessories, and electrical items." />
-      </Helmet>
+      <SEO 
+        title="Product Catalogues & Spec Sheets"
+        description="Download latest product brochures, technical specification sheets, solar plant manuals, and Amaze inverter guides from New Bharat Electricals."
+        keywords="electrical product catalogue, inverter spec sheets, solar installation manuals PDF, New Bharat brochures"
+        breadcrumbs={breadcrumbs}
+      />
       <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center">
         <div className="w-full bg-brand-dark py-20 px-6 text-center">
           <motion.h1 

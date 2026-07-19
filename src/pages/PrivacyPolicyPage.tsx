@@ -1,14 +1,21 @@
-import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export default function PrivacyPolicyPage() {
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Privacy Policy", url: "/privacy-policy" }
+  ];
+
   return (
     <div className="bg-[#f8f9fa] min-h-screen py-12 md:py-20">
-      <Helmet>
-        <title>Privacy Policy | New Bharat Electricals</title>
-        <meta name="description" content="Privacy Policy of New Bharat Electricals. Learn how we handle and protect your personal information." />
-      </Helmet>
+      <SEO 
+        title="Privacy Policy & Data Protection"
+        description="Read the Privacy Policy of New Bharat Electricals. Learn how our enterprise handles, stores, and protects customer inquiry records and transaction files securely."
+        keywords="New Bharat privacy, data protection, compliance, cookie policy"
+        breadcrumbs={breadcrumbs}
+      />
 
       <div className="max-w-[800px] mx-auto px-4 lg:px-8">
         <motion.div 

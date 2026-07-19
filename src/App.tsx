@@ -1,12 +1,13 @@
 import ErrorBoundary from './components/ErrorBoundary';
-import React, { Suspense } from 'react';
-import { Routes, Route, BrowserRouter, Outlet } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
+import { Routes, Route, BrowserRouter, Outlet, useLocation } from 'react-router-dom';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import WhatsAppFab from './components/WhatsAppFab';
 import Home from './pages/Home';
+import { initAnalytics, trackPageView } from './lib/analytics';
 const GenericCategoryPage = React.lazy(() => import('./pages/GenericCategoryPage'));
 const GenericSubCategoryPage = React.lazy(() => import('./pages/GenericSubCategoryPage'));
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
@@ -20,6 +21,8 @@ const AboutUsPage = React.lazy(() => import('./pages/AboutUsPage'));
 const PrivacyPolicyPage = React.lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsConditionsPage = React.lazy(() => import('./pages/TermsConditionsPage'));
 const BrandPage = React.lazy(() => import('./pages/BrandPage'));
+const BlogPage = React.lazy(() => import('./pages/BlogPage'));
+const SEOReportPage = React.lazy(() => import('./pages/SEOReportPage'));
 import ScrollToTop from './components/ScrollToTop';
 import LeadCapturePopup from './components/LeadCapturePopup';
 
@@ -76,7 +79,18 @@ const PublicLayout = () => (
   </div>
 );
 
+const AnalyticsTracker = () => {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);
+  return null;
+};
+
 export default function App() {
+  useEffect(() => {
+    initAnalytics();
+  }, []);
   
   return (
     <HelmetProvider>
@@ -85,6 +99,7 @@ export default function App() {
         <GlobalHead />
         <CartProvider>
           <BrowserRouter>
+          <AnalyticsTracker />
           <ScrollToTop />
           <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div></div>}>
           <Routes>
@@ -127,6 +142,9 @@ export default function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
               <Route path="/brands/:brandSlug" element={<BrandPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPage />} />
+              <Route path="/seo-report" element={<SEOReportPage />} />
               <Route path="/:category" element={<GenericCategoryPage />} />
               <Route path="/:category/:subcategory" element={<GenericSubCategoryPage />} />
               <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />

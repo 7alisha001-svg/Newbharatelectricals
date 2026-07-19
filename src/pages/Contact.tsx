@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Helmet } from 'react-helmet-async';
 import { Mail, Phone, MapPin, MessageCircle, Send, CheckCircle2, Building, Warehouse } from 'lucide-react';
 
 import { supabase } from '../lib/supabase';
 import { useStore } from '../context/StoreContext';
+import { SEO } from '../components/SEO';
+import { trackLeadSubmission } from '../lib/analytics';
 
 export default function Contact() {
   const { settings } = useStore();
@@ -98,6 +99,7 @@ export default function Contact() {
       }
 
       setSubmitted(true);
+      trackLeadSubmission('Contact Form', inquiryType);
       form.reset();
       setTimeout(() => setSubmitted(false), 10000);
     } catch (err: any) {
@@ -108,12 +110,31 @@ export default function Contact() {
     }
   };
 
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Contact Us", url: "/contact" }
+  ];
+
+  const contactFaqs = [
+    {
+      question: "What are your business hours?",
+      answer: "We are open Monday to Saturday from 09:00 AM to 08:00 PM."
+    },
+    {
+      question: "How do I request a site inspection or service call?",
+      answer: "You can submit the contact form, click our WhatsApp floating button, or call our certified technical support directly."
+    }
+  ];
+
   return (
     <>
-      <Helmet>
-        <title>Contact Us | New Bharat Electricals | Budaun</title>
-        <meta name="description" content="Get in touch with New Bharat Electricals for inquiries about solar panels, inverters, and electrical accessories in Budaun, India." />
-      </Helmet>
+      <SEO 
+        title="Contact Us & Request a Callback"
+        description="Connect with the certified engineering team at New Bharat Electricals Budaun. Inquire about Class-A contracting, solar plans, AMCs, or request an emergency service call."
+        keywords="electrical contractor helpline, solar panel quotes, Amaze batteries inquiry, Class-A contractor license Budaun"
+        breadcrumbs={breadcrumbs}
+        faqData={contactFaqs}
+      />
       <div className="w-full bg-white">
         {/* Header */}
         <section className="bg-brand-dark py-10 md:py-16 text-center px-4 md:px-6">

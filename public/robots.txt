@@ -1,0 +1,43 @@
+# robots.txt for New Bharat Electricals (https://newbharatelectricals.com)
+# Optimized for Google Search, Bing, Google AI Overviews, Gemini, ChatGPT, Perplexity, and Claude
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin-login/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /order-success/
+
+# AI Discovery & Generative Search Engine Crawlers
+# We explicitly allow AI engines to index our high-trust educational knowledge hub and services
+
+User-agent: GPTBot
+Allow: /
+Allow: /blog/
+Disallow: /admin/
+Disallow: /checkout/
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /blog/
+Disallow: /admin/
+Disallow: /checkout/
+
+User-agent: Google-Extended
+Allow: /
+Allow: /blog/
+Disallow: /admin/
+
+User-agent: Anthropic-ai
+Allow: /
+Allow: /blog/
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /blog/
+Disallow: /admin/
+
+# Sitemaps Mappings
+Sitemap: https://newbharatelectricals.com/sitemap.xml

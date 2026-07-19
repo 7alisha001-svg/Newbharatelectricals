@@ -47,5 +47,7 @@ export const mainNavLinks = [
     dropdownItems: categoryNav['brands'].map(item => ({ name: item.name, href: `/brands/${item.slug}` }))
   },
   { name: 'About Us', href: '/about-us' },
+  { name: 'Knowledge Hub', href: '/blog' },
+  { name: 'SEO Report', href: '/seo-report' },
   { name: 'Contact Us', href: '/contact' }
 ];

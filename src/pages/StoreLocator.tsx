@@ -1,14 +1,21 @@
 import { motion } from 'motion/react';
-import { Helmet } from 'react-helmet-async';
 import { MapPin, Phone, MessageCircle, Navigation, Clock } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 export default function StoreLocator() {
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Store Locator", url: "/store-locator" }
+  ];
+
   return (
     <>
-      <Helmet>
-        <title>Store Locator | New Bharat Electricals | Budaun</title>
-        <meta name="description" content="Find the flagship store and headquarters of New Bharat Electricals located in Budaun, Uttar Pradesh. Get directions and contact information." />
-      </Helmet>
+      <SEO 
+        title="Store Locator & Head Office Directions"
+        description="Find our authorized dealer hubs, showrooms, and the flagship New Bharat Electricals store located in Budaun, Uttar Pradesh. View Google Maps coordinates, opening schedules, and calling numbers."
+        keywords="New Bharat Electricals shop location, electrical store Budaun, inverter showroom Uttar Pradesh, solar panel dealer contact"
+        breadcrumbs={breadcrumbs}
+      />
       <div className="w-full min-h-[80vh] bg-white">
         {/* Header */}
         <section className="bg-brand-gray py-12 md:py-20 border-b border-gray-200 text-center px-4">
