@@ -48,15 +48,21 @@ export default function QuotePopup() {
 
   const validate = () => {
     const newErrors: any = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.name.trim()) newErrors.name = 'Full Name is required';
     
     if (!formData.phone.trim()) {
       newErrors.phone = 'Mobile number is required';
-    } else if (!/^[6-9]\d{9}$/.test(formData.phone.trim())) {
-      newErrors.phone = 'Enter a valid 10-digit Indian mobile number';
+    } else {
+      const cleanPhone = formData.phone.trim().replace(/[\s\-()]/g, '');
+      const phoneRegex = /^\+?[0-9\s\-()]{10,}$/;
+      if (!phoneRegex.test(formData.phone.trim()) || cleanPhone.length < 10) {
+        newErrors.phone = 'Enter a valid phone number (minimum 10 digits)';
+      }
     }
     
-    if (formData.email.trim() && !/^\S+@\S+\.\S+$/.test(formData.email.trim())) {
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email Address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       newErrors.email = 'Enter a valid email address';
     }
     
@@ -69,50 +75,55 @@ export default function QuotePopup() {
     if (!validate()) return;
     
     setLoading(true);
+    setErrors({});
     
     try {
       const payloadData = {
-        email: formData.email,
-        message: formData.message,
+        email: formData.email.trim(),
+        message: formData.message.trim(),
         status: 'New',
-        ip_address: '', // IP can be handled by backend if needed
-        is_quote: true // to identify in the admin panel
+        is_quote: true
       };
       
       const { error } = await supabase.from('inquiries').insert([{
-        name: formData.name,
-        phone: formData.phone,
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
         inquiry_type: 'Quote Request',
         message: JSON.stringify(payloadData)
       }]);
       
       if (error) throw error;
       
-      try {
-        await fetch('/api/inquiries/notify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            name: formData.name, 
-            phone: formData.phone, 
-            email: formData.email, 
-            inquiryType: 'Quote Request', 
-            message: formData.message 
-          })
-        });
-      } catch (err) {
-        console.warn('Failed to send email:', err);
+      const response = await fetch('/api/inquiries/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          fullName: formData.name.trim(), 
+          emailAddress: formData.email.trim(), 
+          phoneNumber: formData.phone.trim(), 
+          companyName: undefined,
+          subject: 'Quote Request', 
+          message: formData.message.trim() || 'Please provide a quote for the selected products/services.',
+          pageUrl: window.location.href,
+          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to submit quote request.");
       }
 
       setSubmitted(true);
       
       setTimeout(() => {
         closePopup();
-      }, 5000);
+      }, 6000);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error submitting quote:', err);
-      alert('There was a problem submitting your request. Please try again.');
+      setErrors({ form: err.message || 'There was a problem submitting your request. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -178,7 +189,7 @@ export default function QuotePopup() {
                     <CheckCircle2 size={32} className="text-green-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Thank you!</h3>
-                  <p className="text-base text-gray-700">Your enquiry has been submitted successfully.<br/>Our team will contact you shortly.</p>
+                  <p className="text-base text-gray-700">Thank you for contacting New Bharat Electricals. We have received your enquiry and our team will contact you shortly.</p>
                   <button 
                     onClick={closePopup}
                     className="mt-6 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2.5 px-6 rounded-xl transition-colors"
@@ -188,6 +199,11 @@ export default function QuotePopup() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {errors.form && (
+                    <div className="bg-red-50 text-red-800 p-3 rounded-xl text-xs font-semibold border border-red-100">
+                      {errors.form}
+                    </div>
+                  )}
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
@@ -207,19 +223,19 @@ export default function QuotePopup() {
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">+91</span>
                         <input 
-                          type="tel" 
-                          name="phone" 
-                          value={formData.phone} 
-                          onChange={handleChange}
-                          className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-1 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-brand-green focus:ring-brand-green'}`}
-                          placeholder="9876543210"
+                           type="tel" 
+                           name="phone" 
+                           value={formData.phone} 
+                           onChange={handleChange}
+                           className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-1 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-brand-green focus:ring-brand-green'}`}
+                           placeholder="9876543210"
                         />
                       </div>
                       {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Email Address <span className="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email Address <span className="text-red-500">*</span></label>
                       <input 
                         type="email" 
                         name="email" 

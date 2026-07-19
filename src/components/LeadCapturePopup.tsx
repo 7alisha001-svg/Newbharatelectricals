@@ -76,9 +76,18 @@ export default function LeadCapturePopup() {
       setErrorMessage('Full name is required.');
       return;
     }
-    if (!mobile.trim() || mobile.trim().length < 10) {
-      setErrorMessage('A valid 10-digit mobile number is required.');
+    const cleanMobile = mobile.trim().replace(/[\s\-()]/g, '');
+    const mobileRegex = /^\+?[0-9\s\-()]{10,}$/;
+    if (!mobile.trim() || !mobileRegex.test(mobile.trim()) || cleanMobile.length < 10) {
+      setErrorMessage('Please enter a valid phone number (minimum 10 digits).');
       return;
+    }
+    if (email.trim() && email.trim() !== 'N/A') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        setErrorMessage('Please enter a valid email address.');
+        return;
+      }
     }
     if (!city.trim()) {
       setErrorMessage('City is required.');
@@ -108,24 +117,28 @@ export default function LeadCapturePopup() {
 
       if (dbError) throw dbError;
 
-      // 2. Trigger email notification via Express server
-      try {
-        await fetch('/api/leads/notify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: fullName.trim(),
-            phone: mobile.trim(),
-            email: email.trim() || 'N/A',
-            city: city.trim(),
-            interestedIn: interestedIn,
-          }),
-        });
-      } catch (emailErr) {
-        // Log error but don't fail the submission experience because the database insertion succeeded
-        console.warn('Failed to send email notification:', emailErr);
+      // 2. Trigger email notification via unified API
+      const response = await fetch('/api/inquiries/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          emailAddress: email.trim() || 'N/A',
+          phoneNumber: mobile.trim(),
+          companyName: undefined,
+          subject: `Consultation: ${interestedIn}`,
+          message: `Product Segment: ${interestedIn}\nPreferred City: ${city.trim()}`,
+          pageUrl: window.location.href,
+          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to dispatch lead notifications.");
       }
 
       setIsSuccess(true);
@@ -135,11 +148,11 @@ export default function LeadCapturePopup() {
       // Auto close after 3 seconds
       setTimeout(() => {
         setIsOpen(false);
-      }, 3000);
+      }, 4000);
 
     } catch (err: any) {
       console.error('Error submitting lead:', err);
-      setErrorMessage('Something went wrong. Please try again.');
+      setErrorMessage(err.message || 'Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

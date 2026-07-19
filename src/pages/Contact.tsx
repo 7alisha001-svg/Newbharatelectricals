@@ -18,39 +18,91 @@ export default function Contact() {
     setError(null);
     
     const form = e.target as HTMLFormElement;
-    const name = (form.elements.namedItem('name') as HTMLInputElement).value;
-    const phone = (form.elements.namedItem('phone') as HTMLInputElement).value;
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
+    const phone = (form.elements.namedItem('phone') as HTMLInputElement).value.trim();
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+    const company = (form.elements.namedItem('company') as HTMLInputElement).value.trim();
     const inquiryType = (form.elements.namedItem('inquiry-type') as HTMLSelectElement).value;
-    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value;
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim();
+
+    // Validations
+    if (!name) {
+      setError("Full name is required.");
+      setIsSubmitting(false);
+      return;
+    }
+    if (!phone) {
+      setError("Phone number is required.");
+      setIsSubmitting(false);
+      return;
+    }
+    // Standard phone validation
+    const phoneClean = phone.replace(/[\s\-()]/g, '');
+    const phoneRegex = /^\+?[0-9\s\-()]{10,}$/;
+    if (!phoneRegex.test(phone) || phoneClean.length < 10) {
+      setError("Please enter a valid phone number (minimum 10 digits).");
+      setIsSubmitting(false);
+      return;
+    }
+    if (!email) {
+      setError("Email address is required.");
+      setIsSubmitting(false);
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
+      const payloadData = {
+        email,
+        company,
+        status: 'New',
+        is_contact: true,
+        message: message
+      };
+
       const { error: dbError } = await supabase
         .from('inquiries')
         .insert([{ 
           name, 
           phone, 
           inquiry_type: inquiryType, 
-          message 
+          message: JSON.stringify(payloadData)
         }]);
 
       if (dbError) throw dbError;
 
-      try {
-        await fetch('/api/inquiries/notify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, phone, email: 'N/A', inquiryType, message })
-        });
-      } catch (err) {
-        console.warn('Failed to send email:', err);
+      const response = await fetch('/api/inquiries/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: name,
+          emailAddress: email,
+          phoneNumber: phone,
+          companyName: company || undefined,
+          subject: inquiryType,
+          message: message,
+          pageUrl: window.location.href,
+          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to deliver email.");
       }
 
       setSubmitted(true);
       form.reset();
-      setTimeout(() => setSubmitted(false), 5000);
+      setTimeout(() => setSubmitted(false), 10000);
     } catch (err: any) {
       console.error('Error submitting inquiry:', err);
-      setError('There was a problem submitting your inquiry. Please try again.');
+      setError(err.message || 'There was a problem submitting your inquiry. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +153,7 @@ export default function Contact() {
                 >
                   <CheckCircle2 size={64} className="text-brand-green mb-4" />
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent Successfully!</h3>
-                  <p className="text-gray-900">Thank you for reaching out. Our team will get back to you shortly.</p>
+                  <p className="text-gray-900">Thank you for contacting New Bharat Electricals. We have received your enquiry and our team will contact you shortly.</p>
                 </motion.div>
               ) : (
                 <form className="space-y-6" onSubmit={handleSubmit}>
@@ -112,12 +164,23 @@ export default function Contact() {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                      <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
                       <input id="name" name="name" required type="text" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="John Doe" />
                     </div>
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                      <input id="phone" name="phone" required type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="+91 90000 00000" />
+                      <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-2">Phone Number *</label>
+                      <input id="phone" name="phone" required type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="+91 94570 02000" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">Email Address *</label>
+                      <input id="email" name="email" required type="email" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="name@domain.com" />
+                    </div>
+                    <div>
+                      <label htmlFor="company" className="block text-sm font-bold text-gray-700 mb-2">Company Name <span className="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                      <input id="company" name="company" type="text" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Your Company Name" />
                     </div>
                   </div>
 

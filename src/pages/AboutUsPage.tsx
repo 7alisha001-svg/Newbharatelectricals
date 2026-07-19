@@ -14,12 +14,13 @@ export default function AboutUsPage() {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   const galleryImages = [
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop", // Warehouse / Industrial
-    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop", // Team
-    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop", // Meeting / Office
-    "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop", // Products / Industrial
-    "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop", // Office / Building
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop"  // Team interaction
+    { src: "/images/amaze-an-star-1475-1.jpg", caption: "Amaze Inverter Brand Showcase" },
+    { src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop", caption: "Warehouse & Industrial Facility" },
+    { src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop", caption: "Our Dedicated Engineering Team" },
+    { src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop", caption: "Corporate Operations Planning" },
+    { src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop", caption: "Premium Products Inventory" },
+    { src: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop", caption: "New Bharat Corporate Office" },
+    { src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop", caption: "Professional Client Consultations" }
   ];
 
   const values = [
@@ -317,7 +318,7 @@ export default function AboutUsPage() {
 
           {/* Masonry / Grid Gallery */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-            {galleryImages.map((src, idx) => (
+            {galleryImages.map((item, idx) => (
               <motion.div 
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
@@ -325,15 +326,20 @@ export default function AboutUsPage() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
                 className="relative aspect-square overflow-hidden rounded-xl cursor-pointer group shadow-sm hover:shadow-xl transition-all"
-                onClick={() => setLightboxImage(src)}
+                onClick={() => setLightboxImage(item.src)}
               >
                 <img 
-                  src={src} 
-                  alt={`Gallery Image ${idx + 1}`}
+                  src={item.src} 
+                  alt={item.caption}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-brand-dark/0 group-hover:bg-brand-dark/20 transition-colors duration-300" />
+                {/* High contrast overlay with legible caption text */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                  <span className="text-white text-xs sm:text-sm font-bold tracking-wide drop-shadow-md">
+                    {item.caption}
+                  </span>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -347,24 +353,38 @@ export default function AboutUsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4 gap-4"
             onClick={() => setLightboxImage(null)}
           >
             <button 
-              className="absolute top-6 right-6 text-white hover:text-brand-lime transition-colors p-2"
+              className="absolute top-6 right-6 text-white hover:text-brand-lime transition-colors p-2 z-10"
               onClick={() => setLightboxImage(null)}
+              aria-label="Close Lightbox"
             >
               <X size={36} />
             </button>
-            <motion.img 
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              src={lightboxImage} 
-              alt="Expanded view" 
-              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <div className="relative max-w-full max-h-[85vh] flex flex-col items-center">
+              <motion.img 
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                src={lightboxImage} 
+                alt="Expanded view" 
+                className="max-w-full max-h-[75vh] md:max-h-[80vh] object-contain rounded-lg shadow-2xl border border-gray-800"
+                onClick={(e) => e.stopPropagation()}
+              />
+              {(() => {
+                const item = galleryImages.find(g => g.src === lightboxImage);
+                return item?.caption ? (
+                  <div 
+                    className="mt-4 bg-black/80 px-6 py-2.5 rounded-full border border-gray-800 text-white font-bold tracking-wide text-xs sm:text-sm md:text-base text-center shadow-lg"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {item.caption}
+                  </div>
+                ) : null;
+              })()}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

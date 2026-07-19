@@ -35,19 +35,29 @@ export default function Navbar() {
     ? settings.logo_url 
     : "/header-logo-dark.png";
 
-  const [croppedLogo, setCroppedLogo] = useState<string | null>(() => {
-    return croppedNavbarLogoCache[rawLogoUrl] || null;
+  const [croppedLogo, setCroppedLogo] = useState<string>(() => {
+    if (rawLogoUrl === "/header-logo-dark.png") {
+      return "/header-logo-dark.png";
+    }
+    return croppedNavbarLogoCache[rawLogoUrl] || rawLogoUrl;
   });
 
   useEffect(() => {
     if (!rawLogoUrl) return;
+    
+    // Skip canvas cropping for the default pre-cropped logo to avoid any async delays
+    if (rawLogoUrl === "/header-logo-dark.png") {
+      setCroppedLogo("/header-logo-dark.png");
+      return;
+    }
     
     if (croppedNavbarLogoCache[rawLogoUrl]) {
       setCroppedLogo(croppedNavbarLogoCache[rawLogoUrl]);
       return;
     }
 
-    setCroppedLogo(null);
+    // Do NOT set croppedLogo to null/empty here; keep rendering the rawLogoUrl
+    // while we crop in the background to prevent flashing/blinking.
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -174,6 +184,8 @@ export default function Navbar() {
                 <img 
                   src={croppedLogo || rawLogoUrl} 
                   alt={settings?.business_name || "New Bharat Electricals"} 
+                  fetchPriority="high"
+                  loading="eager"
                   style={{
                     ['--desktop-logo-height' as any]: settings?.social_links?.header_logo_size ? `${Math.round(settings.social_links.header_logo_size * 0.82)}px` : undefined
                   }}

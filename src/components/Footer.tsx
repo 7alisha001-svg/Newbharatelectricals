@@ -262,7 +262,7 @@ export default function Footer() {
                     <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
                        <Mail className="text-brand-green" size={16} />
                     </div>
-                    <a href="mailto:info@newbharatelectricals.com" className="leading-relaxed font-semibold text-sm hover:text-brand-green break-all block py-1">info@newbharatelectricals.com</a>
+                    <a href="mailto:Info@newbharatelectricals.com" className="leading-relaxed font-semibold text-sm hover:text-brand-green break-all block py-1">Info@newbharatelectricals.com</a>
                  </div>
                  <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
                     <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
@@ -289,7 +289,7 @@ export default function Footer() {
                  </div>
                  <div className="flex flex-col items-center sm:items-start">
                    <span className="text-gray-300 text-xs uppercase font-extrabold tracking-wider mb-1">Email Support</span>
-                   <a href="mailto:info@newbharatelectricals.com" className="text-white font-bold hover:text-brand-green transition-colors duration-200">info@newbharatelectricals.com</a>
+                   <a href="mailto:Info@newbharatelectricals.com" className="text-white font-bold hover:text-brand-green transition-colors duration-200">Info@newbharatelectricals.com</a>
                  </div>
                  
                  {/* Payment Methods Mockup */}
