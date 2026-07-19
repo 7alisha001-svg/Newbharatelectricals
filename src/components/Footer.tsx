@@ -333,6 +333,18 @@ export default function Footer() {
             </div>
         </div>
 
+        {/* Developer Credit */}
+        <div className="border-t border-gray-800/40 pt-4 pb-2 flex flex-col sm:flex-row justify-center items-center text-[11px] sm:text-xs text-neutral-400 font-medium gap-1 sm:gap-2 text-center">
+          <span>Designed & Developed by <span className="text-gray-300 font-semibold">Bilal Saifi</span></span>
+          <span className="hidden sm:inline text-gray-600">|</span>
+          <a 
+            href="mailto:bilsaifi001@gmail.com" 
+            className="text-brand-green hover:text-brand-green-light transition-colors duration-200 font-semibold"
+          >
+            bilsaifi001@gmail.com
+          </a>
+        </div>
+
       </div>
     </footer>
   );

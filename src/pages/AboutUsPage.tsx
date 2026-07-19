@@ -67,6 +67,13 @@ export default function AboutUsPage() {
             alt="New Bharat Electricals Facility" 
             className="w-full h-full object-cover object-center"
             loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                target.src = '/images/amaze-an-star-1475-1.jpg';
+              }
+            }}
           />
         </div>
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8 relative z-20 text-center">
@@ -128,6 +135,13 @@ export default function AboutUsPage() {
                 alt="Our Facility" 
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                    target.src = '/images/amaze-an-star-1475-1.jpg';
+                  }
+                }}
               />
             </motion.div>
           </div>
@@ -160,6 +174,13 @@ export default function AboutUsPage() {
                   alt="Mazhar Hussain - Founder & Owner"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
                   loading="lazy"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                      target.src = '/images/amaze-an-star-1475-1.jpg';
+                    }
+                  }}
                 />
               </div>
               <div className="p-8 md:p-10 flex-1 flex flex-col">
@@ -186,6 +207,13 @@ export default function AboutUsPage() {
                   alt="Sahib Mazhar - Manager"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
                   loading="lazy"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                      target.src = '/images/amaze-an-star-1475-1.jpg';
+                    }
+                  }}
                 />
               </div>
               <div className="p-8 md:p-10 flex-1 flex flex-col">
@@ -333,6 +361,13 @@ export default function AboutUsPage() {
                   alt={item.caption}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                   loading="lazy"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                      target.src = '/images/amaze-an-star-1475-1.jpg';
+                    }
+                  }}
                 />
                 {/* High contrast overlay with legible caption text */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -368,10 +403,17 @@ export default function AboutUsPage() {
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
-                src={lightboxImage} 
+                src={lightboxImage || undefined} 
                 alt="Expanded view" 
                 className="max-w-full max-h-[75vh] md:max-h-[80vh] object-contain rounded-lg shadow-2xl border border-gray-800"
                 onClick={(e) => e.stopPropagation()}
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                    target.src = '/images/amaze-an-star-1475-1.jpg';
+                  }
+                }}
               />
               {(() => {
                 const item = galleryImages.find(g => g.src === lightboxImage);
