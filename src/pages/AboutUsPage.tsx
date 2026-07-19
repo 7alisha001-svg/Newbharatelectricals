@@ -12,16 +12,84 @@ import { Helmet } from 'react-helmet-async';
 export default function AboutUsPage() {
   const { settings } = useStore();
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  const galleryCategories = [
+    { id: 'All', label: 'All Photos' },
+    { id: 'Team', label: 'Our Team' },
+    { id: 'Office', label: 'Head Office' },
+    { id: 'Warehouse', label: 'Warehouse' },
+    { id: 'Events', label: 'Company Events' },
+    { id: 'Customer', label: 'Customer Relations' },
+    { id: 'Projects', label: 'Our Projects' }
+  ];
 
   const galleryImages = [
-    { src: "/images/amaze-an-star-1475-1.jpg", caption: "Amaze Inverter Brand Showcase" },
-    { src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop", caption: "Warehouse & Industrial Facility" },
-    { src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop", caption: "Our Dedicated Engineering Team" },
-    { src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop", caption: "Corporate Operations Planning" },
-    { src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop", caption: "Premium Products Inventory" },
-    { src: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop", caption: "New Bharat Corporate Office" },
-    { src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop", caption: "Professional Client Consultations" }
+    { 
+      src: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop", 
+      caption: "New Bharat Corporate Office Lobby", 
+      category: "Office" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop", 
+      caption: "New Bharat Corporate Headquarters Exterior", 
+      category: "Office" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop", 
+      caption: "Main Distribution & Logistics Warehouse", 
+      category: "Warehouse" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=800&auto=format&fit=crop", 
+      caption: "Inventory Management and Power Storage Facility", 
+      category: "Warehouse" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop", 
+      caption: "Our Executive Management and Technical Leads", 
+      category: "Team" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=800&auto=format&fit=crop", 
+      caption: "Customer Support & Sales Team", 
+      category: "Team" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&auto=format&fit=crop", 
+      caption: "Annual Renewable Energy Symposium & Team Celebration", 
+      category: "Events" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop", 
+      caption: "Employee Training & Product Launch Seminar", 
+      category: "Events" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800&auto=format&fit=crop", 
+      caption: "Client Consultation at Corporate Office", 
+      category: "Customer" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1552581230-c01591d3c99a?q=80&w=800&auto=format&fit=crop", 
+      caption: "Interactive Feedback Session with Local Authorized Dealers", 
+      category: "Customer" 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=800&auto=format&fit=crop", 
+      caption: "Commercial Rooftop Solar Installation - 50kW Setup", 
+      category: "Projects" 
+    },
+    { 
+      src: "/images/amaze-an-star-1475-1.jpg", 
+      caption: "Amaze Premium Power Inverter Installation & Brand Showcase", 
+      category: "Projects" 
+    }
   ];
+
+  const filteredImages = selectedCategory === 'All' 
+    ? galleryImages 
+    : galleryImages.filter(img => img.category === selectedCategory);
 
   const values = [
     { icon: Award, title: "Quality", desc: "Uncompromising standards in every product." },
@@ -170,7 +238,7 @@ export default function AboutUsPage() {
               <div className="aspect-[4/3] w-full overflow-hidden bg-gray-200 relative">
                 {/* Placeholder for Founder Photo */}
                 <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop" 
+                  src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=800&auto=format&fit=crop" 
                   alt="Mazhar Hussain - Founder & Owner"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
                   loading="lazy"
@@ -344,40 +412,64 @@ export default function AboutUsPage() {
             </p>
           </div>
 
-          {/* Masonry / Grid Gallery */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-            {galleryImages.map((item, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="relative aspect-square overflow-hidden rounded-xl cursor-pointer group shadow-sm hover:shadow-xl transition-all"
-                onClick={() => setLightboxImage(item.src)}
+          {/* Categories Filters */}
+          <div className="flex flex-wrap justify-center gap-2 mb-10 max-w-4xl mx-auto">
+            {galleryCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 uppercase tracking-widest cursor-pointer ${
+                  selectedCategory === cat.id
+                    ? 'bg-brand-green text-white shadow-md shadow-brand-green/25 border-none'
+                    : 'bg-white text-gray-800 border border-gray-200 hover:border-brand-green hover:text-brand-green'
+                }`}
               >
-                <img 
-                  src={item.src} 
-                  alt={item.caption}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
-                      target.src = '/images/amaze-an-star-1475-1.jpg';
-                    }
-                  }}
-                />
-                {/* High contrast overlay with legible caption text */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <span className="text-white text-xs sm:text-sm font-bold tracking-wide drop-shadow-md">
-                    {item.caption}
-                  </span>
-                </div>
-              </motion.div>
+                {cat.label}
+              </button>
             ))}
           </div>
+
+          {/* Masonry / Grid Gallery */}
+          <motion.div 
+            layout
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredImages.map((item) => (
+                <motion.div 
+                  layout
+                  key={item.src}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative aspect-square overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-xl hover:border-brand-green border border-gray-100 transition-all"
+                  onClick={() => setLightboxImage(item.src)}
+                >
+                  <img 
+                    src={item.src} 
+                    alt={item.caption}
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
+                        target.src = '/images/amaze-an-star-1475-1.jpg';
+                      }
+                    }}
+                  />
+                  {/* High contrast overlay with legible caption text */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                    <span className="text-brand-lime text-[10px] uppercase font-black tracking-widest mb-1">{item.category}</span>
+                    <span className="text-white text-xs sm:text-sm font-extrabold tracking-wide leading-snug drop-shadow-md">
+                      {item.caption}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
 
