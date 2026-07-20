@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { ShieldCheck, ShoppingCart, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { motion } from 'motion/react';
-import { supabase } from '../lib/supabase';
+import { supabaseAnon } from '../lib/supabase';
 
 export default function CheckoutPage() {
   const { cart, cartTotal, clearCart } = useCart();
@@ -53,14 +53,42 @@ export default function CheckoutPage() {
     
     
     try {
-      const { error: dbError } = await supabase
+      const { data: insertedOrder, error: dbError } = await supabaseAnon
         .from('orders')
-        .insert([payload]);
+        .insert([payload])
+        .select();
         
 
       if (dbError) {
         console.error('Supabase returned an error during insert:', dbError);
         throw dbError;
+      }
+
+      // Trigger backend server-side emails and Google Sheet sync
+      try {
+        await fetch('/api/orders/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: insertedOrder?.[0]?.id,
+            orderId,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email || 'N/A',
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            paymentMethod: formData.paymentMethod,
+            totalAmount: cartTotal,
+            cartItems: cart,
+            dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            status: 'Pending'
+          })
+        });
+      } catch (serverErr) {
+        console.error('Order dispatch emails or sheet sync failed on server, order is still recorded:', serverErr);
       }
       
       clearCart();

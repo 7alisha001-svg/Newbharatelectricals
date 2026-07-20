@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, User, Phone, Mail, MapPin, Tag, Check, AlertCircle, Zap, ShieldCheck } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabaseAnon } from '../lib/supabase';
 
 export default function LeadCapturePopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,14 +106,15 @@ export default function LeadCapturePopup() {
         message: 'Lead captured from first-time visitor popup'
       };
 
-      const { error: dbError } = await supabase
+      const { data: insertedData, error: dbError } = await supabaseAnon
         .from('inquiries')
         .insert([{
           name: fullName.trim(),
           phone: mobile.trim(),
           inquiry_type: 'Lead Capture',
           message: JSON.stringify(leadPayload)
-        }]);
+        }])
+        .select();
 
       if (dbError) throw dbError;
 
@@ -124,6 +125,7 @@ export default function LeadCapturePopup() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          id: insertedData?.[0]?.id,
           fullName: fullName.trim(),
           emailAddress: email.trim() || 'N/A',
           phoneNumber: mobile.trim(),
@@ -131,7 +133,8 @@ export default function LeadCapturePopup() {
           subject: `Consultation: ${interestedIn}`,
           message: `Product Segment: ${interestedIn}\nPreferred City: ${city.trim()}`,
           pageUrl: window.location.href,
-          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+          source: 'Popup'
         }),
       });
 

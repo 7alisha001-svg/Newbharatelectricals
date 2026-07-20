@@ -74,6 +74,198 @@ export default function GoogleSheetsPage() {
     errors: string[];
   } | null>(null);
 
+  // Real-time Integration settings state
+  const [spreadsheetIdSetting, setSpreadsheetIdSetting] = useState('');
+  const [appScriptUrlSetting, setAppScriptUrlSetting] = useState('');
+  const [inquirySheetNameSetting, setInquirySheetNameSetting] = useState('Inquiries');
+  const [orderSheetNameSetting, setOrderSheetNameSetting] = useState('Orders');
+  const [syncEnabledSetting, setSyncEnabledSetting] = useState(true);
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+  // Sync Stats State
+  const [pendingInquiriesCount, setPendingInquiriesCount] = useState(0);
+  const [syncedInquiriesCount, setSyncedInquiriesCount] = useState(0);
+  const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
+  const [syncedOrdersCount, setSyncedOrdersCount] = useState(0);
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [syncingAll, setSyncingAll] = useState(false);
+  const [syncResult, setSyncResult] = useState<{
+    successCount: number;
+    failCount: number;
+    errors: string[];
+  } | null>(null);
+
+  const fetchSettingsAndStats = async () => {
+    setLoadingStats(true);
+    try {
+      // 1. Fetch Global Settings
+      const { data: settingsData } = await supabase
+        .from('settings')
+        .select('*')
+        .eq('id', 'global')
+        .single();
+
+      if (settingsData) {
+        const socialLinks = settingsData.social_links || {};
+        setSpreadsheetIdSetting(socialLinks.google_sheets_spreadsheet_id || '');
+        setAppScriptUrlSetting(socialLinks.google_sheets_app_script_url || '');
+        setInquirySheetNameSetting(socialLinks.google_sheets_inquiry_sheet_name || 'Inquiries');
+        setOrderSheetNameSetting(socialLinks.google_sheets_order_sheet_name || 'Orders');
+        setSyncEnabledSetting(socialLinks.google_sheets_sync_enabled !== false);
+        setSettingsLoaded(true);
+      }
+
+      // 2. Fetch Inquiries Statistics (Support both schemas)
+      const { data: allInquiries } = await supabase
+        .from('inquiries')
+        .select('id, message, sheets_sync_status' as any);
+
+      let syncedInq = 0;
+      let pendingInq = 0;
+
+      if (allInquiries) {
+        allInquiries.forEach((item: any) => {
+          if (item.sheets_sync_status === 'synced') {
+            syncedInq++;
+          } else if (item.sheets_sync_status === 'pending' || item.sheets_sync_status === 'failed') {
+            pendingInq++;
+          } else {
+            // Check JSON
+            try {
+              const msg = JSON.parse(item.message || '{}');
+              if (msg.sheets_sync_status === 'synced') {
+                syncedInq++;
+              } else {
+                pendingInq++; // default to pending if un-synced
+              }
+            } catch (e) {
+              pendingInq++; // if not JSON, assume pending
+            }
+          }
+        });
+      }
+
+      setSyncedInquiriesCount(syncedInq);
+      setPendingInquiriesCount(pendingInq);
+
+      // 3. Fetch Orders Statistics (Support both schemas)
+      const { data: allOrders } = await supabase
+        .from('orders')
+        .select('id, cart_items, sheets_sync_status' as any);
+
+      let syncedOrd = 0;
+      let pendingOrd = 0;
+
+      if (allOrders) {
+        allOrders.forEach((item: any) => {
+          if (item.sheets_sync_status === 'synced') {
+            syncedOrd++;
+          } else if (item.sheets_sync_status === 'pending' || item.sheets_sync_status === 'failed') {
+            pendingOrd++;
+          } else {
+            // Check JSON inside cart_items
+            try {
+              const cart = item.cart_items || {};
+              if (Array.isArray(cart)) {
+                pendingOrd++; // Plain array is pending
+              } else if (cart.sheets_sync_status === 'synced') {
+                syncedOrd++;
+              } else {
+                pendingOrd++;
+              }
+            } catch (e) {
+              pendingOrd++;
+            }
+          }
+        });
+      }
+
+      setSyncedOrdersCount(syncedOrd);
+      setPendingOrdersCount(pendingOrd);
+
+    } catch (err) {
+      console.error('Error loading settings and statistics:', err);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    setSavingSettings(true);
+    setAlert(null);
+    try {
+      // Fetch existing row first to merge social_links
+      const { data: settingsData } = await supabase
+        .from('settings')
+        .select('*')
+        .eq('id', 'global')
+        .single();
+
+      const existingSocialLinks = settingsData?.social_links || {};
+      const updatedSocialLinks = {
+        ...existingSocialLinks,
+        google_sheets_spreadsheet_id: spreadsheetIdSetting,
+        google_sheets_app_script_url: appScriptUrlSetting,
+        google_sheets_inquiry_sheet_name: inquirySheetNameSetting,
+        google_sheets_order_sheet_name: orderSheetNameSetting,
+        google_sheets_sync_enabled: syncEnabledSetting
+      };
+
+      const { error } = await supabase
+        .from('settings')
+        .update({ social_links: updatedSocialLinks })
+        .eq('id', 'global');
+
+      if (error) throw error;
+
+      setAlert({ text: 'Google Sheets integration settings updated successfully!', type: 'success' });
+    } catch (err: any) {
+      console.error('Error saving integration settings:', err);
+      setAlert({ text: `Failed to save settings: ${err.message || String(err)}`, type: 'error' });
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
+  const handleSyncPending = async () => {
+    setSyncingAll(true);
+    setSyncResult(null);
+    setAlert(null);
+    try {
+      const response = await fetch('/api/sheets/sync-pending', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Server returned an error');
+      }
+
+      setSyncResult({
+        successCount: result.successCount,
+        failCount: result.failCount,
+        errors: result.errors || []
+      });
+
+      if (result.failCount === 0) {
+        setAlert({ text: `Sync complete! Successfully processed ${result.successCount} records.`, type: 'success' });
+      } else {
+        setAlert({ text: `Sync completed with warnings. Synced ${result.successCount} records, failed ${result.failCount}.`, type: 'error' });
+      }
+
+      // Refresh stats
+      await fetchSettingsAndStats();
+    } catch (err: any) {
+      console.error('Sync execution failed:', err);
+      setAlert({ text: `Synchronization failed: ${err.message || String(err)}`, type: 'error' });
+    } finally {
+      setSyncingAll(false);
+    }
+  };
+
   // Load auth on mount
   useEffect(() => {
     const unsubscribe = initAuth(
@@ -89,12 +281,17 @@ export default function GoogleSheetsPage() {
       }
     );
 
-    // Fetch total products count from Supabase
-    const getCount = async () => {
-      const { count } = await supabase.from('products').select('*', { count: 'exact', head: true });
-      setTotalProducts(count || 0);
+    // Fetch total products count from Supabase and Sheets Settings
+    const initData = async () => {
+      try {
+        const { count } = await supabase.from('products').select('*', { count: 'exact', head: true });
+        setTotalProducts(count || 0);
+      } catch (e) {
+        console.error('Error fetching product count:', e);
+      }
+      await fetchSettingsAndStats();
     };
-    getCount();
+    initData();
 
     return () => unsubscribe();
   }, []);
@@ -629,6 +826,17 @@ export default function GoogleSheetsPage() {
               <Upload size={16} />
               Import from Sheets
             </button>
+            <button
+              onClick={() => { setActiveTab('realtime' as any); setAlert(null); fetchSettingsAndStats(); }}
+              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
+                activeTab === ('realtime' as any)
+                  ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
+                  : 'border-transparent text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <RefreshCw size={16} />
+              Real-time Forms Sync
+            </button>
           </div>
 
           {/* TAB 1: EXPORT */}
@@ -944,6 +1152,342 @@ export default function GoogleSheetsPage() {
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* TAB 3: REAL-TIME FORMS SYNC */}
+          {activeTab === ('realtime' as any) && (
+            <div className="space-y-6">
+              {/* Integration Status Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-2xl shadow-md p-6 border-none flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-bold text-gray-500 uppercase tracking-wide">Sync Status</span>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                        syncEnabledSetting 
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 animate-pulse'
+                          : 'bg-amber-50 text-amber-700 border border-amber-100'
+                      }`}>
+                        {syncEnabledSetting ? '● Active' : 'Offline'}
+                      </span>
+                    </div>
+                    <h4 className="text-3xl font-black text-gray-900">
+                      {syncEnabledSetting ? 'Enabled' : 'Disabled'}
+                    </h4>
+                    <p className="text-gray-500 text-xs mt-2">
+                      When enabled, submissions from lead popups, contact forms, and checkouts sync instantly.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-md p-6 border-none flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-bold text-gray-500 uppercase tracking-wide">Inquiries Sheet</span>
+                      <span className="bg-gray-50 text-gray-600 border border-gray-100 px-2 py-0.5 rounded text-xs font-mono">{inquirySheetNameSetting}</span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <h4 className="text-3xl font-black text-gray-900">{syncedInquiriesCount}</h4>
+                      <span className="text-xs font-semibold text-emerald-600 uppercase">Synced</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-xs text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded-full">{pendingInquiriesCount} pending</span>
+                      <span className="text-gray-400 text-[11px]">in queue</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-md p-6 border-none flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-bold text-gray-500 uppercase tracking-wide">Orders Sheet</span>
+                      <span className="bg-gray-50 text-gray-600 border border-gray-100 px-2 py-0.5 rounded text-xs font-mono">{orderSheetNameSetting}</span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <h4 className="text-3xl font-black text-gray-900">{syncedOrdersCount}</h4>
+                      <span className="text-xs font-semibold text-emerald-600 uppercase">Synced</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-xs text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded-full">{pendingOrdersCount} pending</span>
+                      <span className="text-gray-400 text-[11px]">in queue</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Toolbar */}
+              <div className="bg-white rounded-2xl shadow-md p-6 border-none flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-base font-bold text-gray-900">Synchronize Pending Records</h3>
+                  <p className="text-gray-500 text-xs mt-1">
+                    If some submissions failed to sync due to network drops or credentials issue, retry sending them with one click.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={fetchSettingsAndStats}
+                    disabled={loadingStats}
+                    className="p-2.5 text-gray-500 hover:text-gray-900 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
+                    title="Refresh stats"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${loadingStats ? 'animate-spin' : ''}`} />
+                  </button>
+                  <button
+                    onClick={handleSyncPending}
+                    disabled={syncingAll || (pendingInquiriesCount === 0 && pendingOrdersCount === 0)}
+                    className="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2.5 px-6 rounded-xl transition-all inline-flex items-center gap-2 text-sm disabled:opacity-40 shadow-sm"
+                  >
+                    {syncingAll ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Synchronizing...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-4 h-4" />
+                        Sync All Pending ({pendingInquiriesCount + pendingOrdersCount})
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Sync execution result log */}
+              {syncResult && (
+                <div className="bg-white rounded-2xl shadow-md p-6 border-none space-y-4">
+                  <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    Last Synchronization Results
+                  </h4>
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div className="bg-emerald-50/50 p-3 rounded-xl border border-emerald-100">
+                      <p className="text-xl font-bold text-emerald-800">{syncResult.successCount}</p>
+                      <p className="text-[10px] uppercase font-bold text-emerald-600 tracking-wider">Synced Successfully</p>
+                    </div>
+                    <div className="bg-rose-50/50 p-3 rounded-xl border border-rose-100">
+                      <p className="text-xl font-bold text-rose-800">{syncResult.failCount}</p>
+                      <p className="text-[10px] uppercase font-bold text-rose-600 tracking-wider">Failed / Skipped</p>
+                    </div>
+                  </div>
+                  {syncResult.errors.length > 0 && (
+                    <div className="space-y-1.5 pt-2">
+                      <p className="text-[11px] font-bold text-rose-600 uppercase tracking-wide">Sync Failures Log:</p>
+                      <div className="max-h-32 overflow-y-auto bg-rose-50/20 border border-rose-100 p-3 rounded-xl font-mono text-[11px] text-rose-700 space-y-1">
+                        {syncResult.errors.map((e, idx) => <div key={idx}>• {e}</div>)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Configuration Panel */}
+              <div className="bg-white rounded-2xl shadow-md p-6 border-none space-y-6">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Integration Configuration</h3>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Set up direct OAuth Sheet sync or the highly-resilient Google Apps Script Web App sync.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1.5">Google Spreadsheet ID</label>
+                      <input
+                        type="text"
+                        value={spreadsheetIdSetting}
+                        onChange={(e) => setSpreadsheetIdSetting(e.target.value)}
+                        placeholder="e.g. 1a2b3c4d5e6f7g8h9i0j..."
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm text-gray-900 bg-white"
+                      />
+                      <p className="text-gray-400 text-[10px] mt-1 leading-normal">
+                        Provide the unique identifier from your spreadsheet URL. Direct OAuth appending will write to this Spreadsheet.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1.5">Google Apps Script Web App URL</label>
+                      <input
+                        type="text"
+                        value={appScriptUrlSetting}
+                        onChange={(e) => setAppScriptUrlSetting(e.target.value)}
+                        placeholder="https://script.google.com/macros/s/.../exec"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm text-gray-900 bg-white"
+                      />
+                      <p className="text-gray-400 text-[10px] mt-1 leading-normal">
+                        Recommended. Setting this URL activates resilient server-to-server synchronization that runs 24/7 even without active admin login sessions.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3 py-1">
+                      <label className="inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={syncEnabledSetting}
+                          onChange={(e) => setSyncEnabledSetting(e.target.checked)}
+                          className="rounded text-brand-green focus:ring-brand-green h-4 w-4 mr-2"
+                        />
+                        <span className="text-sm font-bold text-gray-700">Enable real-time synchronization</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1.5">Inquiry Sheet Tab Name</label>
+                      <input
+                        type="text"
+                        value={inquirySheetNameSetting}
+                        onChange={(e) => setInquirySheetNameSetting(e.target.value)}
+                        placeholder="Inquiries"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm text-gray-900 bg-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1.5">Orders Sheet Tab Name</label>
+                      <input
+                        type="text"
+                        value={orderSheetNameSetting}
+                        onChange={(e) => setOrderSheetNameSetting(e.target.value)}
+                        placeholder="Orders"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm text-gray-900 bg-white"
+                      />
+                    </div>
+
+                    <div className="pt-2">
+                      <button
+                        onClick={handleSaveSettings}
+                        disabled={savingSettings}
+                        className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 shadow-sm"
+                      >
+                        {savingSettings ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Saving Configuration...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="w-4 h-4" />
+                            Save Configuration
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Google Apps Script Deployment Instructions */}
+                <div className="border-t border-gray-100 pt-6 space-y-4">
+                  <div className="bg-amber-50/50 rounded-2xl p-6 border border-amber-100/60 text-gray-700">
+                    <h4 className="text-sm font-bold text-amber-800 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-amber-600" />
+                       Resilient Google Apps Script Guide
+                    </h4>
+                    <p className="text-xs text-amber-700 mt-1">
+                      Setting up a Google Apps Script Web App ensures entries are written to your spreadsheet reliably 24/7 from the cloud, bypassing OAuth access tokens' 1-hour expiration limits.
+                    </p>
+                    
+                    <div className="mt-4 space-y-3 text-xs leading-relaxed text-gray-600">
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-white border border-amber-200 rounded-full flex items-center justify-center text-[10px] font-black text-amber-800 flex-shrink-0 mt-0.5">1</span>
+                        <span>Open your target Google Sheet, click on <b>Extensions</b> &gt; <b>Apps Script</b>.</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-white border border-amber-200 rounded-full flex items-center justify-center text-[10px] font-black text-amber-800 flex-shrink-0 mt-0.5">2</span>
+                        <span>Delete existing template code and paste the macro script below.</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-white border border-amber-200 rounded-full flex items-center justify-center text-[10px] font-black text-amber-800 flex-shrink-0 mt-0.5">3</span>
+                        <span>Click <b>Deploy</b> (top-right) &gt; <b>New Deployment</b>. Set type as <b>Web App</b>.</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-white border border-amber-200 rounded-full flex items-center justify-center text-[10px] font-black text-amber-800 flex-shrink-0 mt-0.5">4</span>
+                        <span>Under "Execute as", choose <b>Me (your email)</b>. Under "Who has access", choose <b>Anyone</b> (crucial for Cloud Run backends).</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-white border border-amber-200 rounded-full flex items-center justify-center text-[10px] font-black text-amber-800 flex-shrink-0 mt-0.5">5</span>
+                        <span>Authorize permissions, copy the generated Web App URL, and paste it into the field above!</span>
+                      </div>
+                    </div>
+
+                    {/* Code copy box */}
+                    <div className="mt-5 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wide">Deployment Script:</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(`function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var spreadsheetId = data.spreadsheetId;
+    var sheetName = data.sheetName || "Sheet1";
+    var row = data.row;
+    var headers = data.headers;
+    
+    var ss = spreadsheetId ? SpreadsheetApp.openById(spreadsheetId) : SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(sheetName);
+    
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+    }
+    
+    if (sheet.getLastRow() === 0 && headers && headers.length > 0) {
+      sheet.appendRow(headers);
+    }
+    
+    sheet.appendRow(row);
+    
+    return ContentService.createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`);
+                            setAlert({ text: 'Apps Script copied to clipboard!', type: 'success' });
+                          }}
+                          className="bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 rounded px-2 py-0.5 text-[10px] font-bold transition-all inline-flex items-center gap-1"
+                        >
+                          Copy Script Code
+                        </button>
+                      </div>
+                      <pre className="p-3 bg-white border border-amber-100 rounded-xl text-[11px] text-gray-700 font-mono overflow-x-auto max-h-48 leading-relaxed">
+{`function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var spreadsheetId = data.spreadsheetId;
+    var sheetName = data.sheetName || "Sheet1";
+    var row = data.row;
+    var headers = data.headers;
+    
+    var ss = spreadsheetId ? SpreadsheetApp.openById(spreadsheetId) : SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(sheetName);
+    
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+    }
+    
+    if (sheet.getLastRow() === 0 && headers && headers.length > 0) {
+      sheet.appendRow(headers);
+    }
+    
+    sheet.appendRow(row);
+    
+    return ContentService.createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           )}
         </div>

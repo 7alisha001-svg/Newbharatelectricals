@@ -8,7 +8,21 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase URL or Anon Key is missing. Check your environment variables.');
 }
 
+// Standard client (used for auth, admin tasks, etc.)
 export const supabase = createClient(
   supabaseUrl,
   supabaseAnonKey
+);
+
+// Anonymous client (bypasses local auth session for public form submissions)
+export const supabaseAnon = createClient(
+  supabaseUrl,
+  supabaseAnonKey,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
 );

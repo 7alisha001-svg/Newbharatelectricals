@@ -10,8 +10,6 @@ import Testimonials from '../components/Testimonials';
 import LocationsPreview from '../components/LocationsPreview';
 import { SEO } from '../components/SEO';
 
-import QuotePopup from '../components/QuotePopup';
-
 export default function Home() {
   return (
     <>
@@ -20,7 +18,6 @@ export default function Home() {
         description="New Bharat Electricals is Budaun's leading licensed Class-A electrical contractor, authorized Amaze power inverters distributor, and premium solar panels installer. Contact us for turnkey industrial cabling, AMCs, and backup systems."
         keywords="solar panels Budaun, electrical contractor Bareilly, Amaze inverter batteries Uttar Pradesh, industrial switchgear installation, AMC electrical panel"
       />
-      <QuotePopup />
       <Hero />
       <BrandsSection />
       <FeaturedProducts />

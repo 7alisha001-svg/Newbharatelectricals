@@ -6,8 +6,20 @@ import puppeteer from 'puppeteer';
   });
   const page = await browser.newPage();
   
-  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-  page.on('pageerror', error => console.log('PAGE ERROR:', error.message));
+  page.on('console', msg => {
+    console.log(`PAGE LOG [${msg.type()}]:`, msg.text());
+  });
+  page.on('pageerror', error => {
+    console.error('PAGE ERROR EXCEPTION:', error.stack || error.message);
+  });
+  page.on('requestfailed', request => {
+    console.log(`PAGE REQUEST FAILED: ${request.url()} (${request.failure()?.errorText})`);
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) {
+      console.log(`PAGE RESPONSE ERROR: ${response.url()} returned status ${response.status()}`);
+    }
+  });
   
   await page.goto('http://localhost:3000', { waitUntil: 'networkidle0' });
   

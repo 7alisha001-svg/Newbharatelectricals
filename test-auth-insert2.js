@@ -7,23 +7,15 @@ const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_6w
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function test() {
-  const payloadData = {
-    email: 'test@example.com',
-    company: 'Test Co',
-    status: 'New',
-    is_contact: true,
-    message: 'Hello'
-  };
-
-  const { data, error } = await supabase
-    .from('inquiries')
-    .insert([{ 
-      name: 'Test Name', 
-      phone: '1234567890', 
-      inquiry_type: 'General Inquiry', 
-      message: JSON.stringify(payloadData)
-    }]);
-
-  console.log('Error:', error);
+  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    email: 'bilsaifi001@gmail.com',
+    password: 'password' // Just a guess, or we can use another way
+  });
+  
+  if (authError) {
+    console.log('Auth Error:', authError.message);
+  } else {
+    console.log('Logged in!');
+  }
 }
 test();

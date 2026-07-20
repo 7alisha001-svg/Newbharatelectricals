@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, MessageCircle, Send, CheckCircle2, Building, Warehouse } from 'lucide-react';
 
-import { supabase } from '../lib/supabase';
+import { supabaseAnon } from '../lib/supabase';
 import { useStore } from '../context/StoreContext';
 import { SEO } from '../components/SEO';
 import { trackLeadSubmission } from '../lib/analytics';
@@ -66,14 +66,15 @@ export default function Contact() {
         message: message
       };
 
-      const { error: dbError } = await supabase
+      const { data: insertedData, error: dbError } = await supabaseAnon
         .from('inquiries')
         .insert([{ 
           name, 
           phone, 
           inquiry_type: inquiryType, 
           message: JSON.stringify(payloadData)
-        }]);
+        }])
+        .select();
 
       if (dbError) throw dbError;
 
@@ -81,6 +82,7 @@ export default function Contact() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: insertedData?.[0]?.id,
           fullName: name,
           emailAddress: email,
           phoneNumber: phone,
@@ -88,7 +90,8 @@ export default function Contact() {
           subject: inquiryType,
           message: message,
           pageUrl: window.location.href,
-          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+          source: 'Contact Page'
         })
       });
 
