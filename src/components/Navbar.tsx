@@ -82,11 +82,24 @@ function HeaderSkeleton() {
   );
 }
 
-export default function Navbar() {
+export interface HeaderProps {
+  settings?: any;
+  categories?: any[];
+  brands?: any[];
+  loading?: boolean;
+}
+
+export default function Navbar(props: HeaderProps = {}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-  const { settings, brands, categories, loading } = useStore();
+  const store = useStore();
+  
+  const settings = props.settings !== undefined ? props.settings : store.settings;
+  const categories = props.categories !== undefined ? props.categories : store.categories;
+  const brands = props.brands !== undefined ? props.brands : store.brands;
+  const loading = props.loading !== undefined ? props.loading : store.loading;
+
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
   const { cartCount } = useCart();

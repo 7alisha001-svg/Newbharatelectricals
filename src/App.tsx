@@ -66,18 +66,21 @@ const GlobalHead = () => {
   );
 };
 
-const PublicLayout = () => (
+const PublicLayout = () => {
+  const { settings, categories, brands, loading } = useStore();
 
-  <div className="min-h-screen top-0 bg-white selection:bg-brand-green selection:text-white flex flex-col">
-    <Navbar />
-    <main className="flex-grow pt-24">
-      <Outlet />
-    </main>
-    <Footer />
-    <WhatsAppFab />
-    <LeadCapturePopup />
-  </div>
-);
+  return (
+    <div className="min-h-screen top-0 bg-white selection:bg-brand-green selection:text-white flex flex-col">
+      <Navbar settings={settings} categories={categories} brands={brands} loading={loading} />
+      <main className="flex-grow pt-24">
+        <Outlet />
+      </main>
+      <Footer />
+      <WhatsAppFab />
+      <LeadCapturePopup />
+    </div>
+  );
+};
 
 const AnalyticsTracker = () => {
   const location = useLocation();
