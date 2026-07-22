@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
+import { useMedia } from '../context/MediaContext';
 import { mainNavLinks } from '../data/navigation';
 
 const croppedNavbarLogoCache: Record<string, string> = {};
@@ -155,9 +156,12 @@ export default function Navbar(props: HeaderProps = {}) {
     return link;
   });
 
-  const rawLogoUrl = settings?.logo_url && !settings.logo_url.includes('settings/header-logo-dark.png') 
-    ? settings.logo_url 
-    : "/header-logo-dark.png";
+  const { getMediaUrl } = useMedia();
+
+  const mediaHeaderLogo = getMediaUrl('header_logo');
+  const rawLogoUrl = (mediaHeaderLogo && mediaHeaderLogo !== '/header-logo-dark.png')
+    ? mediaHeaderLogo
+    : (settings?.logo_url || "/header-logo-dark.png");
 
   const [croppedLogo, setCroppedLogo] = useState<string>(() => {
     if (rawLogoUrl === "/header-logo-dark.png") {
@@ -169,7 +173,7 @@ export default function Navbar(props: HeaderProps = {}) {
   useEffect(() => {
     if (!rawLogoUrl) return;
     
-    // Skip canvas cropping for the default pre-cropped logo to avoid any async delays
+    // Skip canvas cropping for default pre-cropped logo to avoid any async delays
     if (rawLogoUrl === "/header-logo-dark.png") {
       setCroppedLogo("/header-logo-dark.png");
       return;
@@ -181,7 +185,9 @@ export default function Navbar(props: HeaderProps = {}) {
     }
 
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    if (rawLogoUrl.startsWith('http://') || rawLogoUrl.startsWith('https://')) {
+      img.crossOrigin = "anonymous";
+    }
     img.src = rawLogoUrl;
     img.onload = () => {
       try {
@@ -273,7 +279,7 @@ export default function Navbar(props: HeaderProps = {}) {
     setExpandedMenus(prev => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const isReady = isHydrated && !loading && settings !== null;
+  const isReady = isHydrated && !loading;
 
   if (!isReady) {
     return <HeaderSkeleton />;
@@ -309,21 +315,20 @@ export default function Navbar(props: HeaderProps = {}) {
             <div className="flex items-center flex-shrink-0 p-0 m-0">
               <Link to="/" className="flex items-center group p-0 m-0">
                 <img 
-                  src={croppedLogo || rawLogoUrl} 
+                  src={croppedLogo || rawLogoUrl || "/header-logo-dark.png"} 
                   alt={settings?.business_name || "New Bharat Electricals"} 
                   fetchPriority="high"
                   loading="eager"
                   style={{
-                    ['--desktop-logo-height' as any]: settings?.social_links?.header_logo_size ? `${Math.round(settings.social_links.header_logo_size * 0.82)}px` : undefined
+                    height: settings?.social_links?.header_logo_size 
+                      ? `${Math.round(Number(settings.social_links.header_logo_size) * 0.82)}px` 
+                      : undefined,
+                    maxHeight: '72px'
                   }}
-                  className={`${
-                    settings?.social_links?.header_logo_size 
-                      ? 'h-10 sm:h-12 md:h-[var(--desktop-logo-height)]' 
-                      : 'h-10 sm:h-12 md:h-[46px] lg:h-[52px] xl:h-16'
-                  } w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0`}
+                  className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0"
                   onError={(e) => { 
                     const target = e.currentTarget;
-                    if (target.src !== '/header-logo-dark.png') {
+                    if (!target.src.includes('header-logo-dark.png')) {
                       target.src = '/header-logo-dark.png';
                     }
                   }} />

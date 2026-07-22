@@ -99,8 +99,10 @@ export default function BrandPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {brandProducts.map((product, idx) => {
-              const discountPercent = product.regular_price > product.sale_price 
-                ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)
+              const regPrice = Number(product.regular_price) || 0;
+              const salePrice = Number(product.sale_price) || 0;
+              const discountPercent = (regPrice > salePrice && regPrice > 0)
+                ? Math.round(((regPrice - salePrice) / regPrice) * 100)
                 : 0;
               const catSlug = product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'category';
 
@@ -146,14 +148,14 @@ export default function BrandPage() {
                   
                   <div className="mt-auto">
                     <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
-                      <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{product.sale_price}</span>
-                      <span className="text-xs sm:text-sm text-gray-900 line-through">₹{product.regular_price}</span>
+                      <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{salePrice || regPrice}</span>
+                      {regPrice > salePrice && <span className="text-xs sm:text-sm text-gray-900 line-through">₹{regPrice}</span>}
                     </div>
                     <button 
                       onClick={() => addToCart({
                         id: product.id,
                         name: product.name,
-                        price: product.sale_price.toString(),
+                        price: (salePrice || regPrice).toString(),
                         imageUrl: product.image_url,
                         quantity: 1
                       })}

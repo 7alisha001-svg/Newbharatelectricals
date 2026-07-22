@@ -3,13 +3,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, ShoppingCart, Package, Archive, 
   Flag, Users, Settings, LogOut, X, Navigation as NavIcon, MapPin,
-  Zap, Sun, FileSpreadsheet, MessageCircle
+  Zap, Sun, FileSpreadsheet, MessageCircle, Image as ImageIcon
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+  { name: 'Media Library', href: '/admin/media-library', icon: ImageIcon },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Inventory', href: '/admin/inventory', icon: Archive },

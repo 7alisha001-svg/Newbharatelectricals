@@ -3,15 +3,17 @@ import { useState, useEffect } from 'react';
 import { MapPin, Facebook, Instagram, Linkedin, Twitter, Phone, Mail, Clock, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
+import { useMedia } from '../context/MediaContext';
 import { mainNavLinks as fallbackNavLinks } from '../data/navigation';
 
 const croppedFooterLogoCache: Record<string, string> = {};
 
 export default function Footer() {
   const { settings } = useStore();
+  const { getMediaUrl } = useMedia();
   const mainNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : fallbackNavLinks);
 
-  const rawLogoUrl = settings?.social_links?.footer_logo || "/footer-logo-light.png";
+  const rawLogoUrl = getMediaUrl('footer_logo', settings?.social_links?.footer_logo || "/footer-logo-light.png");
 
   const [croppedLogo, setCroppedLogo] = useState<string | null>(() => {
     return croppedFooterLogoCache[rawLogoUrl] || null;

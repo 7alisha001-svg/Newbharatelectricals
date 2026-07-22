@@ -97,7 +97,19 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (catRes.data) setCategories(catRes.data);
       if (brandRes.data) setBrands(brandRes.data);
       if (prodRes.data) setProducts(prodRes.data);
-      if (settingsRes.data) setSettings(settingsRes.data);
+      if (settingsRes.data) {
+        setSettings(settingsRes.data);
+      } else if (!settings) {
+        setSettings({
+          id: 'global',
+          business_name: 'New Bharat Electricals',
+          logo_url: '/header-logo-dark.png',
+          email: 'Info@newbharatelectricals.com',
+          phone: '+919457002000',
+          office_address: 'Near Dr Amar Singh, Chaudhary Saray Lalpul Road, Budaun HO, Budaun 243601, Uttar Pradesh',
+          warehouse_address: 'Loda Bahedi, Budaun, Uttar Pradesh – 243601',
+        });
+      }
     } catch (error) {
       console.error('Error fetching store data:', error);
     } finally {
@@ -108,12 +120,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     fetchData();
 
-
     // Setup Realtime subscriptions
     const catSub = supabase
       .channel('categories_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
-        debouncedFetchData(); // Simplest way to ensure fully fresh data
+        debouncedFetchData();
       })
       .subscribe();
 
@@ -139,10 +150,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       .subscribe();
 
     return () => {
-      catSub.unsubscribe();
-      brandSub.unsubscribe();
-      prodSub.unsubscribe();
-      settingsSub.unsubscribe();
+      supabase.removeChannel(catSub);
+      supabase.removeChannel(brandSub);
+      supabase.removeChannel(prodSub);
+      supabase.removeChannel(settingsSub);
     };
   }, []);
 

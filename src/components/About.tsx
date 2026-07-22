@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Award } from 'lucide-react';
+import MediaImage from './MediaImage';
 
 export default function About() {
   return (
@@ -42,11 +43,12 @@ export default function About() {
             viewport={{ once: true }}
             className="md:w-1/2 relative bg-gray-100 min-h-[300px]"
           >
-            <img 
-              src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1200&auto=format&fit=crop" 
+            <MediaImage 
+              imageKey="about_home_section"
+              defaultSrc="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1200&auto=format&fit=crop" 
               alt="Electrical Manufacturing" 
               className="absolute inset-0 w-full h-full object-cover"
-             onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
+            />
           </motion.div>
           
         </div>

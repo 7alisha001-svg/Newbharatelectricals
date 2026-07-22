@@ -8,6 +8,7 @@ import {
 import { useStore } from '../context/StoreContext';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
+import MediaImage from '../components/MediaImage';
 
 export default function AboutUsPage() {
   const { settings } = useStore();
@@ -204,18 +205,11 @@ export default function AboutUsPage() {
               className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] group"
             >
               <div className="absolute inset-0 bg-brand-dark/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
-              <img 
-                src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1000&auto=format&fit=crop" 
+              <MediaImage 
+                imageKey="about_story_1"
+                defaultSrc="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1000&auto=format&fit=crop" 
                 alt="Our Facility" 
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
-                    target.src = '/images/amaze-an-star-1475-1.jpg';
-                  }
-                }}
               />
             </motion.div>
           </div>

@@ -30,20 +30,23 @@ export default function ProductPage() {
     );
   }
 
-  const discountPercent = rawProduct.regular_price > rawProduct.sale_price 
-    ? Math.round(((rawProduct.regular_price - rawProduct.sale_price) / rawProduct.regular_price) * 100)
+  const regPrice = Number(rawProduct.regular_price) || 0;
+  const salePrice = Number(rawProduct.sale_price) || 0;
+
+  const discountPercent = (regPrice > salePrice && regPrice > 0)
+    ? Math.round(((regPrice - salePrice) / regPrice) * 100)
     : 0;
 
   const product = {
     id: rawProduct.id,
     name: rawProduct.name,
-    sku: rawProduct.sku || `NBE-${rawProduct.id.substring(0, 6).toUpperCase()}`,
-    stockStatus: rawProduct.stock_quantity > 0 ? 'In Stock' : 'Out of Stock',
+    sku: rawProduct.sku || `NBE-${(rawProduct.id || '').substring(0, 6).toUpperCase()}`,
+    stockStatus: (rawProduct.stock_quantity ?? 0) > 0 ? 'In Stock' : 'Out of Stock',
     description: rawProduct.description,
     features: rawProduct.features || [],
-    originalPrice: rawProduct.regular_price.toLocaleString('en-IN'),
-    price: rawProduct.sale_price.toLocaleString('en-IN'),
-    rawPrice: rawProduct.sale_price.toString(),
+    originalPrice: regPrice.toLocaleString('en-IN'),
+    price: salePrice.toLocaleString('en-IN'),
+    rawPrice: salePrice.toString(),
     discount: discountPercent > 0 ? `${discountPercent}% OFF` : null,
     rating: 4.8,
     reviews: 124,

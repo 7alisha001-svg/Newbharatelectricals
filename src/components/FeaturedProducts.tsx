@@ -27,8 +27,10 @@ export default function FeaturedProducts() {
 
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3 md:gap-4">
           {featuredProducts.map((product, idx) => {
-            const discountPercent = product.regular_price > product.sale_price 
-              ? Math.round(((product.regular_price - product.sale_price) / product.regular_price) * 100)
+            const regPrice = Number(product.regular_price) || 0;
+            const salePrice = Number(product.sale_price) || 0;
+            const discountPercent = (regPrice > salePrice && regPrice > 0)
+              ? Math.round(((regPrice - salePrice) / regPrice) * 100)
               : 0;
             
             // Format category name for url slug, using basic replace
@@ -72,14 +74,14 @@ export default function FeaturedProducts() {
                 </Link>
                 <div className="mt-auto pt-4 border-t border-gray-100">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 sm:mb-5">
-                    <span className="text-[11px] sm:text-sm text-gray-900 line-through mb-0.5 sm:mb-0">₹{product.regular_price}</span>
-                    <span className="text-lg sm:text-xl font-bold text-gray-900">₹{product.sale_price}</span>
+                    <span className="text-[11px] sm:text-sm text-gray-900 line-through mb-0.5 sm:mb-0">₹{regPrice}</span>
+                    <span className="text-lg sm:text-xl font-bold text-gray-900">₹{salePrice || regPrice}</span>
                   </div>
                   <button 
                     onClick={() => addToCart({
                       id: product.id,
                       name: product.name,
-                      price: product.sale_price.toString(),
+                      price: (salePrice || regPrice).toString(),
                       imageUrl: product.image_url,
                       quantity: 1
                     })}

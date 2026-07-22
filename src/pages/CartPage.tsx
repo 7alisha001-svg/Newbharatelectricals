@@ -90,7 +90,7 @@ export default function CartPage() {
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center font-black text-gray-900 text-lg">
                           <span className="md:hidden text-gray-900 font-medium text-base">Subtotal:</span>
-                          ₹{(parseFloat(item.price.replace(/,/g, '')) * item.quantity).toLocaleString()}
+                          ₹{(parseFloat(String(item.price || '0').replace(/,/g, '')) * item.quantity).toLocaleString()}
                         </div>
                       </div>
                     ))}

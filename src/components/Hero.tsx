@@ -2,8 +2,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, ShieldCheck, Zap, Activity, Sun, BatteryCharging, Award, Shield, Droplet } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useMedia } from '../context/MediaContext';
 
 export default function Hero() {
+  const { getMediaUrl } = useMedia();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides = [
@@ -16,7 +18,7 @@ export default function Hero() {
         { icon: Zap, text: "FAST\nCHARGING" },
         { icon: Activity, text: "LONG LASTING\nPERFORMANCE" }
       ],
-      image: "https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1200&auto=format&fit=crop",
+      image: getMediaUrl('hero_banner_1', "https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1200&auto=format&fit=crop"),
       ctaText: "SHOP NOW",
       ctaLink: "/power-solutions/home-inverters",
       themeText: "text-brand-green"
@@ -30,7 +32,7 @@ export default function Hero() {
         { icon: BatteryCharging, text: "LOWER\nBILLS" },
         { icon: Award, text: "25 YEAR\nWARRANTY" }
       ],
-      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1200&auto=format&fit=crop",
+      image: getMediaUrl('hero_banner_2', "https://images.unsplash.com/photo-1509391365360-2e959784a276?q=80&w=1200&auto=format&fit=crop"),
       ctaText: "EXPLORE SOLAR",
       ctaLink: "/solar-solutions/residential-solar-panels",
       themeText: "text-brand-dark"
@@ -44,7 +46,7 @@ export default function Hero() {
         { icon: Droplet, text: "LOW\nMAINTENANCE" },
         { icon: Zap, text: "HIGH\nCRANKING" }
       ],
-      image: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=1200&auto=format&fit=crop",
+      image: getMediaUrl('hero_banner_3', "https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=1200&auto=format&fit=crop"),
       ctaText: "BUY NOW",
       ctaLink: "/power-solutions/battery-backup-systems",
       themeText: "text-brand-green"
