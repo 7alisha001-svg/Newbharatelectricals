@@ -6,12 +6,14 @@ import {
   Lightbulb, Cog, TrendingUp, ThumbsUp, X, Star, Sun, Truck, Headset
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
+import { useMedia } from '../context/MediaContext';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
 import MediaImage from '../components/MediaImage';
 
 export default function AboutUsPage() {
   const { settings } = useStore();
+  const { getMediaUrl } = useMedia();
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
@@ -27,62 +29,74 @@ export default function AboutUsPage() {
 
   const galleryImages = [
     { 
-      src: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_1",
+      src: getMediaUrl("about_gallery_1", "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop"), 
       caption: "New Bharat Corporate Office Lobby", 
       category: "Office" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_2",
+      src: getMediaUrl("about_gallery_2", "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop"), 
       caption: "New Bharat Corporate Headquarters Exterior", 
       category: "Office" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_3",
+      src: getMediaUrl("about_gallery_3", "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop"), 
       caption: "Main Distribution & Logistics Warehouse", 
       category: "Warehouse" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_4",
+      src: getMediaUrl("about_gallery_4", "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=800&auto=format&fit=crop"), 
       caption: "Inventory Management and Power Storage Facility", 
       category: "Warehouse" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_5",
+      src: getMediaUrl("about_gallery_5", "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop"), 
       caption: "Our Executive Management and Technical Leads", 
       category: "Team" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_6",
+      src: getMediaUrl("about_gallery_6", "https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=800&auto=format&fit=crop"), 
       caption: "Customer Support & Sales Team", 
       category: "Team" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_7",
+      src: getMediaUrl("about_gallery_7", "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&auto=format&fit=crop"), 
       caption: "Annual Renewable Energy Symposium & Team Celebration", 
       category: "Events" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_8",
+      src: getMediaUrl("about_gallery_8", "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop"), 
       caption: "Employee Training & Product Launch Seminar", 
       category: "Events" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_9",
+      src: getMediaUrl("about_gallery_9", "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800&auto=format&fit=crop"), 
       caption: "Client Consultation at Corporate Office", 
       category: "Customer" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1552581230-c01591d3c99a?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_10",
+      src: getMediaUrl("about_gallery_10", "https://images.unsplash.com/photo-1552581230-c01591d3c99a?q=80&w=800&auto=format&fit=crop"), 
       caption: "Interactive Feedback Session with Local Authorized Dealers", 
       category: "Customer" 
     },
     { 
-      src: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=800&auto=format&fit=crop", 
+      key: "about_gallery_11",
+      src: getMediaUrl("about_gallery_11", "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=800&auto=format&fit=crop"), 
       caption: "Commercial Rooftop Solar Installation - 50kW Setup", 
       category: "Projects" 
     },
     { 
-      src: "/images/amaze-an-star-1475-1.jpg", 
+      key: "about_gallery_12",
+      src: getMediaUrl("about_gallery_12", "/images/amaze-an-star-1475-1.jpg"), 
       caption: "Amaze Premium Power Inverter Installation & Brand Showcase", 
       category: "Projects" 
     }
@@ -137,18 +151,11 @@ export default function AboutUsPage() {
       <section className="relative bg-brand-dark py-16 md:py-28 lg:py-36 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-dark/80 to-brand-dark z-10" />
-          <img 
-            src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2070&auto=format&fit=crop" 
+          <MediaImage 
+            imageKey="about_hero_banner"
+            defaultSrc="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2070&auto=format&fit=crop" 
             alt="New Bharat Electricals Facility" 
             className="w-full h-full object-cover object-center"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            onError={(e) => {
-              const target = e.currentTarget;
-              if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
-                target.src = '/images/amaze-an-star-1475-1.jpg';
-              }
-            }}
           />
         </div>
         <div className="max-w-[1200px] mx-auto px-4 lg:px-8 relative z-20 text-center">
@@ -236,19 +243,11 @@ export default function AboutUsPage() {
               className="bg-gray-50 rounded-3xl overflow-hidden shadow-lg border border-gray-100 flex flex-col group"
             >
               <div className="aspect-[4/3] w-full overflow-hidden bg-gray-200 relative">
-                {/* Placeholder for Founder Photo */}
-                <img 
-                  src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=800&auto=format&fit=crop" 
+                <MediaImage 
+                  imageKey="about_leader_founder"
+                  defaultSrc="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=800&auto=format&fit=crop" 
                   alt="Mazhar Hussain - Founder & Owner"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
-                      target.src = '/images/amaze-an-star-1475-1.jpg';
-                    }
-                  }}
                 />
               </div>
               <div className="p-8 md:p-10 flex-1 flex flex-col">
@@ -269,19 +268,11 @@ export default function AboutUsPage() {
               className="bg-gray-50 rounded-3xl overflow-hidden shadow-lg border border-gray-100 flex flex-col group"
             >
               <div className="aspect-[4/3] w-full overflow-hidden bg-gray-200 relative">
-                {/* Placeholder for Manager Photo */}
-                <img 
-                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" 
+                <MediaImage 
+                  imageKey="about_leader_manager"
+                  defaultSrc="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" 
                   alt="Sahib Mazhar - Manager"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
-                      target.src = '/images/amaze-an-star-1475-1.jpg';
-                    }
-                  }}
                 />
               </div>
               <div className="p-8 md:p-10 flex-1 flex flex-col">

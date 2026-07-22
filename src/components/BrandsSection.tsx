@@ -1,86 +1,88 @@
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
+import { useMedia } from '../context/MediaContext';
 import { motion } from 'motion/react';
 
 export default function BrandsSection() {
   const { brands } = useStore();
+  const { getMediaUrl } = useMedia();
 
   const defaultBrands = [
     {
       id: 'brand-amaze',
       name: 'AMAZE',
       slug: 'amaze',
-      logo_url: 'https://ftxyuhwejcqxoyhmkczl.supabase.co/storage/v1/object/public/logos/amaze.png',
+      logo_url: getMediaUrl('brand_logo_amaze', 'https://ftxyuhwejcqxoyhmkczl.supabase.co/storage/v1/object/public/logos/amaze.png'),
       link: '/brands/amaze'
     },
     {
       id: 'brand-okaya',
       name: 'OKAYA',
       slug: 'okaya',
-      logo_url: 'https://okayapower.com/assets/images/logo.png',
+      logo_url: getMediaUrl('brand_logo_okaya', 'https://okayapower.com/assets/images/logo.png'),
       link: '/brands/okaya'
     },
     {
       id: 'brand-livguard',
       name: 'LIVGUARD',
       slug: 'livguard',
-      logo_url: 'https://www.livguard.com/wp-content/themes/livguard/images/logo.png',
+      logo_url: getMediaUrl('brand_logo_livguard', 'https://www.livguard.com/wp-content/themes/livguard/images/logo.png'),
       link: '/brands/livguard'
     },
     {
       id: 'brand-smarten',
       name: 'SMARTEN',
       slug: 'smarten',
-      logo_url: 'https://smarten.in/assets/images/logo.png',
+      logo_url: getMediaUrl('brand_logo_smarten', 'https://smarten.in/assets/images/logo.png'),
       link: '/brands/smarten'
     },
     {
       id: 'brand-indpower',
       name: 'INDPOWER',
       slug: 'indpower',
-      logo_url: '', // Explicit placeholder card since there's no official logo URL hotlinking
+      logo_url: getMediaUrl('brand_logo_indpower', ''),
       link: '/brands/indpower'
     },
     {
       id: 'brand-servokon',
       name: 'SERVOKON',
       slug: 'servokon',
-      logo_url: 'https://www.servokon.com/images/logo.png',
+      logo_url: getMediaUrl('brand_logo_servokon', 'https://www.servokon.com/images/logo.png'),
       link: '/brands/servokon'
     },
     {
       id: 'brand-addo',
       name: 'ADDO by Eastman',
       slug: 'addo-by-eastman',
-      logo_url: 'https://addobatteries.com/wp-content/uploads/2021/04/logo.png',
+      logo_url: getMediaUrl('brand_logo_addo', 'https://addobatteries.com/wp-content/uploads/2021/04/logo.png'),
       link: '/brands/addo-by-eastman'
     },
     {
       id: 'brand-massimo',
       name: 'MASSIMO',
       slug: 'massimo',
-      logo_url: 'https://www.massimobatteries.com/wp-content/uploads/2022/07/massimo-logo.png',
+      logo_url: getMediaUrl('brand_logo_massimo', 'https://www.massimobatteries.com/wp-content/uploads/2022/07/massimo-logo.png'),
       link: '/brands/massimo'
     },
     {
       id: 'brand-adani',
       name: 'ADANI',
       slug: 'adani',
-      logo_url: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Adani_Group_logo.svg',
+      logo_url: getMediaUrl('brand_logo_adani', 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Adani_Group_logo.svg'),
       link: '/brands/adani'
     },
     {
       id: 'brand-waaree',
       name: 'WAAREE',
       slug: 'waaree',
-      logo_url: 'https://www.waaree.com/images/logo.png',
+      logo_url: getMediaUrl('brand_logo_waaree', 'https://www.waaree.com/images/logo.png'),
       link: '/brands/waaree'
     },
     {
       id: 'brand-kent',
       name: 'KENT',
       slug: 'kent',
-      logo_url: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Kent_RO_Systems_Logo.png',
+      logo_url: getMediaUrl('brand_logo_kent', 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Kent_RO_Systems_Logo.png'),
       link: '/brands/kent'
     }
   ];

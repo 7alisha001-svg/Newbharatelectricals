@@ -1,6 +1,6 @@
 import ErrorBoundary from './components/ErrorBoundary';
 import React, { Suspense, useEffect } from 'react';
-import { Routes, Route, BrowserRouter, Outlet, useLocation } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Outlet, useLocation, Navigate } from 'react-router-dom';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
@@ -115,6 +115,7 @@ export default function App() {
             <Routes>
               <Route path="/admin-login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Navigate to="dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="media-library" element={<MediaLibrary />} />
                 <Route path="orders" element={<Orders />} />

@@ -6,6 +6,7 @@ import { supabaseAnon } from '../lib/supabase';
 import { useStore } from '../context/StoreContext';
 import { SEO } from '../components/SEO';
 import { trackLeadSubmission } from '../lib/analytics';
+import MediaImage from '../components/MediaImage';
 
 export default function Contact() {
   const { settings } = useStore();
@@ -140,22 +141,32 @@ export default function Contact() {
       />
       <div className="w-full bg-white">
         {/* Header */}
-        <section className="bg-brand-dark py-10 md:py-16 text-center px-4 md:px-6">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-5xl font-heading font-bold text-white mb-4 md:mb-6"
-          >
-            Contact Us
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-medium"
-          >
-            Have questions about our products, dealer opportunities, or require support? We are here to help.
-          </motion.p>
+        <section className="bg-brand-dark py-10 md:py-16 text-center px-4 md:px-6 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <MediaImage 
+              imageKey="contact_hero_banner"
+              defaultSrc="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop"
+              alt="Contact Us Header Background"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="relative z-10">
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl md:text-5xl font-heading font-bold text-white mb-4 md:mb-6"
+            >
+              Contact Us
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-medium"
+            >
+              Have questions about our products, dealer opportunities, or require support? We are here to help.
+            </motion.p>
+          </div>
         </section>
 
         <section className="max-w-7xl mx-auto px-4 lg:px-6 py-8 md:py-16">

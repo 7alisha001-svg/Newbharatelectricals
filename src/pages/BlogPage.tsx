@@ -22,10 +22,13 @@ import {
 import { blogPosts, BlogPost } from '../data/blogPosts';
 import { SEO } from '../components/SEO';
 import { trackLeadSubmission, trackCTAInteraction } from '../lib/analytics';
+import { useMedia } from '../context/MediaContext';
+import MediaImage from '../components/MediaImage';
 
 export default function BlogPage() {
   const { slug } = useParams<{ slug?: string }>();
   const navigate = useNavigate();
+  const { getMediaUrl } = useMedia();
   
   // List State
   const [searchQuery, setSearchQuery] = useState('');
@@ -256,7 +259,7 @@ export default function BlogPage() {
           <div className="relative w-full bg-brand-dark py-14 md:py-24 px-4 overflow-hidden border-b border-brand-green/10">
             <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/95 to-transparent z-10"></div>
             <img 
-              src={activePost.image} 
+              src={getMediaUrl(`blog_post_${blogPosts.findIndex(p => p.slug === activePost.slug) + 1}`, activePost.image)} 
               alt={activePost.title} 
               className="absolute inset-0 w-full h-full object-cover opacity-20 blur-[1px]"
               loading="eager"
@@ -491,6 +494,14 @@ export default function BlogPage() {
       <div className="w-full bg-slate-50 min-h-screen pb-16">
         {/* Banner */}
         <section className="bg-brand-dark py-14 md:py-24 text-center px-4 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <MediaImage 
+              imageKey="blog_header_banner"
+              defaultSrc="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1600&auto=format&fit=crop"
+              alt="Blog Banner Background"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="absolute top-0 left-0 w-64 h-64 bg-brand-green/5 rounded-full blur-3xl -ml-20 -mt-20"></div>
           <div className="relative z-10 max-w-3xl mx-auto">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-green/20 text-brand-lime text-xs font-black uppercase tracking-wider mb-4 border border-brand-green/25">
@@ -568,7 +579,7 @@ export default function BlogPage() {
                   {/* Image Aspect Box */}
                   <div className="aspect-[16/10] w-full bg-slate-100 overflow-hidden relative">
                     <img 
-                      src={post.image} 
+                      src={getMediaUrl(`blog_post_${blogPosts.findIndex(p => p.slug === post.slug) + 1}`, post.image)} 
                       alt={post.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"

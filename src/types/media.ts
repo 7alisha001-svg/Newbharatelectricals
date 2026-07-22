@@ -17,5 +17,6 @@ export type MediaCategory =
   | 'Promo Banners'
   | 'Category Banners'
   | 'Contact & Stores'
+  | 'Blog'
   | 'Products & Brands'
   | 'General';

@@ -1,7 +1,9 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { 
   Upload, Search, Image as ImageIcon, Copy, Check, Trash2, Edit3, 
-  Eye, RefreshCw, X, Layers, AlertCircle, Sparkles, Filter, Link2
+  Eye, RefreshCw, X, Layers, AlertCircle, Sparkles, Filter, Link2,
+  LayoutGrid, List, CheckSquare, Square, Download, Sliders, FileText,
+  Clock, HardDrive, Maximize2, Zap
 } from 'lucide-react';
 import { useMedia } from '../../context/MediaContext';
 import { WebsiteMedia, MediaCategory } from '../../types/media';
@@ -25,12 +27,20 @@ export default function MediaLibrary() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MediaCategory>('All');
   const [activeTab, setActiveTab] = useState<'all' | 'website_slots'>('website_slots');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   
+  // Multi-select state
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  
+  // Drag and drop state
+  const [isDragging, setIsDragging] = useState(false);
+
   // Modals state
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [previewModalItem, setPreviewModalItem] = useState<WebsiteMedia | null>(null);
   const [editModalItem, setEditModalItem] = useState<WebsiteMedia | null>(null);
   const [replaceTargetItem, setReplaceTargetItem] = useState<WebsiteMedia | null>(null);
+  const [optimizeItem, setOptimizeItem] = useState<WebsiteMedia | null>(null);
   
   // Copy state
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -46,6 +56,9 @@ export default function MediaLibrary() {
   const [uploadAltText, setUploadAltText] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Canvas ref for image conversion/optimization
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
@@ -73,6 +86,74 @@ export default function MediaLibrary() {
       return matchesCategory && matchesSearch;
     });
   }, [mediaItems, selectedCategory, searchQuery]);
+
+  // Multi-select handlers
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filteredItems.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredItems.map(i => i.id));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (window.confirm(`Are you sure you want to delete ${selectedIds.length} selected media item(s)?`)) {
+      try {
+        for (const id of selectedIds) {
+          await deleteMedia(id);
+        }
+        showNotification('success', `Deleted ${selectedIds.length} item(s) successfully.`);
+        setSelectedIds([]);
+      } catch (err) {
+        showNotification('error', 'Error deleting selected items.');
+      }
+    }
+  };
+
+  const handleBulkCopy = () => {
+    const urls = filteredItems.filter(i => selectedIds.includes(i.id)).map(i => i.image_url).join('\n');
+    navigator.clipboard.writeText(urls);
+    showNotification('success', `Copied ${selectedIds.length} image URLs to clipboard!`);
+  };
+
+  // Drag & drop zone handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        setUploadFile(file);
+        const nameNoExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+        setUploadTitle(nameNoExt.replace(/[-_]/g, ' '));
+        setUploadModalOpen(true);
+      } else {
+        showNotification('error', 'Please drop a valid image file.');
+      }
+    }
+  };
 
   // Handle File Selection for Upload
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -301,14 +382,30 @@ export default function MediaLibrary() {
         </div>
       </div>
 
-      {/* Search & Category Filter Controls */}
-      <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+      {/* Search, Filter, View Mode & Drag-Drop Bar */}
+      <div 
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`bg-white rounded-2xl p-4 border transition-all ${
+          isDragging ? 'border-brand-green bg-emerald-50/50 shadow-lg ring-2 ring-brand-green/30' : 'border-gray-200 shadow-sm'
+        } flex flex-col md:flex-row gap-4 justify-between items-center relative`}
+      >
+        {isDragging && (
+          <div className="absolute inset-0 bg-brand-green/10 backdrop-blur-xs rounded-2xl flex items-center justify-center z-20 pointer-events-none">
+            <div className="flex items-center gap-2 bg-white px-5 py-3 rounded-xl shadow-xl border border-brand-green font-bold text-brand-green text-sm">
+              <Upload size={20} className="animate-bounce" />
+              <span>Drop image file here to upload!</span>
+            </div>
+          </div>
+        )}
+
         {/* Search Input */}
-        <div className="relative w-full md:w-96">
+        <div className="relative w-full md:w-80">
           <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by title, key, category or alt text..."
+            placeholder="Search title, key, category or alt text..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-brand-green focus:bg-white transition-all"
@@ -323,24 +420,85 @@ export default function MediaLibrary() {
           )}
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto py-1 custom-scrollbar">
-          <Filter size={14} className="text-gray-400 mr-1 shrink-0" />
-          {CATEGORIES.map((cat) => (
+        {/* Category Pills & View Switcher */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 custom-scrollbar max-w-md">
+            <Filter size={14} className="text-gray-400 mr-1 shrink-0" />
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-gray-900 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center bg-gray-100 p-1 rounded-xl shrink-0 border border-gray-200">
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                selectedCategory === cat
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}
+              title="Grid View"
             >
-              {cat}
+              <LayoutGrid size={16} />
             </button>
-          ))}
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}
+              title="List View"
+            >
+              <List size={16} />
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Bulk Operations Toolbar */}
+      {selectedIds.length > 0 && (
+        <div className="bg-gray-900 text-white rounded-2xl p-4 flex items-center justify-between shadow-lg animate-fade-in">
+          <div className="flex items-center gap-3">
+            <span className="bg-brand-green text-white text-xs font-bold px-2.5 py-1 rounded-lg">
+              {selectedIds.length} Selected
+            </span>
+            <button 
+              onClick={toggleSelectAll}
+              className="text-xs text-gray-300 hover:text-white underline font-medium"
+            >
+              {selectedIds.length === filteredItems.length ? 'Deselect All' : 'Select All'}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleBulkCopy}
+              className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-2 rounded-xl transition-colors"
+            >
+              <Copy size={14} />
+              <span>Copy URLs</span>
+            </button>
+
+            <button
+              onClick={handleBulkDelete}
+              className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-colors shadow"
+            >
+              <Trash2 size={14} />
+              <span>Delete Selected</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedIds([])}
+              className="p-1.5 text-gray-400 hover:text-white"
+            >
+              <X size={18} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* WEBSITE SLOTS VIEW */}
       {activeTab === 'website_slots' && (
