@@ -90,6 +90,11 @@ const AnalyticsTracker = () => {
 export default function App() {
   useEffect(() => {
     initAnalytics();
+    try {
+      window.sessionStorage.removeItem('retry-chunk-error');
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
   
   return (

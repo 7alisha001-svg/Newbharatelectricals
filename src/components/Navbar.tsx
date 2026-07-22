@@ -7,11 +7,94 @@ import { mainNavLinks } from '../data/navigation';
 
 const croppedNavbarLogoCache: Record<string, string> = {};
 
+function HeaderSkeleton() {
+  return (
+    <>
+      {/* Top Bar Skeleton */}
+      <div className="bg-brand-green text-white hidden md:block text-xs font-medium py-1 min-h-[28px]">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8 flex justify-between items-center h-5">
+          <div className="flex items-center space-x-6">
+            <div className="h-3.5 w-32 bg-white/20 rounded animate-pulse" />
+            <div className="h-3.5 w-32 bg-white/20 rounded animate-pulse" />
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="h-3.5 w-24 bg-white/20 rounded animate-pulse" />
+            <div className="h-3.5 w-20 bg-white/20 rounded animate-pulse" />
+          </div>
+        </div>
+      </div>
+
+      {/* Main Header Skeleton */}
+      <header className="sticky w-full top-0 z-50 bg-white border-none min-h-[64px] md:min-h-[104px]">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-0.5 md:py-2">
+          {/* Main Header Row Skeleton */}
+          <div className="flex items-center justify-between gap-2 md:gap-4 mb-0">
+            {/* Logo Placeholder */}
+            <div className="flex items-center flex-shrink-0 p-0 m-0">
+              <div className="h-10 sm:h-12 md:h-[46px] lg:h-[52px] xl:h-16 w-36 sm:w-44 bg-gray-100 rounded-lg animate-pulse" />
+            </div>
+
+            {/* Location Selector Placeholder */}
+            <div className="hidden xl:flex items-center text-sm lg:pr-2">
+              <div className="w-6 h-6 bg-gray-100 rounded-full animate-pulse mr-2" />
+              <div className="flex flex-col gap-1">
+                <div className="h-3 w-16 bg-gray-100 rounded animate-pulse" />
+                <div className="h-3.5 w-28 bg-gray-100 rounded animate-pulse" />
+              </div>
+            </div>
+
+            {/* Search Bar Placeholder */}
+            <div className="hidden lg:flex flex-grow max-w-[700px] relative">
+              <div className="w-full h-11 bg-[#f1f1f1] rounded-full animate-pulse" />
+            </div>
+
+            {/* Right Side Icons Placeholder */}
+            <div className="hidden lg:flex flex-shrink-0 items-center space-x-6 ml-4">
+              <div className="h-5 w-24 bg-gray-100 rounded animate-pulse" />
+              <div className="h-5 w-24 bg-gray-100 rounded animate-pulse" />
+              <div className="h-6 w-6 bg-gray-100 rounded-full animate-pulse" />
+              <div className="h-6 w-6 bg-gray-100 rounded-full animate-pulse" />
+              <div className="h-6 w-6 bg-gray-100 rounded-full animate-pulse" />
+            </div>
+
+            {/* Mobile Actions Placeholder */}
+            <div className="flex items-center lg:hidden space-x-2 sm:space-x-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
+              <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
+              <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
+            </div>
+          </div>
+
+          {/* Desktop Categories Bottom Bar Placeholder */}
+          <nav className="hidden lg:flex mt-4">
+            <div className="flex items-center space-x-10 py-1">
+              <div className="h-4 w-16 bg-gray-100 rounded animate-pulse" />
+              <div className="h-4 w-20 bg-gray-100 rounded animate-pulse" />
+              <div className="h-4 w-24 bg-gray-100 rounded animate-pulse" />
+              <div className="h-4 w-20 bg-gray-100 rounded animate-pulse" />
+              <div className="h-4 w-24 bg-gray-100 rounded animate-pulse" />
+              <div className="h-4 w-16 bg-gray-100 rounded animate-pulse" />
+            </div>
+          </nav>
+        </div>
+      </header>
+    </>
+  );
+}
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { settings, brands } = useStore();
-  
+  const [isHydrated, setIsHydrated] = useState(false);
+  const { settings, brands, categories, loading } = useStore();
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+  const location = useLocation();
+  const { cartCount } = useCart();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   // Build dynamic navLinks based on settings or fallback
   const baseNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : mainNavLinks);
   const navLinks = (Array.isArray(baseNavLinks) ? baseNavLinks : mainNavLinks).map((link: any) => {
@@ -58,9 +141,6 @@ export default function Navbar() {
     }
     return link;
   });
-  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
-  const location = useLocation();
-  const { cartCount } = useCart();
 
   const rawLogoUrl = settings?.logo_url && !settings.logo_url.includes('settings/header-logo-dark.png') 
     ? settings.logo_url 
@@ -86,9 +166,6 @@ export default function Navbar() {
       setCroppedLogo(croppedNavbarLogoCache[rawLogoUrl]);
       return;
     }
-
-    // Do NOT set croppedLogo to null/empty here; keep rendering the rawLogoUrl
-    // while we crop in the background to prevent flashing/blinking.
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -182,6 +259,12 @@ export default function Navbar() {
     e.preventDefault();
     setExpandedMenus(prev => ({ ...prev, [name]: !prev[name] }));
   };
+
+  const isReady = isHydrated && !loading && settings !== null;
+
+  if (!isReady) {
+    return <HeaderSkeleton />;
+  }
 
   return (
     <>
