@@ -1,108 +1,22 @@
 
-import { useState, useEffect } from 'react';
 import { MapPin, Facebook, Instagram, Linkedin, Twitter, Phone, Mail, Clock, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { useMedia } from '../context/MediaContext';
 import { mainNavLinks as fallbackNavLinks } from '../data/navigation';
 
-const croppedFooterLogoCache: Record<string, string> = {};
-
 export default function Footer() {
   const { settings } = useStore();
   const { getMediaUrl } = useMedia();
   const mainNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : fallbackNavLinks);
 
-  const rawLogoUrl = getMediaUrl('footer_logo', settings?.social_links?.footer_logo || "/footer-logo-light.png");
+  const mediaFooterLogo = getMediaUrl('footer_logo');
+  const rawLogoUrl = (mediaFooterLogo && mediaFooterLogo.trim() !== '' && mediaFooterLogo !== '/footer-logo-light.png')
+    ? mediaFooterLogo
+    : (settings?.social_links?.footer_logo && settings.social_links.footer_logo.trim() !== '' 
+        ? settings.social_links.footer_logo 
+        : "/footer-logo-light.png");
 
-  const [croppedLogo, setCroppedLogo] = useState<string | null>(() => {
-    return croppedFooterLogoCache[rawLogoUrl] || null;
-  });
-
-  useEffect(() => {
-    if (!rawLogoUrl) return;
-    
-    if (croppedFooterLogoCache[rawLogoUrl]) {
-      setCroppedLogo(croppedFooterLogoCache[rawLogoUrl]);
-      return;
-    }
-
-    setCroppedLogo(null);
-
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = rawLogoUrl;
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
-          setCroppedLogo(rawLogoUrl);
-          return;
-        }
-
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.drawImage(img, 0, 0);
-
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const { data, width, height } = imgData;
-
-        let minX = width, minY = height, maxX = 0, maxY = 0;
-        let hasAlpha = false;
-
-        for (let y = 0; y < height; y++) {
-          for (let x = 0; x < width; x++) {
-            const alpha = data[(y * width + x) * 4 + 3];
-            if (alpha > 5) {
-              hasAlpha = true;
-              if (x < minX) minX = x;
-              if (x > maxX) maxX = x;
-              if (y < minY) minY = y;
-              if (y > maxY) maxY = y;
-            }
-          }
-        }
-
-        if (!hasAlpha || maxX < minX || maxY < minY) {
-          croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
-          setCroppedLogo(rawLogoUrl);
-          return;
-        }
-
-        const croppedWidth = maxX - minX + 1;
-        const croppedHeight = maxY - minY + 1;
-
-        const croppedCanvas = document.createElement('canvas');
-        croppedCanvas.width = croppedWidth;
-        croppedCanvas.height = croppedHeight;
-        const croppedCtx = croppedCanvas.getContext('2d');
-        if (!croppedCtx) {
-          croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
-          setCroppedLogo(rawLogoUrl);
-          return;
-        }
-
-        croppedCtx.drawImage(
-          canvas,
-          minX, minY, croppedWidth, croppedHeight,
-          0, 0, croppedWidth, croppedHeight
-        );
-
-        const dataUrl = croppedCanvas.toDataURL();
-        croppedFooterLogoCache[rawLogoUrl] = dataUrl;
-        setCroppedLogo(dataUrl);
-      } catch (e) {
-        croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
-        setCroppedLogo(rawLogoUrl);
-      }
-    };
-    img.onerror = () => {
-      croppedFooterLogoCache[rawLogoUrl] = rawLogoUrl;
-      setCroppedLogo(rawLogoUrl);
-    };
-  }, [rawLogoUrl]);
   return (
     <footer className="bg-brand-dark pt-8 sm:pt-10 relative text-sm border-t-4 border-brand-green">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
@@ -128,12 +42,12 @@ export default function Footer() {
         {/* Mobile Section 1: Logo, Description, Socials */}
         <div className="flex md:hidden flex-col items-center text-center border-b border-gray-800/60 pb-8 mb-6">
             <img 
-              src={croppedLogo || rawLogoUrl} 
+              src={rawLogoUrl} 
               alt={settings?.business_name || "New Bharat Electricals"} 
-              className="h-12 w-auto object-contain mb-4"
+              className="h-16 sm:h-20 max-w-[300px] w-auto object-contain mb-4"
               onError={(e) => { 
                 const target = e.currentTarget;
-                if (target.src !== '/footer-logo-light.png') {
+                if (!target.src.includes('footer-logo-light.png')) {
                   target.src = '/footer-logo-light.png';
                 }
               }} 
@@ -199,23 +113,23 @@ export default function Footer() {
            <div className="col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-8 mt-4 md:border-t-0 md:pt-0 md:mt-0">
               <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">Contact Info</h4>
               
-              <div className="hidden md:flex justify-center lg:justify-start items-center p-0 w-full mb-2">
+              <div className="hidden md:flex justify-center lg:justify-start items-center p-0 w-full mb-3">
                 <img 
-                  src={croppedLogo || rawLogoUrl} 
+                  src={rawLogoUrl} 
                   alt={settings?.business_name || "New Bharat Electricals"} 
                   style={{ 
                     maxWidth: settings?.social_links?.footer_logo_size 
                       ? `${settings.social_links.footer_logo_size}px` 
-                      : undefined 
+                      : '340px' 
                   }} 
-                  className={`w-auto ${
+                  className={`w-auto h-auto ${
                     settings?.social_links?.footer_logo_size 
-                      ? '' 
-                      : 'h-12 sm:h-14 md:h-16 lg:h-18'
-                  } object-contain block transition-transform duration-300 hover:scale-[1.05]`} 
+                      ? 'max-h-[120px] md:max-h-[140px]' 
+                      : 'max-h-[80px] md:max-h-[100px] lg:max-h-[120px]'
+                  } max-w-full object-contain block transition-transform duration-300 hover:scale-[1.03]`} 
                   onError={(e) => { 
                     const target = e.currentTarget;
-                    if (target.src !== '/footer-logo-light.png') {
+                    if (!target.src.includes('footer-logo-light.png')) {
                       target.src = '/footer-logo-light.png';
                     }
                   }} 
@@ -230,7 +144,7 @@ export default function Footer() {
                    <div className="text-left">
                      <p className="font-bold text-sm mb-1 text-white">Corporate Office</p>
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
-                       {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
+                       {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'office')?.address) || 
                         settings?.office_address || 
                         'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun 243601,\nUttar Pradesh'}
                      </p>
@@ -244,7 +158,7 @@ export default function Footer() {
                    <div className="text-left">
                      <p className="font-bold text-sm mb-1 text-white">Warehouse</p>
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
-                       {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
+                       {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'warehouse')?.address) || 
                         settings?.warehouse_address || 
                         'Loda Bahedi,\nBudaun,\nUttar Pradesh – 243601'}
                      </p>

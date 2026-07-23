@@ -49,11 +49,13 @@ const GoogleSheetsPage = React.lazy(() => import('./pages/admin/GoogleSheetsPage
 const MediaLibrary = React.lazy(() => import('./pages/admin/MediaLibrary'));
 
 import { useStore, StoreProvider } from './context/StoreContext';
-import { MediaProvider } from './context/MediaContext';
+import { MediaProvider, useMedia } from './context/MediaContext';
+import { useCart } from './context/CartContext';
 
 
 const GlobalHead = () => {
   const { settings } = useStore();
+  if (settings === undefined) console.warn('[Startup] Warning: settings is undefined in GlobalHead');
   return (
       <Helmet>
         <title>{settings?.business_name || 'New Bharat Electricals'} | Trusted Solar & Electrical Solutions</title>
@@ -70,6 +72,8 @@ const GlobalHead = () => {
 
 const PublicLayout = () => {
   const { settings, categories, brands, loading } = useStore();
+  
+  if (categories === undefined) console.warn('[Startup] Warning: categories is undefined in PublicLayout');
 
   return (
     <div className="min-h-screen top-0 bg-white selection:bg-brand-green selection:text-white flex flex-col">
@@ -92,8 +96,23 @@ const AnalyticsTracker = () => {
   return null;
 };
 
+const AppStartupCheck = () => {
+  const media = useMedia();
+  const store = useStore();
+  const cart = useCart();
+  
+  useEffect(() => {
+    console.log('[Startup] MediaContext initialized:', !!media);
+    console.log('[Startup] StoreContext initialized:', !!store);
+    console.log('[Startup] CartContext initialized:', !!cart);
+  }, []);
+  
+  return null;
+};
+
 export default function App() {
   useEffect(() => {
+    console.log('[Startup] App component mounted');
     initAnalytics();
     try {
       window.sessionStorage.removeItem('retry-chunk-error');
@@ -103,70 +122,73 @@ export default function App() {
   }, []);
   
   return (
-    <HelmetProvider>
-      <MediaProvider>
-        <StoreProvider>
-          <GlobalHead />
-          <CartProvider>
-            <BrowserRouter>
-            <AnalyticsTracker />
-            <ScrollToTop />
-            <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div></div>}>
-            <Routes>
-              <Route path="/admin-login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Navigate to="dashboard" replace />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="media-library" element={<MediaLibrary />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="products" element={<Products />} />
-                <Route path="products/new" element={<ProductForm />} />
-                <Route path="products/:id/edit" element={<ProductForm />} />
-                <Route path="inventory" element={<Inventory />} />
-                <Route path="categories" element={<Categories />} />
-                <Route path="categories/new" element={<CategoryForm />} />
-                <Route path="categories/:id/edit" element={<CategoryForm />} />
-                <Route path="brands" element={<Brands />} />
-                <Route path="brands/new" element={<BrandForm />} />
-                <Route path="brands/:id/edit" element={<BrandForm />} />
-                <Route path="brand-slider" element={<BrandSliderAdmin />} />
-                <Route path="customers" element={<Customers />} />
-                <Route path="quotes" element={<Quotes />} />
-                <Route path="leads" element={<Leads />} />
-                <Route path="navigation" element={<Navigation />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="locations" element={<Locations />} />
-                <Route path="sheets" element={<GoogleSheetsPage />} />
-                <Route path="power-solutions/:subcategory" element={<CategoryProductManager />} />
-                <Route path="solar-solutions/:subcategory" element={<CategoryProductManager />} />
-              </Route>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <MediaProvider>
+          <StoreProvider>
+            <GlobalHead />
+            <CartProvider>
+              <BrowserRouter>
+              <AppStartupCheck />
+              <AnalyticsTracker />
+              <ScrollToTop />
+              <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div></div>}>
+              <Routes>
+                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<Navigate to="dashboard" replace />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="media-library" element={<MediaLibrary />} />
+                  <Route path="orders" element={<Orders />} />
+                  <Route path="products" element={<Products />} />
+                  <Route path="products/new" element={<ProductForm />} />
+                  <Route path="products/:id/edit" element={<ProductForm />} />
+                  <Route path="inventory" element={<Inventory />} />
+                  <Route path="categories" element={<Categories />} />
+                  <Route path="categories/new" element={<CategoryForm />} />
+                  <Route path="categories/:id/edit" element={<CategoryForm />} />
+                  <Route path="brands" element={<Brands />} />
+                  <Route path="brands/new" element={<BrandForm />} />
+                  <Route path="brands/:id/edit" element={<BrandForm />} />
+                  <Route path="brand-slider" element={<BrandSliderAdmin />} />
+                  <Route path="customers" element={<Customers />} />
+                  <Route path="quotes" element={<Quotes />} />
+                  <Route path="leads" element={<Leads />} />
+                  <Route path="navigation" element={<Navigation />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="locations" element={<Locations />} />
+                  <Route path="sheets" element={<GoogleSheetsPage />} />
+                  <Route path="power-solutions/:subcategory" element={<CategoryProductManager />} />
+                  <Route path="solar-solutions/:subcategory" element={<CategoryProductManager />} />
+                </Route>
 
-            {/* Public Routes */}
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/catalogue" element={<Catalogue />} />
-              <Route path="/store-locator" element={<StoreLocator />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/order-success" element={<OrderSuccessPage />} />
-              <Route path="/about-us" element={<AboutUsPage />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
-              <Route path="/brands/:brandSlug" element={<BrandPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogPage />} />
-              <Route path="/seo-report" element={<SEOReportPage />} />
-              <Route path="/:category" element={<GenericCategoryPage />} />
-              <Route path="/:category/:subcategory" element={<GenericSubCategoryPage />} />
-              <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />
-            </Route>
-          </Routes>
-          </Suspense>
-        </BrowserRouter>
-        </CartProvider>
-      </StoreProvider>
-      </MediaProvider>
-    </HelmetProvider>
+              {/* Public Routes */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/catalogue" element={<Catalogue />} />
+                <Route path="/store-locator" element={<StoreLocator />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/order-success" element={<OrderSuccessPage />} />
+                <Route path="/about-us" element={<AboutUsPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
+                <Route path="/brands/:brandSlug" element={<BrandPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:slug" element={<BlogPage />} />
+                <Route path="/seo-report" element={<SEOReportPage />} />
+                <Route path="/:category" element={<GenericCategoryPage />} />
+                <Route path="/:category/:subcategory" element={<GenericSubCategoryPage />} />
+                <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />
+              </Route>
+            </Routes>
+            </Suspense>
+          </BrowserRouter>
+          </CartProvider>
+        </StoreProvider>
+        </MediaProvider>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }

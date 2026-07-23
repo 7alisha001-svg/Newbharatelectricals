@@ -43,15 +43,17 @@ export default function ProductPage() {
     sku: rawProduct.sku || `NBE-${(rawProduct.id || '').substring(0, 6).toUpperCase()}`,
     stockStatus: (rawProduct.stock_quantity ?? 0) > 0 ? 'In Stock' : 'Out of Stock',
     description: rawProduct.description,
-    features: rawProduct.features || [],
+    features: Array.isArray(rawProduct.features) ? rawProduct.features : [],
     originalPrice: regPrice.toLocaleString('en-IN'),
     price: salePrice.toLocaleString('en-IN'),
     rawPrice: salePrice.toString(),
     discount: discountPercent > 0 ? `${discountPercent}% OFF` : null,
     rating: 4.8,
     reviews: 124,
-    images: rawProduct.gallery_images?.length > 0 ? rawProduct.gallery_images : (rawProduct.image_url ? [rawProduct.image_url] : []),
-    specifications: rawProduct.specs || []
+    images: Array.isArray(rawProduct.gallery_images) && rawProduct.gallery_images.length > 0 
+      ? rawProduct.gallery_images 
+      : (rawProduct.image_url ? [rawProduct.image_url] : ['/placeholder.png']),
+    specifications: Array.isArray(rawProduct.specs) ? rawProduct.specs : []
   };
 
 

@@ -1,4 +1,5 @@
 import { useStore } from '../../context/StoreContext';
+import { useMedia } from '../../context/MediaContext';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { 
@@ -45,6 +46,7 @@ export default function Settings() {
   });
 
   const { refreshStore } = useStore();
+  const { saveMedia, refreshMedia } = useMedia();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -70,7 +72,29 @@ export default function Settings() {
     setMessage({ text: '', type: '' });
     try {
       await supabase.from('settings').upsert({ id: 'global', ...settings });
+
+      if (settings.social_links?.footer_logo) {
+        await saveMedia({
+          image_key: 'footer_logo',
+          title: 'Footer Logo (Light Theme)',
+          category: 'Header & Footer',
+          image_url: settings.social_links.footer_logo,
+          alt_text: 'New Bharat Electricals Footer Logo'
+        });
+      }
+
+      if (settings.logo_url) {
+        await saveMedia({
+          image_key: 'header_logo',
+          title: 'Header Logo (Dark Theme)',
+          category: 'Header & Footer',
+          image_url: settings.logo_url,
+          alt_text: 'New Bharat Electricals Header Logo'
+        });
+      }
+
       await refreshStore();
+      await refreshMedia();
       setMessage({ text: 'Website settings and content saved successfully!', type: 'success' });
     } catch (error: any) {
       console.error("Error saving settings:", error);
@@ -247,11 +271,11 @@ export default function Settings() {
                 />
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">
-                    Footer Logo Size ({settings.social_links?.footer_logo_size || 240}px)
+                    Footer Logo Size ({settings.social_links?.footer_logo_size || 340}px)
                   </label>
                   <input 
                     type="range" min="100" max="500" step="10"
-                    value={settings.social_links?.footer_logo_size || 240}
+                    value={settings.social_links?.footer_logo_size || 340}
                     onChange={(e) => handleSocialChange('footer_logo_size', parseInt(e.target.value))}
                     className="w-full"
                   />

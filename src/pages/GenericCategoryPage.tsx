@@ -21,10 +21,7 @@ export default function GenericCategoryPage() {
         name: 'Power Solutions',
         slug: 'power-solutions',
         description: 'High-performance inverters, tall tubular batteries, and integrated combo power backups.',
-        image_url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop',
-        display_order: 1,
-        is_active: true,
-        created_at: ''
+        image_url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop'
       };
     } else if (categorySlug === 'solar-solutions') {
       currentCategory = {
@@ -32,10 +29,7 @@ export default function GenericCategoryPage() {
         name: 'Solar Solutions',
         slug: 'solar-solutions',
         description: 'Complete range of solar on-grid, off-grid and hybrid PCUs, advanced solar panels, and solar charge controllers.',
-        image_url: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop',
-        display_order: 2,
-        is_active: true,
-        created_at: ''
+        image_url: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop'
       };
     }
   }

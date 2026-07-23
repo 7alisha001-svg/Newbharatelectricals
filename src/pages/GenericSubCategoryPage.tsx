@@ -62,7 +62,7 @@ export default function GenericSubCategoryPage() {
     }) || [];
 
     const dbSolarCategories = storeCategories
-      .filter(c => c.is_active !== false && (c.slug?.startsWith('solar-') || c.slug?.includes('solar')))
+      .filter(c => (c.slug?.startsWith('solar-') || c.slug?.includes('solar')))
       .map(c => ({ name: c.name, slug: c.slug }));
 
     const mergedCategoriesMap = new Map<string, { name: string; slug: string }>();
@@ -89,7 +89,7 @@ export default function GenericSubCategoryPage() {
     }) || [];
 
     const dbPowerCategories = storeCategories
-      .filter(c => c.is_active !== false && !c.slug?.startsWith('solar-') && !c.slug?.includes('solar') && c.slug !== 'amaze')
+      .filter(c => !c.slug?.startsWith('solar-') && !c.slug?.includes('solar') && c.slug !== 'amaze')
       .map(c => ({ name: c.name, slug: c.slug }));
 
     const mergedCategoriesMap = new Map<string, { name: string; slug: string }>();
@@ -210,29 +210,6 @@ export default function GenericSubCategoryPage() {
                   )}
                </div>
 
-               {/* Sort Options Mock */}
-               <div className="p-6">
-                  <h5 className="font-bold text-gray-900 mb-4">Sort By</h5>
-                  <div className="space-y-3">
-                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
-                      <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" defaultChecked />
-                      <span>Recommended</span>
-                    </label>
-                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
-                      <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" />
-                      <span>New Arrivals</span>
-                    </label>
-                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
-                      <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" />
-                      <span>Capacity: Low to High</span>
-                    </label>
-                    <label className="flex items-center space-x-3 text-sm text-gray-900 font-medium cursor-pointer">
-                      <input type="radio" name="sort" className="form-radio text-brand-green focus:ring-brand-green h-4 w-4" />
-                      <span>Capacity: High to Low</span>
-                    </label>
-                  </div>
-               </div>
-               
                {/* Quick Info Box */}
                <div className="bg-brand-green text-white p-6 m-4 rounded-2xl hidden lg:block">
                   <h5 className="font-bold mb-2">Need Expert Help?</h5>

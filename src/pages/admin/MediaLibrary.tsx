@@ -1,11 +1,13 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { 
   Upload, Search, Image as ImageIcon, Copy, Check, Trash2, Edit3, 
   Eye, RefreshCw, X, Layers, AlertCircle, Sparkles, Filter, Link2,
   LayoutGrid, List, CheckSquare, Square, Download, Sliders, FileText,
-  Clock, HardDrive, Maximize2, Zap
+  Clock, HardDrive, Maximize2, Zap, Save
 } from 'lucide-react';
 import { useMedia } from '../../context/MediaContext';
+import { useStore } from '../../context/StoreContext';
+import { supabase } from '../../lib/supabase';
 import { WebsiteMedia, MediaCategory } from '../../types/media';
 import { uploadMediaFile } from '../../lib/mediaService';
 
@@ -21,8 +23,15 @@ const CATEGORIES: MediaCategory[] = [
   'General'
 ];
 
+interface PendingChange {
+  file: File;
+  previewUrl: string;
+  item: WebsiteMedia;
+}
+
 export default function MediaLibrary() {
   const { mediaItems, saveMedia, deleteMedia, refreshMedia } = useMedia();
+  const { refreshStore } = useStore();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MediaCategory>('All');
@@ -40,7 +49,10 @@ export default function MediaLibrary() {
   const [previewModalItem, setPreviewModalItem] = useState<WebsiteMedia | null>(null);
   const [editModalItem, setEditModalItem] = useState<WebsiteMedia | null>(null);
   const [replaceTargetItem, setReplaceTargetItem] = useState<WebsiteMedia | null>(null);
-  const [optimizeItem, setOptimizeItem] = useState<WebsiteMedia | null>(null);
+  
+  // Pending changes state
+  const [pendingChanges, setPendingChanges] = useState<Record<string, PendingChange>>({});
+  const [isSavingAll, setIsSavingAll] = useState(false);
   
   // Copy state
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -57,13 +69,26 @@ export default function MediaLibrary() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Canvas ref for image conversion/optimization
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
     setTimeout(() => setNotification(null), 4000);
   };
+
+  useEffect(() => {
+    const hasChanges = Object.keys(pendingChanges).length > 0;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    if (hasChanges) {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [pendingChanges]);
 
   const handleCopyUrl = (url: string, id: string) => {
     navigator.clipboard.writeText(url);
@@ -218,34 +243,78 @@ export default function MediaLibrary() {
       return;
     }
 
-    setIsUploading(true);
-    try {
-      const newUrl = await uploadMediaFile(file, (pct) => setUploadProgress(pct));
-      
-      await saveMedia({
-        id: replaceTargetItem.id,
-        image_key: replaceTargetItem.image_key,
-        title: replaceTargetItem.title,
-        category: replaceTargetItem.category,
-        image_url: newUrl,
-        alt_text: replaceTargetItem.alt_text
-      });
-
-      showNotification('success', `Updated image for ${replaceTargetItem.title}!`);
-      if (previewModalItem?.id === replaceTargetItem.id) {
-        setPreviewModalItem({ ...replaceTargetItem, image_url: newUrl });
+    const previewUrl = URL.createObjectURL(file);
+    setPendingChanges(prev => ({
+      ...prev,
+      [replaceTargetItem.id]: {
+        file,
+        previewUrl,
+        item: replaceTargetItem
       }
-      setReplaceTargetItem(null);
-    } catch (err: any) {
-      console.error('Replacement failed:', err);
-      showNotification('error', err.message || 'Failed to replace image.');
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
-      if (replaceFileInputRef.current) {
-        replaceFileInputRef.current.value = '';
-      }
+    }));
+    
+    // Close preview modal if it was open for this item
+    if (previewModalItem?.id === replaceTargetItem.id) {
+       setPreviewModalItem(null);
     }
+    setReplaceTargetItem(null);
+    if (replaceFileInputRef.current) replaceFileInputRef.current.value = '';
+  };
+
+  const handleSaveChanges = async () => {
+    if (isSavingAll || Object.keys(pendingChanges).length === 0) return;
+    setIsSavingAll(true);
+    let successCount = 0;
+    
+    try {
+      for (const [id, change] of Object.entries(pendingChanges)) {
+        const newUrl = await uploadMediaFile(change.file);
+        await saveMedia({
+          id: change.item.id,
+          image_key: change.item.image_key,
+          title: change.item.title,
+          category: change.item.category,
+          image_url: newUrl,
+          alt_text: change.item.alt_text
+        });
+
+        // Sync header/footer logo with settings table if changed
+        if (change.item.image_key === 'footer_logo') {
+          const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+          const socialLinks = settingsData?.social_links || {};
+          await supabase.from('settings').upsert({
+            id: 'global',
+            ...settingsData,
+            social_links: { ...socialLinks, footer_logo: newUrl }
+          });
+        } else if (change.item.image_key === 'header_logo') {
+          const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+          await supabase.from('settings').upsert({
+            id: 'global',
+            ...settingsData,
+            logo_url: newUrl
+          });
+        }
+
+        successCount++;
+      }
+      
+      await refreshStore();
+      showNotification('success', `Successfully saved ${successCount} image(s)!`);
+      
+      Object.values(pendingChanges).forEach(c => URL.revokeObjectURL(c.previewUrl));
+      setPendingChanges({});
+    } catch (err: any) {
+      console.error('Save failed:', err);
+      showNotification('error', err.message || 'Failed to save some images.');
+    } finally {
+      setIsSavingAll(false);
+    }
+  };
+
+  const handleCancelChanges = () => {
+    Object.values(pendingChanges).forEach(c => URL.revokeObjectURL(c.previewUrl));
+    setPendingChanges({});
   };
 
   const resetUploadForm = () => {
@@ -284,6 +353,25 @@ export default function MediaLibrary() {
 
     try {
       await saveMedia(editModalItem);
+
+      if (editModalItem.image_key === 'footer_logo') {
+        const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+        const socialLinks = settingsData?.social_links || {};
+        await supabase.from('settings').upsert({
+          id: 'global',
+          ...settingsData,
+          social_links: { ...socialLinks, footer_logo: editModalItem.image_url }
+        });
+      } else if (editModalItem.image_key === 'header_logo') {
+        const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+        await supabase.from('settings').upsert({
+          id: 'global',
+          ...settingsData,
+          logo_url: editModalItem.image_url
+        });
+      }
+
+      await refreshStore();
       showNotification('success', 'Image details saved!');
       setEditModalItem(null);
     } catch (err) {
@@ -522,16 +610,23 @@ export default function MediaLibrary() {
                 {/* Image Box */}
                 <div className="relative h-44 bg-gray-900/5 flex items-center justify-center p-3 border-b border-gray-100 overflow-hidden">
                   <img 
-                    src={item.image_url} 
+                    src={pendingChanges[item.id]?.previewUrl || item.image_url} 
                     alt={item.alt_text || item.title} 
                     className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
                     }}
                   />
-                  <div className="absolute top-2 left-2 bg-gray-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-lg">
-                    {item.category}
-                  </div>
+                  {pendingChanges[item.id] && (
+                    <div className="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow">
+                      Unsaved Change
+                    </div>
+                  )}
+                  {!pendingChanges[item.id] && (
+                    <div className="absolute top-2 left-2 bg-gray-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-lg">
+                      {item.category}
+                    </div>
+                  )}
                   
                   <button
                     onClick={() => setPreviewModalItem(item)}
@@ -566,7 +661,7 @@ export default function MediaLibrary() {
                       className="flex-1 flex items-center justify-center gap-1.5 bg-brand-green hover:bg-brand-dark text-white text-xs font-bold py-2 px-3 rounded-xl transition-colors shadow-sm disabled:opacity-50"
                     >
                       <RefreshCw size={14} className={isUploading && replaceTargetItem?.id === item.id ? 'animate-spin' : ''} />
-                      <span>{isUploading && replaceTargetItem?.id === item.id ? 'Replacing...' : 'Replace Image'}</span>
+                      <span>{pendingChanges[item.id] ? 'Change Again' : 'Replace Image'}</span>
                     </button>
 
                     <button
@@ -611,13 +706,18 @@ export default function MediaLibrary() {
               >
                 <div className="h-36 bg-gray-50 flex items-center justify-center p-2 relative overflow-hidden">
                   <img 
-                    src={item.image_url} 
+                    src={pendingChanges[item.id]?.previewUrl || item.image_url} 
                     alt={item.alt_text || item.title} 
                     className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
                     }}
                   />
+                  {pendingChanges[item.id] && (
+                    <div className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow z-10">
+                      Unsaved
+                    </div>
+                  )}
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
@@ -826,7 +926,7 @@ export default function MediaLibrary() {
             {/* Left Preview Image */}
             <div className="md:w-1/2 bg-gray-900/5 border border-gray-100 rounded-2xl flex items-center justify-center p-4 min-h-[250px]">
               <img 
-                src={previewModalItem.image_url} 
+                src={pendingChanges[previewModalItem.id]?.previewUrl || previewModalItem.image_url} 
                 alt={previewModalItem.alt_text || previewModalItem.title} 
                 className="max-h-[350px] max-w-full object-contain rounded-lg shadow-sm"
               />
@@ -938,7 +1038,7 @@ export default function MediaLibrary() {
                 <label className="block text-xs font-bold text-gray-700 mb-1">Category</label>
                 <select
                   value={editModalItem.category}
-                  onChange={(e) => setEditModalItem({ ...editModalItem, category: e.target.value })}
+                  onChange={(e) => setEditModalItem({ ...editModalItem, category: e.target.value as MediaCategory })}
                   className="w-full px-3 py-2.5 text-xs border border-gray-200 rounded-xl outline-none focus:border-brand-green"
                 >
                   {CATEGORIES.filter(c => c !== 'All').map(cat => (
@@ -990,10 +1090,42 @@ export default function MediaLibrary() {
                   type="submit"
                   className="flex-1 py-3 text-xs font-bold text-white bg-brand-green hover:bg-brand-dark rounded-xl transition-colors shadow-md"
                 >
-                  Save Changes
+                  Save Details
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* STICKY SAVE BAR */}
+      {Object.keys(pendingChanges).length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-200 shadow-2xl rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4 min-w-[320px] max-w-lg w-full animate-fade-in-up">
+          <div className="flex-1 flex items-center gap-3">
+            <div className="bg-amber-100 text-amber-600 p-2 rounded-xl">
+              <AlertCircle size={24} />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900">Unsaved Changes</p>
+              <p className="text-xs text-gray-500">{Object.keys(pendingChanges).length} image(s) ready to update</p>
+            </div>
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <button
+              onClick={handleCancelChanges}
+              disabled={isSavingAll}
+              className="flex-1 sm:flex-none px-4 py-2 text-sm font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSavingAll}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 text-sm font-bold text-white bg-brand-green hover:bg-brand-dark rounded-xl shadow-md transition-colors disabled:opacity-50"
+            >
+              {isSavingAll ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}
+              <span>{isSavingAll ? 'Saving...' : 'Save Changes'}</span>
+            </button>
           </div>
         </div>
       )}

@@ -32,12 +32,12 @@ export default function LocationsPreview() {
             <div className="flex-1">
               <h3 className="text-2xl font-black text-gray-900 mb-2">Corporate Office</h3>
               <p className="text-gray-900 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
-                {settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.address || 
+                {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'office')?.address) || 
                  settings?.office_address || 
                  'Near Dr Amar Singh, Chaudhry Sarai, Budaun'}
               </p>
               <a 
-                href={settings?.social_links?.locations?.find((l: any) => l.type === 'office')?.map_link || 'https://maps.google.com/?q=New+Bharat+Electricals,Budaun'}
+                href={(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'office')?.map_link) || 'https://maps.google.com/?q=New+Bharat+Electricals,Budaun'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-brand-green font-bold hover:text-brand-green-dark transition-colors"
@@ -61,12 +61,12 @@ export default function LocationsPreview() {
             <div className="flex-1">
               <h3 className="text-2xl font-black text-gray-900 mb-2">Warehouse</h3>
               <p className="text-gray-900 mb-4 line-clamp-2 text-lg font-medium tracking-wide">
-                {settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.address || 
+                {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'warehouse')?.address) || 
                  settings?.warehouse_address || 
                  'Budaun, Loda Bahedi, Uttar Pradesh'}
               </p>
               <a 
-                href={settings?.social_links?.locations?.find((l: any) => l.type === 'warehouse')?.map_link || 'https://maps.google.com/?q=Loda+Bahedi,Budaun'}
+                href={(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'warehouse')?.map_link) || 'https://maps.google.com/?q=Loda+Bahedi,Budaun'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-brand-green font-bold hover:text-brand-green-dark transition-colors"

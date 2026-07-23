@@ -23,10 +23,10 @@ export default function Home() {
       <FeaturedProducts />
       <PromoBanners />
       <TrendingProducts />
-      <Testimonials />
-      <WhyUs />
       <CompanyStats />
       <About />
+      <WhyUs />
+      <Testimonials />
       <LocationsPreview />
     </>
   );
