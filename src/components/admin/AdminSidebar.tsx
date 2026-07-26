@@ -83,10 +83,10 @@ export default function AdminSidebar({
 
       {/* Sidebar */}
       <div className={`
-        fixed lg:sticky top-0 left-0 h-screen bg-gray-900 text-white w-64 z-50 transition-transform duration-300 ease-in-out flex flex-col
+        fixed lg:sticky top-0 left-0 h-screen bg-gray-900 text-white w-64 z-50 transition-transform duration-300 ease-in-out flex flex-col flex-shrink-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div className="flex items-center justify-between py-3 px-5 border-b border-gray-800">
+        <div className="flex items-center justify-between py-3 px-5 border-b border-gray-800 flex-shrink-0">
           <Link to="/" className="flex items-center hover:opacity-100 transition-opacity p-0 m-0 overflow-visible">
             <img 
               src={settings?.social_links?.footer_logo || "/footer-logo-light.png"} 
@@ -182,7 +182,7 @@ export default function AdminSidebar({
           </div>
         </nav>
 
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-gray-800 flex-shrink-0 bg-gray-900">
           <div className="mb-4 px-4">
             <p className="text-sm font-medium text-white truncate">{adminUser?.full_name || 'Admin'}</p>
             <p className="text-xs text-gray-400 truncate">{adminUser?.email || 'Loading...'}</p>

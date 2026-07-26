@@ -25,6 +25,10 @@ export const MediaImage: React.FC<MediaImageProps> = ({
   const dynamicSrc = getMediaUrl(imageKey, defaultSrc);
   const dynamicAlt = alt || getMediaAlt(imageKey, alt);
 
+  React.useEffect(() => {
+    setHasError(false);
+  }, [dynamicSrc, defaultSrc]);
+
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (!hasError) {
       setHasError(true);

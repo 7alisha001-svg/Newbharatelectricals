@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useMedia } from '../context/MediaContext';
+import MediaImage from './MediaImage';
 import { mainNavLinks } from '../data/navigation';
 
 const croppedNavbarLogoCache: Record<string, string> = {};
@@ -92,6 +93,7 @@ export interface HeaderProps {
 
 export default function Navbar(props: HeaderProps = {}) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const store = useStore();
@@ -163,110 +165,41 @@ export default function Navbar(props: HeaderProps = {}) {
     ? mediaHeaderLogo
     : (settings?.logo_url || "/header-logo-dark.png");
 
-  const [croppedLogo, setCroppedLogo] = useState<string>(() => {
-    if (rawLogoUrl === "/header-logo-dark.png") {
-      return "/header-logo-dark.png";
-    }
-    return croppedNavbarLogoCache[rawLogoUrl] || rawLogoUrl;
-  });
-
+  // Scroll direction detection for sticky header visibility
   useEffect(() => {
-    if (!rawLogoUrl) return;
-    
-    // Skip canvas cropping for default pre-cropped logo to avoid any async delays
-    if (rawLogoUrl === "/header-logo-dark.png") {
-      setCroppedLogo("/header-logo-dark.png");
-      return;
-    }
-    
-    if (croppedNavbarLogoCache[rawLogoUrl]) {
-      setCroppedLogo(croppedNavbarLogoCache[rawLogoUrl]);
-      return;
-    }
+    let previousScrollY = window.scrollY;
+    let ticking = false;
 
-    const img = new Image();
-    if (rawLogoUrl.startsWith('http://') || rawLogoUrl.startsWith('https://')) {
-      img.crossOrigin = "anonymous";
-    }
-    img.src = rawLogoUrl;
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
-          setCroppedLogo(rawLogoUrl);
-          return;
-        }
+    const handleScrollUpdate = () => {
+      const currentScrollY = window.scrollY;
 
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.drawImage(img, 0, 0);
+      // Update shadow background when scrolled past 10px
+      setIsScrolled(currentScrollY > 10);
 
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const { data, width, height } = imgData;
+      // Pure scroll direction detection without minimum distance thresholds
+      if (currentScrollY <= 0) {
+        setIsVisible(true);
+      } else if (currentScrollY > previousScrollY) {
+        // Scrolling DOWN -> Hide Header immediately
+        setIsVisible(false);
+      } else if (currentScrollY < previousScrollY) {
+        // Scrolling UP -> Show Header immediately on first upward pixel/notch
+        setIsVisible(true);
+      }
 
-        let minX = width, minY = height, maxX = 0, maxY = 0;
-        let hasAlpha = false;
+      previousScrollY = currentScrollY;
+      ticking = false;
+    };
 
-        for (let y = 0; y < height; y++) {
-          for (let x = 0; x < width; x++) {
-            const alpha = data[(y * width + x) * 4 + 3];
-            if (alpha > 5) {
-              hasAlpha = true;
-              if (x < minX) minX = x;
-              if (x > maxX) maxX = x;
-              if (y < minY) minY = y;
-              if (y > maxY) maxY = y;
-            }
-          }
-        }
-
-        if (!hasAlpha || maxX < minX || maxY < minY) {
-          croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
-          setCroppedLogo(rawLogoUrl);
-          return;
-        }
-
-        const croppedWidth = maxX - minX + 1;
-        const croppedHeight = maxY - minY + 1;
-
-        const croppedCanvas = document.createElement('canvas');
-        croppedCanvas.width = croppedWidth;
-        croppedCanvas.height = croppedHeight;
-        const croppedCtx = croppedCanvas.getContext('2d');
-        if (!croppedCtx) {
-          croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
-          setCroppedLogo(rawLogoUrl);
-          return;
-        }
-
-        croppedCtx.drawImage(
-          canvas,
-          minX, minY, croppedWidth, croppedHeight,
-          0, 0, croppedWidth, croppedHeight
-        );
-
-        const dataUrl = croppedCanvas.toDataURL();
-        croppedNavbarLogoCache[rawLogoUrl] = dataUrl;
-        setCroppedLogo(dataUrl);
-      } catch (e) {
-        croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
-        setCroppedLogo(rawLogoUrl);
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleScrollUpdate);
+        ticking = true;
       }
     };
-    img.onerror = () => {
-      croppedNavbarLogoCache[rawLogoUrl] = rawLogoUrl;
-      setCroppedLogo(rawLogoUrl);
-    };
-  }, [rawLogoUrl]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
@@ -284,6 +217,8 @@ export default function Navbar(props: HeaderProps = {}) {
   if (!isReady) {
     return <HeaderSkeleton />;
   }
+
+  const shouldHide = !isVisible && !mobileMenuOpen;
 
   return (
     <>
@@ -307,16 +242,22 @@ export default function Navbar(props: HeaderProps = {}) {
         </div>
       </div>
 
-      <header className={`sticky w-full top-0 z-50 transition-all duration-300 bg-white border-none ${isScrolled ? 'shadow-md' : ''}`}>
+      <header className={`sticky w-full top-0 z-50 bg-white border-none transition-transform duration-300 ease-in-out transform ${
+        shouldHide 
+          ? '-translate-y-full shadow-none pointer-events-none' 
+          : 'translate-y-0 ' + (isScrolled ? 'shadow-md' : '')
+      }`}>
         <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-0.5 md:py-2">
           {/* Main Header / Logo / Search / Icons */}
           <div className="flex items-center justify-between gap-2 md:gap-4 mb-0">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0 p-0 m-0">
               <Link to="/" className="flex items-center group p-0 m-0">
-                <img 
-                  src={croppedLogo || rawLogoUrl || "/header-logo-dark.png"} 
-                  alt={settings?.business_name || "New Bharat Electricals"} 
+                <MediaImage 
+                  imageKey="header_logo"
+                  defaultSrc={settings?.logo_url || "/header-logo-dark.png"} 
+                  fallbackSrc="/header-logo-dark.png"
+                  alt={settings?.business_name || "New Bharat Electricals Header Logo"} 
                   fetchPriority="high"
                   loading="eager"
                   style={{
@@ -326,12 +267,7 @@ export default function Navbar(props: HeaderProps = {}) {
                     maxHeight: '72px'
                   }}
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0"
-                  onError={(e) => { 
-                    const target = e.currentTarget;
-                    if (!target.src.includes('header-logo-dark.png')) {
-                      target.src = '/header-logo-dark.png';
-                    }
-                  }} />
+                />
               </Link>
             </div>
 

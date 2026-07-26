@@ -135,8 +135,8 @@ export const SEO: React.FC<SEOProps> = ({
       'itemListElement': breadcrumbs.map((crumb, idx) => ({
         '@type': 'ListItem',
         'position': idx + 1,
-        'name': crumb.name,
-        'item': crumb.url.startsWith('http') ? crumb.url : `${siteUrl}${crumb.url}`
+        'name': crumb.name || '',
+        'item': (crumb.url || '').startsWith('http') ? crumb.url : `${siteUrl}${crumb.url || ''}`
       }))
     };
     finalSchemas.push(breadcrumbSchema);

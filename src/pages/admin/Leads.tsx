@@ -57,11 +57,11 @@ export default function Leads() {
         if (searchTerm) {
           const lowerSearch = searchTerm.toLowerCase();
           filtered = filtered.filter(lead => 
-            lead.name.toLowerCase().includes(lowerSearch) ||
-            lead.phone.toLowerCase().includes(lowerSearch) ||
-            lead.email.toLowerCase().includes(lowerSearch) ||
-            lead.city.toLowerCase().includes(lowerSearch) ||
-            lead.interestedIn.toLowerCase().includes(lowerSearch)
+            (lead.name || '').toLowerCase().includes(lowerSearch) ||
+            (lead.phone || '').toLowerCase().includes(lowerSearch) ||
+            (lead.email || '').toLowerCase().includes(lowerSearch) ||
+            (lead.city || '').toLowerCase().includes(lowerSearch) ||
+            (lead.interestedIn || '').toLowerCase().includes(lowerSearch)
           );
         }
 

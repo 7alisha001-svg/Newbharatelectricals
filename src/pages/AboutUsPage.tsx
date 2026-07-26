@@ -163,9 +163,10 @@ export default function AboutUsPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl lg:text-7xl font-heading font-black text-white mb-6 uppercase tracking-tight drop-shadow-lg"
+            style={{ color: '#FFFFFF' }}
           >
             Powering Trust.<br />
-            <span className="text-brand-lime">Delivering Excellence.</span>
+            <span className="text-[#84CC16]">Delivering Excellence.</span>
           </motion.h1>
           <motion.div 
             initial={{ opacity: 0, width: 0 }}
@@ -177,7 +178,7 @@ export default function AboutUsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-white text-lg md:text-2xl max-w-3xl mx-auto font-semibold tracking-wide drop-shadow-md"
+            className="text-[#D1D5DB] text-lg md:text-2xl max-w-3xl mx-auto font-semibold tracking-wide drop-shadow-md"
           >
             Your premier destination for high-performance Power Solutions, Solar Energy Systems, and essential Electrical Products.
           </motion.p>
@@ -290,11 +291,11 @@ export default function AboutUsPage() {
       {/* Our Team */}
       <section className="py-16 md:py-20 bg-brand-dark text-white text-center">
         <div className="max-w-[800px] mx-auto px-4">
-          <Users size={64} className="mx-auto text-brand-lime mb-6" />
-          <h3 className="text-3xl md:text-5xl font-heading font-black uppercase tracking-tight mb-6">
+          <Users size={64} className="mx-auto text-[#84CC16] mb-6" />
+          <h3 className="text-3xl md:text-5xl font-heading font-black text-white uppercase tracking-tight mb-6" style={{ color: '#FFFFFF' }}>
             Our Strength: 50+ Dedicated Professionals
           </h3>
-          <p className="text-white text-lg md:text-xl font-semibold leading-relaxed">
+          <p className="text-[#D1D5DB] text-lg md:text-xl font-semibold leading-relaxed">
             Behind every successful product delivery and installation is our formidable team. With over 50 skilled employees working in harmony, we ensure that every client receives personalized attention, prompt service, and expert technical guidance. Our team is the true powerhouse of New Bharat Electricals.
           </p>
         </div>
@@ -429,26 +430,19 @@ export default function AboutUsPage() {
               {filteredImages.map((item) => (
                 <motion.div 
                   layout
-                  key={item.src}
+                  key={item.key}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                   className="relative aspect-square overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-xl hover:border-brand-green border border-gray-100 transition-all"
-                  onClick={() => setLightboxImage(item.src)}
+                  onClick={() => setLightboxImage(getMediaUrl(item.key, item.src))}
                 >
-                  <img 
-                    src={item.src} 
+                  <MediaImage 
+                    imageKey={item.key}
+                    defaultSrc={item.src}
                     alt={item.caption}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      if (target.src !== '/images/amaze-an-star-1475-1.jpg') {
-                        target.src = '/images/amaze-an-star-1475-1.jpg';
-                      }
-                    }}
                   />
                   {/* High contrast overlay with legible caption text */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
@@ -617,10 +611,10 @@ export default function AboutUsPage() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-green/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
         
         <div className="max-w-[1000px] mx-auto px-4 lg:px-8 text-center relative z-10">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black text-white uppercase tracking-tight mb-6">
-            Ready to Upgrade Your <span className="text-brand-lime">Power Solutions?</span>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black text-white uppercase tracking-tight mb-6" style={{ color: '#FFFFFF' }}>
+            Ready to Upgrade Your <span className="text-[#84CC16]">Power Solutions?</span>
           </h2>
-          <p className="text-white text-lg md:text-xl mb-10 max-w-2xl mx-auto font-semibold tracking-wide">
+          <p className="text-[#D1D5DB] text-lg md:text-xl mb-10 max-w-2xl mx-auto font-semibold tracking-wide">
             Get expert consultation for Power Solutions, Solar Systems, and Electrical Products from the industry leaders.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">

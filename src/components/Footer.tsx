@@ -3,6 +3,7 @@ import { MapPin, Facebook, Instagram, Linkedin, Twitter, Phone, Mail, Clock, Che
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { useMedia } from '../context/MediaContext';
+import MediaImage from './MediaImage';
 import { mainNavLinks as fallbackNavLinks } from '../data/navigation';
 
 export default function Footer() {
@@ -41,16 +42,12 @@ export default function Footer() {
 
         {/* Mobile Section 1: Logo, Description, Socials */}
         <div className="flex md:hidden flex-col items-center text-center border-b border-gray-800/60 pb-8 mb-6">
-            <img 
-              src={rawLogoUrl} 
-              alt={settings?.business_name || "New Bharat Electricals"} 
+            <MediaImage 
+              imageKey="footer_logo"
+              defaultSrc={settings?.social_links?.footer_logo || "/footer-logo-light.png"} 
+              fallbackSrc="/footer-logo-light.png"
+              alt={settings?.business_name || "New Bharat Electricals Footer Logo"} 
               className="h-16 sm:h-20 max-w-[300px] w-auto object-contain mb-4"
-              onError={(e) => { 
-                const target = e.currentTarget;
-                if (!target.src.includes('footer-logo-light.png')) {
-                  target.src = '/footer-logo-light.png';
-                }
-              }} 
             />
             <p className="text-gray-200 text-sm mb-6 max-w-[280px] leading-relaxed">
               Powering Every Home & Business with premium electrical and solar solutions.
@@ -114,9 +111,11 @@ export default function Footer() {
               <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">Contact Info</h4>
               
               <div className="hidden md:flex justify-center lg:justify-start items-center p-0 w-full mb-3">
-                <img 
-                  src={rawLogoUrl} 
-                  alt={settings?.business_name || "New Bharat Electricals"} 
+                <MediaImage 
+                  imageKey="footer_logo"
+                  defaultSrc={settings?.social_links?.footer_logo || "/footer-logo-light.png"} 
+                  fallbackSrc="/footer-logo-light.png"
+                  alt={settings?.business_name || "New Bharat Electricals Footer Logo"} 
                   style={{ 
                     maxWidth: settings?.social_links?.footer_logo_size 
                       ? `${settings.social_links.footer_logo_size}px` 
@@ -127,12 +126,6 @@ export default function Footer() {
                       ? 'max-h-[120px] md:max-h-[140px]' 
                       : 'max-h-[80px] md:max-h-[100px] lg:max-h-[120px]'
                   } max-w-full object-contain block transition-transform duration-300 hover:scale-[1.03]`} 
-                  onError={(e) => { 
-                    const target = e.currentTarget;
-                    if (!target.src.includes('footer-logo-light.png')) {
-                      target.src = '/footer-logo-light.png';
-                    }
-                  }} 
                 />
               </div>
 

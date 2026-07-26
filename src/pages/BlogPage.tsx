@@ -52,9 +52,9 @@ export default function BlogPage() {
   // Filtered Posts
   const filteredPosts = useMemo(() => {
     return blogPosts.filter(post => {
-      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            post.keywords.some(kw => kw.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchesSearch = (post.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            (post.excerpt || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            (post.keywords || []).some(kw => (kw || '').toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesCat = selectedCategory === 'All' || post.category === selectedCategory;
       return matchesSearch && matchesCat;
     });
@@ -267,7 +267,7 @@ export default function BlogPage() {
             
             <div className="max-w-4xl mx-auto relative z-20 text-white">
               {/* Breadcrumbs for Navigation & SEO */}
-              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs md:text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest">
+              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs md:text-sm font-bold text-[#D1D5DB] mb-6 uppercase tracking-widest">
                 <Link to="/" className="hover:text-brand-green transition">Home</Link>
                 <span>/</span>
                 <Link to="/blog" className="hover:text-brand-green transition">Knowledge Hub</Link>

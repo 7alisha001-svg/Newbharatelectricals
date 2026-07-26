@@ -75,7 +75,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen w-full overflow-hidden bg-gray-50 flex">
       <Helmet>
         <title>Admin Panel | New Bharat Electricals</title>
         <meta name="robots" content="noindex, nofollow" />
@@ -83,8 +83,8 @@ export default function AdminLayout() {
 
       <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 lg:hidden sticky top-0 z-30 shadow-xs">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 lg:hidden sticky top-0 z-30 shadow-xs flex-shrink-0">
           <button 
             onClick={() => setIsSidebarOpen(true)}
             className="text-gray-500 hover:text-gray-900 focus:outline-none p-2 -ml-2 rounded-lg hover:bg-gray-100"
@@ -94,7 +94,7 @@ export default function AdminLayout() {
           <div className="font-bold text-base text-gray-900 ml-2">Admin Portal</div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-4 lg:p-8">
           <ErrorBoundary>
             <Outlet />
           </ErrorBoundary>

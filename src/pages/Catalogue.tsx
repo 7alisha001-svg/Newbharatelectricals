@@ -30,6 +30,7 @@ export default function Catalogue() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-heading font-bold text-white mb-4"
+            style={{ color: '#FFFFFF' }}
           >
             Product Catalogues
           </motion.h1>
@@ -37,7 +38,7 @@ export default function Catalogue() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-gray-900 max-w-2xl mx-auto text-lg"
+            className="text-[#D1D5DB] max-w-2xl mx-auto text-lg font-medium"
           >
             Download our latest product brochures and technical specification sheets.
           </motion.p>

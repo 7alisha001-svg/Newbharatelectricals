@@ -53,10 +53,10 @@ export default function SEOReportPage() {
               <ShieldCheck size={12} />
               Production SEO Optimization
             </span>
-            <h1 className="text-3xl sm:text-5xl font-heading font-black text-white mb-6 tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-heading font-black text-white mb-6 tracking-tight leading-tight" style={{ color: '#FFFFFF' }}>
               SEO & AI-Search Engine Auditing Suite
             </h1>
-            <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p className="text-base sm:text-lg text-[#D1D5DB] max-w-2xl mx-auto font-medium leading-relaxed">
               Real-time audit performance, keyword mappings, schema structures, and Generative Engine Optimization (GEO) matrices for New Bharat Electricals.
             </p>
           </div>

@@ -18,9 +18,32 @@ interface MediaContextType {
 
 const MediaContext = createContext<MediaContextType | undefined>(undefined);
 
+const MEDIA_STORAGE_KEY = 'nbe_website_media_v2';
+
 export const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [dbMedia, setDbMedia] = useState<WebsiteMedia[]>([]);
+  const [dbMedia, setDbMedia] = useState<WebsiteMedia[]>(() => {
+    try {
+      const cached = localStorage.getItem(MEDIA_STORAGE_KEY);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+    } catch (e) {
+      console.warn('Could not parse cached media:', e);
+    }
+    return [];
+  });
   const [loading, setLoading] = useState(true);
+
+  // Sync dbMedia to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      if (dbMedia.length > 0) {
+        localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(dbMedia));
+      }
+    } catch (e) {
+      console.warn('Could not cache media to localStorage:', e);
+    }
+  }, [dbMedia]);
 
   // Merge dbMedia with default website slots (DB items override defaults with same image_key)
   const mediaMap = useMemo(() => {
@@ -58,7 +81,19 @@ export const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const refreshMedia = async () => {
     try {
       const data = await fetchMediaFromDb();
-      setDbMedia(data);
+      if (data && data.length > 0) {
+        setDbMedia((prev) => {
+          // Merge fetched data with existing state to avoid overwriting recent unsaved changes
+          const map = new Map<string, WebsiteMedia>();
+          prev.forEach((item) => map.set(item.image_key || item.id, item));
+          data.forEach((item) => map.set(item.image_key || item.id, item));
+          const updated = Array.from(map.values());
+          try {
+            localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(updated));
+          } catch (e) {}
+          return updated;
+        });
+      }
     } catch (err) {
       console.warn('Media fetch notice:', err);
     } finally {
@@ -107,13 +142,45 @@ export const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (saved) {
       setDbMedia((prev) => {
         const index = prev.findIndex((m) => m.id === saved.id || (m.image_key && m.image_key === saved.image_key));
+        let updated: WebsiteMedia[];
         if (index >= 0) {
-          const updated = [...prev];
+          updated = [...prev];
           updated[index] = saved;
-          return updated;
+        } else {
+          updated = [saved, ...prev];
         }
-        return [saved, ...prev];
+        try {
+          localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
       });
+
+      // Sync header/footer logo with settings table in Supabase
+      if (saved.image_key === 'header_logo') {
+        try {
+          const { data: sData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+          await supabase.from('settings').upsert({
+            id: 'global',
+            ...sData,
+            logo_url: saved.image_url
+          });
+        } catch (e) {
+          console.warn('Notice syncing logo_url to settings:', e);
+        }
+      } else if (saved.image_key === 'footer_logo') {
+        try {
+          const { data: sData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+          const socialLinks = sData?.social_links || {};
+          await supabase.from('settings').upsert({
+            id: 'global',
+            ...sData,
+            social_links: { ...socialLinks, footer_logo: saved.image_url }
+          });
+        } catch (e) {
+          console.warn('Notice syncing footer_logo to settings:', e);
+        }
+      }
+
       return saved;
     }
     throw new Error('Failed to save media record');
@@ -122,7 +189,13 @@ export const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const deleteMedia = async (id: string): Promise<boolean> => {
     const success = await deleteMediaFromDb(id);
     if (success) {
-      setDbMedia((prev) => prev.filter((m) => m.id !== id));
+      setDbMedia((prev) => {
+        const updated = prev.filter((m) => m.id !== id);
+        try {
+          localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
     }
     return success;
   };

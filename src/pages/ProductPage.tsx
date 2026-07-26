@@ -11,6 +11,7 @@ export default function ProductPage() {
   const { category, subcategory, productId } = useParams<{ category: string, subcategory: string, productId: string }>();
   const [quantity, setQuantity] = useState(1);
   const [pincode, setPincode] = useState('');
+  const [selectedImg, setSelectedImg] = useState<string | null>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
@@ -104,11 +105,17 @@ export default function ProductPage() {
             {/* Left - Image Gallery */}
             <div className="w-full md:w-1/2 p-6 sm:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
               <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
-                <img src={product.images[0]} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
+                <img src={selectedImg || product.images[0] || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
               </div>
-              <div className="flex gap-4">
-                {product.images.map((thumb, idx) => (
-                  <button key={idx} className="w-24 h-24 border-2 border-brand-orange rounded-2xl overflow-hidden bg-white p-2">
+              <div className="flex gap-4 overflow-x-auto pb-2">
+                {(product.images || []).map((thumb, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setSelectedImg(thumb)}
+                    className={`w-24 h-24 border-2 rounded-2xl overflow-hidden bg-white p-2 transition-all flex-shrink-0 ${
+                      (selectedImg || product.images[0]) === thumb ? 'border-brand-orange shadow-md' : 'border-gray-200 hover:border-brand-orange/50'
+                    }`}
+                  >
                     <img src={thumb} alt={`Thumbnail ${idx}`} className="w-full h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
                   </button>
                 ))}

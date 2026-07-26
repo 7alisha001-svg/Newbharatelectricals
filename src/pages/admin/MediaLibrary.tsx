@@ -103,10 +103,10 @@ export default function MediaLibrary() {
       const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch = !q || 
-        item.title.toLowerCase().includes(q) || 
-        item.image_key.toLowerCase().includes(q) || 
-        (item.alt_text && item.alt_text.toLowerCase().includes(q)) ||
-        item.category.toLowerCase().includes(q);
+        (item.title || '').toLowerCase().includes(q) || 
+        (item.image_key || '').toLowerCase().includes(q) || 
+        (item.alt_text || '').toLowerCase().includes(q) ||
+        (item.category || '').toLowerCase().includes(q);
 
       return matchesCategory && matchesSearch;
     });
@@ -221,6 +221,7 @@ export default function MediaLibrary() {
         alt_text: uploadAltText.trim() || uploadTitle.trim() || 'Website Image'
       });
 
+      await refreshMedia();
       showNotification('success', 'Image uploaded successfully!');
       setUploadModalOpen(false);
       resetUploadForm();
@@ -243,22 +244,62 @@ export default function MediaLibrary() {
       return;
     }
 
-    const previewUrl = URL.createObjectURL(file);
-    setPendingChanges(prev => ({
-      ...prev,
-      [replaceTargetItem.id]: {
-        file,
-        previewUrl,
-        item: replaceTargetItem
-      }
-    }));
-    
-    // Close preview modal if it was open for this item
-    if (previewModalItem?.id === replaceTargetItem.id) {
+    const targetItem = replaceTargetItem;
+    if (previewModalItem?.id === targetItem.id) {
        setPreviewModalItem(null);
     }
     setReplaceTargetItem(null);
     if (replaceFileInputRef.current) replaceFileInputRef.current.value = '';
+
+    setIsSavingAll(true);
+    showNotification('success', `Uploading and updating "${targetItem.title}"...`);
+
+    try {
+      const newUrl = await uploadMediaFile(file);
+
+      const saved = await saveMedia({
+        id: targetItem.id,
+        image_key: targetItem.image_key,
+        title: targetItem.title,
+        category: targetItem.category,
+        image_url: newUrl,
+        alt_text: targetItem.alt_text
+      });
+
+      // Sync header/footer logo with settings table in Supabase
+      if (targetItem.image_key === 'footer_logo') {
+        const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+        const socialLinks = settingsData?.social_links || {};
+        await supabase.from('settings').upsert({
+          id: 'global',
+          ...settingsData,
+          social_links: { ...socialLinks, footer_logo: newUrl }
+        });
+      } else if (targetItem.image_key === 'header_logo') {
+        const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'global').single();
+        await supabase.from('settings').upsert({
+          id: 'global',
+          ...settingsData,
+          logo_url: newUrl
+        });
+      }
+
+      // Clear pending changes for this item if any
+      setPendingChanges(prev => {
+        const copy = { ...prev };
+        delete copy[targetItem.id];
+        return copy;
+      });
+
+      await refreshStore();
+      await refreshMedia();
+      showNotification('success', `"${targetItem.title}" updated and live on website!`);
+    } catch (err: any) {
+      console.error('Replace failed:', err);
+      showNotification('error', err.message || 'Failed to replace image.');
+    } finally {
+      setIsSavingAll(false);
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -300,6 +341,7 @@ export default function MediaLibrary() {
       }
       
       await refreshStore();
+      await refreshMedia();
       showNotification('success', `Successfully saved ${successCount} image(s)!`);
       
       Object.values(pendingChanges).forEach(c => URL.revokeObjectURL(c.previewUrl));
@@ -372,6 +414,7 @@ export default function MediaLibrary() {
       }
 
       await refreshStore();
+      await refreshMedia();
       showNotification('success', 'Image details saved!');
       setEditModalItem(null);
     } catch (err) {
@@ -602,19 +645,34 @@ export default function MediaLibrary() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {filteredItems.map((item) => (
+            {filteredItems.map((item) => {
+              const isLogo = item.category === 'Header & Footer' || (item.image_key && item.image_key.includes('logo'));
+              return (
               <div 
                 key={item.id} 
                 className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col group"
               >
                 {/* Image Box */}
-                <div className="relative h-44 bg-gray-900/5 flex items-center justify-center p-3 border-b border-gray-100 overflow-hidden">
+                <div className={`relative flex items-center justify-center border-b border-gray-100 overflow-hidden ${
+                  isLogo 
+                    ? 'h-52 md:h-56 p-4 bg-slate-900 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:12px_12px]' 
+                    : 'h-48 p-3 bg-gray-900/5'
+                }`}>
                   <img 
                     src={pendingChanges[item.id]?.previewUrl || item.image_url} 
                     alt={item.alt_text || item.title} 
-                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                    className={`max-h-full max-w-full object-contain ${
+                      isLogo ? 'p-2 filter drop-shadow-md' : ''
+                    } group-hover:scale-105 transition-transform duration-300`}
                     onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                      const target = e.currentTarget;
+                      if (item.image_key === 'header_logo') {
+                        target.src = '/header-logo-dark.png';
+                      } else if (item.image_key === 'footer_logo') {
+                        target.src = '/footer-logo-light.png';
+                      } else {
+                        target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop';
+                      }
                     }}
                   />
                   {pendingChanges[item.id] && (
@@ -682,7 +740,8 @@ export default function MediaLibrary() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {filteredItems.length === 0 && (
@@ -924,11 +983,15 @@ export default function MediaLibrary() {
             </button>
 
             {/* Left Preview Image */}
-            <div className="md:w-1/2 bg-gray-900/5 border border-gray-100 rounded-2xl flex items-center justify-center p-4 min-h-[250px]">
+            <div className={`md:w-1/2 border border-gray-100 rounded-2xl flex items-center justify-center p-6 min-h-[260px] ${
+              previewModalItem.category === 'Header & Footer' || (previewModalItem.image_key && previewModalItem.image_key.includes('logo'))
+                ? 'bg-slate-900 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:12px_12px]'
+                : 'bg-gray-900/5'
+            }`}>
               <img 
                 src={pendingChanges[previewModalItem.id]?.previewUrl || previewModalItem.image_url} 
                 alt={previewModalItem.alt_text || previewModalItem.title} 
-                className="max-h-[350px] max-w-full object-contain rounded-lg shadow-sm"
+                className="max-h-[350px] max-w-full object-contain rounded-lg p-2"
               />
             </div>
 

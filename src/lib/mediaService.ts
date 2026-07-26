@@ -7,8 +7,13 @@ export async function compressAndConvertImage(
   maxWidth = 1920, 
   quality = 0.82
 ): Promise<File | Blob> {
-  // If vector SVG, return original file without canvas modification
-  if (file.type === 'image/svg+xml' || file.name.endsWith('.svg')) {
+  // If vector SVG or transparent PNG, return original file without canvas modification
+  if (
+    file.type === 'image/svg+xml' || 
+    file.type === 'image/png' || 
+    file.name.endsWith('.svg') || 
+    file.name.endsWith('.png')
+  ) {
     return file;
   }
 
@@ -88,7 +93,20 @@ export async function uploadMediaFile(
     console.warn('Image compression fallback to original file:', err);
   }
 
-  const fileExt = file.name.endsWith('.svg') ? 'svg' : 'webp';
+  let fileExt = 'webp';
+  let contentType = 'image/webp';
+
+  if (file.type === 'image/svg+xml' || file.name.endsWith('.svg')) {
+    fileExt = 'svg';
+    contentType = 'image/svg+xml';
+  } else if (file.type === 'image/png' || file.name.endsWith('.png')) {
+    fileExt = 'png';
+    contentType = 'image/png';
+  } else if (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
+    fileExt = 'jpg';
+    contentType = 'image/jpeg';
+  }
+
   const fileName = `${uuidv4()}.${fileExt}`;
   const filePath = `website/${fileName}`;
 
@@ -99,7 +117,7 @@ export async function uploadMediaFile(
       .upload(filePath, processedFile, {
         cacheControl: '31536000',
         upsert: true,
-        contentType: file.name.endsWith('.svg') ? 'image/svg+xml' : 'image/webp'
+        contentType
       });
 
     onProgress?.(80);
@@ -164,9 +182,40 @@ export async function fetchMediaFromDb(): Promise<WebsiteMedia[]> {
 }
 
 export async function saveMediaToDb(item: Partial<WebsiteMedia>): Promise<WebsiteMedia | null> {
+  const imageKey = item.image_key || `img_${Date.now()}`;
+
+  let validDbId: string | undefined = undefined;
+
+  // Always check if a DB record with this image_key already exists first
+  if (imageKey) {
+    try {
+      const { data: existing } = await supabase
+        .from('website_media')
+        .select('id')
+        .eq('image_key', imageKey)
+        .maybeSingle();
+      
+      if (existing?.id) {
+        validDbId = existing.id;
+      }
+    } catch (e) {
+      console.warn('Could not query existing media record by key:', e);
+    }
+  }
+
+  // If no existing record by image_key, check if item.id is a valid UUID
+  if (!validDbId && item.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.id)) {
+    validDbId = item.id;
+  }
+
+  // Generate new UUID if still undefined
+  if (!validDbId) {
+    validDbId = uuidv4();
+  }
+
   const payload = {
-    id: item.id || uuidv4(),
-    image_key: item.image_key || `img_${Date.now()}`,
+    id: validDbId,
+    image_key: imageKey,
     title: item.title || 'Untitled Image',
     category: item.category || 'General',
     image_url: item.image_url || '',
@@ -177,12 +226,12 @@ export async function saveMediaToDb(item: Partial<WebsiteMedia>): Promise<Websit
   try {
     const { data, error } = await supabase
       .from('website_media')
-      .upsert(payload)
+      .upsert(payload, { onConflict: 'id' })
       .select()
       .single();
 
     if (error) {
-      console.warn('Failed saving to website_media table (using returned payload):', error.message);
+      console.warn('Notice saving to website_media table (using returned payload):', error.message);
       return payload as WebsiteMedia;
     }
 

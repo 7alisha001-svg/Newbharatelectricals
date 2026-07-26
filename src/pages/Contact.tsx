@@ -155,6 +155,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-3xl md:text-5xl font-heading font-bold text-white mb-4 md:mb-6"
+              style={{ color: '#FFFFFF' }}
             >
               Contact Us
             </motion.h1>
@@ -162,7 +163,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-medium"
+              className="text-lg md:text-xl text-[#D1D5DB] max-w-2xl mx-auto font-medium"
             >
               Have questions about our products, dealer opportunities, or require support? We are here to help.
             </motion.p>
