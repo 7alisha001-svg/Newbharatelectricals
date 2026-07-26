@@ -60,7 +60,19 @@ export default function CartPage() {
                           >
                             <Trash2 size={18} />
                           </button>
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border border-gray-100 bg-center bg-contain bg-no-repeat shadow-sm" style={{ backgroundImage: `url(${item.imageUrl})` }}></div>
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border border-gray-100 p-2 shadow-sm flex items-center justify-center overflow-hidden">
+                            <img 
+                              src={item.imageUrl || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'} 
+                              alt={item.name} 
+                              className="w-full h-full object-contain"
+                              onError={(e) => { 
+                                const target = e.currentTarget; 
+                                if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { 
+                                  target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; 
+                                } 
+                              }} 
+                            />
+                          </div>
                           <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-base sm:text-lg line-clamp-2 pr-6 sm:pr-0">{item.name}</Link>
                         </div>
                         

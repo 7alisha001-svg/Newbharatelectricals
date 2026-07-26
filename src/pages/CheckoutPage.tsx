@@ -267,7 +267,19 @@ export default function CheckoutPage() {
                 <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                   {cart.map((item) => (
                     <div key={item.id} className="flex gap-4 group">
-                      <div className="w-20 h-20 bg-gray-50 rounded-xl border border-gray-100 bg-center bg-contain bg-no-repeat flex-shrink-0" style={{ backgroundImage: `url(${item.imageUrl})` }}></div>
+                      <div className="w-20 h-20 bg-gray-50 rounded-xl border border-gray-100 p-2 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <img 
+                          src={item.imageUrl || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'} 
+                          alt={item.name} 
+                          className="w-full h-full object-contain"
+                          onError={(e) => { 
+                            const target = e.currentTarget; 
+                            if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { 
+                              target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; 
+                            } 
+                          }} 
+                        />
+                      </div>
                       <div className="flex-1 py-1">
                         <h4 className="font-bold text-sm leading-tight text-gray-900 line-clamp-2 group-hover:text-brand-green transition-colors">{item.name}</h4>
                         <div className="text-gray-700 font-medium text-sm mt-2 font-medium">Qty: <span className="text-gray-900">{item.quantity}</span></div>

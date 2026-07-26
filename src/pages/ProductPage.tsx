@@ -52,7 +52,7 @@ export default function ProductPage() {
     reviews: 124,
     images: Array.isArray(rawProduct.gallery_images) && rawProduct.gallery_images.length > 0 
       ? rawProduct.gallery_images 
-      : (rawProduct.image_url ? [rawProduct.image_url] : ['/placeholder.png']),
+      : (rawProduct.image_url ? [rawProduct.image_url] : ['https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop']),
     specifications: Array.isArray(rawProduct.specs) ? rawProduct.specs : []
   };
 

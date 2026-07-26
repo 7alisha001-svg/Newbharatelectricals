@@ -159,7 +159,7 @@ export default function Navbar(props: HeaderProps = {}) {
   const { getMediaUrl } = useMedia();
 
   const mediaHeaderLogo = getMediaUrl('header_logo');
-  const rawLogoUrl = (mediaHeaderLogo && mediaHeaderLogo !== '/header-logo-dark.png')
+  const rawLogoUrl = (mediaHeaderLogo && mediaHeaderLogo.trim() !== '')
     ? mediaHeaderLogo
     : (settings?.logo_url || "/header-logo-dark.png");
 

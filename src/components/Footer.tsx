@@ -11,7 +11,7 @@ export default function Footer() {
   const mainNavLinks = (Array.isArray(settings?.social_links?.navigation) ? settings.social_links.navigation : fallbackNavLinks);
 
   const mediaFooterLogo = getMediaUrl('footer_logo');
-  const rawLogoUrl = (mediaFooterLogo && mediaFooterLogo.trim() !== '' && mediaFooterLogo !== '/footer-logo-light.png')
+  const rawLogoUrl = (mediaFooterLogo && mediaFooterLogo.trim() !== '')
     ? mediaFooterLogo
     : (settings?.social_links?.footer_logo && settings.social_links.footer_logo.trim() !== '' 
         ? settings.social_links.footer_logo 
