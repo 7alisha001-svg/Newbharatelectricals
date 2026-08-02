@@ -1,4 +1,3 @@
-</div>
 </motion.div>
 
 {/* Corporate Office - Bareilly */}
@@ -37,9 +36,3 @@
     </a>
   </div>
 </motion.div>
-
-</div>
-</div>
-</section>
-  );
-}
