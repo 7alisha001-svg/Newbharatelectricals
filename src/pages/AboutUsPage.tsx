@@ -519,7 +519,7 @@ export default function AboutUsPage() {
             <div className="w-16 h-1 bg-brand-green mx-auto rounded-full" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
             {/* Office Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -561,7 +561,7 @@ export default function AboutUsPage() {
               </div>
             </motion.div>
 
-            {/* Warehouse Card */}
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
