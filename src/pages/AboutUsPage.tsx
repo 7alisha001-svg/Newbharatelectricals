@@ -561,7 +561,7 @@ export default function AboutUsPage() {
               </div>
             </motion.div>
 
-            </motion.div>
+            <h3>Branch Office</h3>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
