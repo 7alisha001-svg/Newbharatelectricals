@@ -2,6 +2,24 @@ import { supabase } from './supabase';
 import { WebsiteMedia } from '../types/media';
 import { v4 as uuidv4 } from 'uuid';
 
+export function normalizeMediaUrl(imageUrl: string | null | undefined, version?: string | number): string {
+  if (!imageUrl) return '';
+
+  try {
+    const parsed = new URL(imageUrl);
+    const isSupabaseStorageUrl = parsed.hostname.includes('supabase') && parsed.pathname.includes('/storage/v1/object/public/');
+    if (isSupabaseStorageUrl) {
+      const separator = parsed.search ? '&' : '?';
+      const suffix = `v=${encodeURIComponent(String(version ?? Date.now()))}`;
+      return `${imageUrl}${separator}${suffix}`;
+    }
+  } catch {
+    // Keep relative and non-URL values as-is
+  }
+
+  return imageUrl;
+}
+
 export async function compressAndConvertImage(
   file: File, 
   maxWidth = 1920, 
@@ -138,7 +156,7 @@ export async function uploadMediaFile(
         .getPublicUrl(filePath);
 
       onProgress?.(100);
-      return publicUrl;
+      return normalizeMediaUrl(publicUrl, Date.now());
     }
 
     const { data: { publicUrl } } = supabase.storage
@@ -146,7 +164,7 @@ export async function uploadMediaFile(
       .getPublicUrl(filePath);
 
     onProgress?.(100);
-    return publicUrl;
+    return normalizeMediaUrl(publicUrl, Date.now());
   } catch (err) {
     console.warn('Supabase storage upload error, converting to data URL fallback:', err);
     // Fallback to Data URL if storage bucket fails
@@ -218,7 +236,7 @@ export async function saveMediaToDb(item: Partial<WebsiteMedia>): Promise<Websit
     image_key: imageKey,
     title: item.title || 'Untitled Image',
     category: item.category || 'General',
-    image_url: item.image_url || '',
+    image_url: normalizeMediaUrl(item.image_url, new Date().toISOString()),
     alt_text: item.alt_text || item.title || 'Website Image',
     updated_at: new Date().toISOString()
   };

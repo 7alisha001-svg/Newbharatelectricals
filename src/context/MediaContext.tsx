@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { WebsiteMedia } from '../types/media';
 import { DEFAULT_WEBSITE_MEDIA } from '../data/defaultMedia';
-import { fetchMediaFromDb, saveMediaToDb, deleteMediaFromDb } from '../lib/mediaService';
+import { fetchMediaFromDb, saveMediaToDb, deleteMediaFromDb, normalizeMediaUrl } from '../lib/mediaService';
 import { supabase } from '../lib/supabase';
 
 interface MediaContextType {
@@ -81,19 +81,30 @@ export const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const refreshMedia = async () => {
     try {
       const data = await fetchMediaFromDb();
-      if (data && data.length > 0) {
-        setDbMedia((prev) => {
-          // Merge fetched data with existing state to avoid overwriting recent unsaved changes
-          const map = new Map<string, WebsiteMedia>();
-          prev.forEach((item) => map.set(item.image_key || item.id, item));
-          data.forEach((item) => map.set(item.image_key || item.id, item));
-          const updated = Array.from(map.values());
-          try {
-            localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(updated));
-          } catch (e) {}
-          return updated;
-        });
+      const normalizedData = (data || []).map((item) => ({
+        ...item,
+        image_url: normalizeMediaUrl(item.image_url, item.updated_at || item.created_at || Date.now()),
+      }));
+
+      if (normalizedData.length === 0) {
+        setDbMedia([]);
+        try {
+          localStorage.removeItem(MEDIA_STORAGE_KEY);
+        } catch (e) {}
+        return;
       }
+
+      setDbMedia((prev) => {
+        // Merge fetched data with existing state to avoid overwriting recent unsaved changes
+        const map = new Map<string, WebsiteMedia>();
+        prev.forEach((item) => map.set(item.image_key || item.id, item));
+        normalizedData.forEach((item) => map.set(item.image_key || item.id, item));
+        const updated = Array.from(map.values());
+        try {
+          localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
     } catch (err) {
       console.warn('Media fetch notice:', err);
     } finally {
