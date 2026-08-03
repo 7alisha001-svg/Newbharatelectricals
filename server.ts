@@ -981,7 +981,7 @@ async function startServer() {
     }));
     
     // Fallback all other requests to index.html for React Router to handle SPA routing
-    app.get("*all", (req, res) => {
+    app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
