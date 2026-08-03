@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { WebsiteMedia } from '../types/media';
 import { v4 as uuidv4 } from 'uuid';
+import { ensureMediaSaveSuccess } from './mediaPersistence';
 
 export function normalizeMediaUrl(imageUrl: string | null | undefined, version?: string | number): string {
   if (!imageUrl) return '';
@@ -248,15 +249,10 @@ export async function saveMediaToDb(item: Partial<WebsiteMedia>): Promise<Websit
       .select()
       .single();
 
-    if (error) {
-      console.warn('Notice saving to website_media table (using returned payload):', error.message);
-      return payload as WebsiteMedia;
-    }
-
-    return data;
+    return ensureMediaSaveSuccess(error, data);
   } catch (err) {
     console.error('Error saving website media:', err);
-    return payload as WebsiteMedia;
+    throw err;
   }
 }
 
@@ -269,6 +265,7 @@ export async function deleteMediaFromDb(id: string): Promise<boolean> {
 
     if (error) {
       console.warn('Notice deleting website_media item:', error.message);
+      return false;
     }
     return true;
   } catch (err) {
