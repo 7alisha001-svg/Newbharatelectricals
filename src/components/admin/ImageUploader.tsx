@@ -26,7 +26,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
           alert(`File ${file.name} is too large. Max 5MB allowed.`);
           continue;
         }
-        const url = await uploadImage(file);
+        const url = await uploadImage(file, "products");
         newImages.push(url);
       }
       onChange(newImages);

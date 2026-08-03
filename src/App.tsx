@@ -110,6 +110,15 @@ const AppStartupCheck = () => {
   return null;
 };
 
+const LoadingScreen = () => (
+  <div className="flex h-screen items-center justify-center bg-white">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-slate-600">Loading...</p>
+    </div>
+  </div>
+);
+
 export default function App() {
   useEffect(() => {
     console.log('[Startup] App component mounted');
@@ -132,7 +141,7 @@ export default function App() {
               <AppStartupCheck />
               <AnalyticsTracker />
               <ScrollToTop />
-              <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div></div>}>
+              <Suspense fallback={<LoadingScreen />}>
               <Routes>
                 <Route path="/admin-login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
@@ -181,6 +190,7 @@ export default function App() {
                 <Route path="/:category" element={<GenericCategoryPage />} />
                 <Route path="/:category/:subcategory" element={<GenericSubCategoryPage />} />
                 <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Routes>
             </Suspense>

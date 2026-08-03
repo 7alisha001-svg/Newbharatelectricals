@@ -322,7 +322,7 @@ function BrandForm({ item, onSave, onCancel }: { item: any, onSave: (item: any) 
     if (logoFile) {
       setUploading(true);
       try {
-        logo_url = await uploadImage(logoFile);
+        logo_url = await uploadImage(logoFile, "brands");
       } catch (err) {
         alert("Failed to upload image.");
         setUploading(false);
