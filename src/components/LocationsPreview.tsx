@@ -64,14 +64,14 @@ function LocationCard({ icon, title, companyName, address, mapUrl, openMapsUrl }
 
 export default function LocationsPreview() {
   const locations = [
-    {
-      title: 'Head Office',
-      companyName: 'NEW BHARAT ELECTRICALS',
-      address: 'Kargaina Market,\nOpp. Bharat Motors,\nChaupla Road,\nBareilly – 243001,\nUttar Pradesh, India',
-      mapUrl: 'https://www.google.com/maps?q=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India&output=embed',
-      openMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India',
-      icon: <Building size={28} />
-    },
+  {
+  title: 'Head Office',
+  companyName: 'NEW BHARAT ELECTRICALS',
+  address: 'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun – 243601,\nUttar Pradesh, India',
+  mapUrl: 'https://www.google.com/maps?q=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India&output=embed',
+  openMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India',
+  icon: <Building size={28} />
+ },
     {
       title: 'Branch Office',
       companyName: 'NEW BHARAT ELECTRICALS',
