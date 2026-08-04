@@ -10,6 +10,7 @@ import { useMedia } from '../context/MediaContext';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
 import MediaImage from '../components/MediaImage';
+import LocationsPreview from '../components/LocationsPreview';
 
 export default function AboutUsPage() {
   const { settings } = useStore();
@@ -185,9 +186,9 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Company Story */}
-      <section className="py-16 md:py-24 bg-gray-50 border-b border-gray-200">
-        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
+            {/* Company Story */}
+      <section className="py-12 md:py-16 lg:py-20 bg-gray-50 border-b border-gray-200">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
@@ -224,9 +225,9 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Leadership Section */}
-      <section className="py-16 md:py-24 bg-white border-b border-gray-100">
-        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
+            {/* Leadership Section */}
+      <section className="py-12 md:py-16 lg:py-20 bg-white border-b border-gray-100">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold text-brand-green uppercase tracking-widest mb-2">Our Leadership</h2>
             <h3 className="text-3xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
@@ -288,22 +289,24 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Our Team */}
-      <section className="py-16 md:py-20 bg-brand-dark text-white text-center">
-        <div className="max-w-[800px] mx-auto px-4">
-          <Users size={64} className="mx-auto text-[#84CC16] mb-6" />
-          <h3 className="text-3xl md:text-5xl font-heading font-black text-white uppercase tracking-tight mb-6" style={{ color: '#FFFFFF' }}>
-            Our Strength: 50+ Dedicated Professionals
-          </h3>
-          <p className="text-[#D1D5DB] text-lg md:text-xl font-semibold leading-relaxed">
-            Behind every successful product delivery and installation is our formidable team. With over 50 skilled employees working in harmony, we ensure that every client receives personalized attention, prompt service, and expert technical guidance. Our team is the true powerhouse of New Bharat Electricals.
-          </p>
+            {/* Our Team */}
+      <section className="py-12 md:py-16 lg:py-20 bg-brand-dark text-white text-center">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
+          <div className="max-w-[800px] mx-auto">
+            <Users size={64} className="mx-auto text-[#84CC16] mb-6" />
+            <h3 className="text-3xl md:text-5xl font-heading font-black text-white uppercase tracking-tight mb-6" style={{ color: '#FFFFFF' }}>
+              Our Strength: 50+ Dedicated Professionals
+            </h3>
+            <p className="text-[#D1D5DB] text-lg md:text-xl font-semibold leading-relaxed">
+              Behind every successful product delivery and installation is our formidable team. With over 50 skilled employees working in harmony, we ensure that every client receives personalized attention, prompt service, and expert technical guidance. Our team is the true powerhouse of New Bharat Electricals.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Statistics */}
       <section className="py-12 bg-brand-green">
-        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, idx) => (
               <motion.div 
@@ -326,9 +329,9 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Our Values */}
-      <section className="py-16 md:py-24 bg-gray-50 border-b border-gray-200">
-        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
+            {/* Our Values */}
+      <section className="py-12 md:py-16 lg:py-20 bg-gray-50 border-b border-gray-200">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold text-brand-green uppercase tracking-widest mb-2">Core Principles</h2>
             <h3 className="text-3xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
@@ -358,9 +361,9 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16 md:py-24 bg-white border-b border-gray-100">
-        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
+            {/* Why Choose Us */}
+      <section className="py-12 md:py-16 lg:py-20 bg-white border-b border-gray-100">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold text-brand-green uppercase tracking-widest mb-2">Advantages</h2>
             <h3 className="text-3xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
@@ -390,9 +393,9 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Company Events & Gallery */}
-      <section className="py-16 md:py-24 bg-gray-50 border-b border-gray-200">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+            {/* Company Events & Gallery */}
+      <section className="py-12 md:py-16 lg:py-20 bg-gray-50 border-b border-gray-200">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold text-brand-green uppercase tracking-widest mb-2">Life At New Bharat</h2>
             <h3 className="text-3xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
@@ -508,122 +511,27 @@ export default function AboutUsPage() {
         )}
       </AnimatePresence>
 
-      {/* Locations Section */}
-      <section className="py-16 md:py-24 bg-white border-b border-gray-100">
-        <div className="max-w-[1200px] mx-auto px-4 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold text-brand-green uppercase tracking-widest mb-2">Reach Us</h2>
-            <h3 className="text-3xl md:text-5xl font-heading font-black text-gray-900 uppercase tracking-tight mb-6">
-              Our Locations
-            </h3>
-            <div className="w-16 h-1 bg-brand-green mx-auto rounded-full" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {/* Office Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-gray-50 rounded-3xl shadow-sm border border-gray-200 overflow-hidden flex flex-col group hover:shadow-xl hover:border-brand-green transition-all"
-            >
-              <div className="p-8 pb-8 flex-1">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-brand-green mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                  <Building size={32} />
-                </div>
-                <h3 className="text-3xl font-black text-gray-900 mb-2 font-heading">Head Office</h3>
-                <h4 className="text-brand-green font-bold text-lg mb-6 uppercase tracking-wider">{settings?.business_name || 'New Bharat Electricals'}</h4>
-                
-                <div className="flex items-start text-gray-800 mb-6 gap-4">
-                  <MapPin size={24} className="mt-1 flex-shrink-0 text-brand-green" />
-                  <p className="leading-relaxed text-lg font-medium tracking-wide whitespace-pre-line">
-                    Near Dr Amar Singh, Chaudhry Sarai,
-                    Lalpul Road,
-                    Budaun HO,
-                    Budaun – 243601,
-                    Uttar Pradesh
-                  </p>
-                </div>
-              </div>
-              
-              <div className="w-full h-[250px] bg-gray-200 relative">
-                {/* Google Map Placeholder */}
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3513.3102435798993!2d79.11718047535552!3d28.02640207599026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a008c2306d1dd5%3A0xe979dcc4999f7d0c!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Head Office Location"
-                ></iframe>
-              </div>
-            </motion.div>
-
-            <h3>Branch Office</h3>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-gray-50 rounded-3xl shadow-sm border border-gray-200 overflow-hidden flex flex-col group hover:shadow-xl hover:border-brand-green transition-all"
-            >
-              <div className="p-8 pb-8 flex-1">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-brand-green mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                  <Warehouse size={32} />
-                </div>
-                <h3 className="text-3xl font-black text-gray-900 mb-2 font-heading">Warehouse</h3>
-                <h4 className="text-gray-900 font-bold text-lg mb-6 uppercase tracking-wider">Distribution & Logistics</h4>
-                
-                <div className="flex items-start text-gray-800 mb-6 gap-4">
-                  <MapPin size={24} className="mt-1 flex-shrink-0 text-brand-green" />
-                  <p className="leading-relaxed text-lg font-medium tracking-wide whitespace-pre-line">
-                    Budaun,
-                    Loda Bahedi,
-                    Uttar Pradesh – 243601
-                  </p>
-                </div>
-              </div>
-              
-              <div className="w-full h-[250px] bg-gray-200 relative">
-                 {/* Google Map Placeholder */}
-                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3513.3102435798993!2d79.11718047535552!3d28.02640207599026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a008c2306d1dd5%3A0xe979dcc4999f7d0c!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Warehouse Location"
-                ></iframe>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+            {/* Locations Section */}
+      <LocationsPreview />
 
       {/* CTA Section */}
-      <section className="bg-brand-dark py-16 md:py-24 relative overflow-hidden">
-        {/* Abstract shapes */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-green/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-green/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
-        
-        <div className="max-w-[1000px] mx-auto px-4 lg:px-8 text-center relative z-10">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black text-white uppercase tracking-tight mb-6" style={{ color: '#FFFFFF' }}>
-            Ready to Upgrade Your <span className="text-[#84CC16]">Power Solutions?</span>
-          </h2>
-          <p className="text-[#D1D5DB] text-lg md:text-xl mb-10 max-w-2xl mx-auto font-semibold tracking-wide">
-            Get expert consultation for Power Solutions, Solar Systems, and Electrical Products from the industry leaders.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <Link to="/contact" className="bg-brand-green text-white font-bold px-8 md:px-12 py-4 md:py-5 rounded-2xl hover:bg-brand-green-dark transition-colors uppercase tracking-widest text-sm shadow-xl hover:shadow-brand-green/30">
-              Get Expert Consultation
-            </Link>
-            <Link to="/catalogue" className="bg-transparent border-2 border-white text-white font-bold px-8 md:px-12 py-4 md:py-5 rounded-2xl hover:bg-white hover:text-brand-dark transition-colors uppercase tracking-widest text-sm">
-              Explore Products
-            </Link>
+      <section className="bg-brand-dark py-12 md:py-16 lg:py-20 relative overflow-hidden">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8 relative z-10">
+          <div className="max-w-[1000px] mx-auto text-center">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black text-white uppercase tracking-tight mb-6" style={{ color: '#FFFFFF' }}>
+              Ready to Upgrade Your <span className="text-[#84CC16]">Power Solutions?</span>
+            </h2>
+            <p className="text-[#D1D5DB] text-lg md:text-xl mb-10 max-w-2xl mx-auto font-semibold tracking-wide">
+              Get expert consultation for Power Solutions, Solar Systems, and Electrical Products from the industry leaders.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+              <Link to="/contact" className="bg-brand-green text-white font-bold px-8 md:px-12 py-4 md:py-5 rounded-2xl hover:bg-brand-green-dark transition-colors uppercase tracking-widest text-sm shadow-xl hover:shadow-brand-green/30">
+                Get Expert Consultation
+              </Link>
+              <Link to="/catalogue" className="bg-transparent border-2 border-white text-white font-bold px-8 md:px-12 py-4 md:py-5 rounded-2xl hover:bg-white hover:text-brand-dark transition-colors uppercase tracking-widest text-sm">
+                Explore Products
+              </Link>
+            </div>
           </div>
         </div>
       </section>
