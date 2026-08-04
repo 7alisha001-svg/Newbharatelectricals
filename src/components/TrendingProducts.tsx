@@ -14,7 +14,7 @@ export default function TrendingProducts() {
   if (trendingProducts.length === 0) return null;
 
   return (
-    <section className="py-8 md:py-16 bg-white">
+    <section className="py-12 md:py-16 lg:py-20 bg-white">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-10">
           <div>

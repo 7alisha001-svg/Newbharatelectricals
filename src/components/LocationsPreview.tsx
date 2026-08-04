@@ -91,8 +91,10 @@ export default function LocationsPreview() {
   ];
 
   return (
-    <section className="bg-white py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+
+        <section className="bg-white py-12 md:py-16 lg:py-20">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-6 xl:px-8">
         <div className="mb-10 text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-brand-green">
             Our Locations

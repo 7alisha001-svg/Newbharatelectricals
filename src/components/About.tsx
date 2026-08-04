@@ -4,7 +4,7 @@ import MediaImage from './MediaImage';
 
 export default function About() {
   return (
-    <section id="about" className="py-8 bg-brand-gray border-none">
+    <section id="about" className="py-12 md:py-16 lg:py-20 bg-brand-gray border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="bg-white rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col md:flex-row border-none">
           

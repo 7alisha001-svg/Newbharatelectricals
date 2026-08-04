@@ -14,7 +14,7 @@ export default function FeaturedProducts() {
   if (featuredProducts.length === 0) return null;
 
   return (
-    <section className="py-8 md:py-12 bg-[#f4f4f4] border-none">
+    <section className="py-12 md:py-16 lg:py-20 bg-[#f4f4f4] border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="flex items-center justify-between mb-4 md:mb-6">
           <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">

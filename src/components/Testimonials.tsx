@@ -30,7 +30,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="py-8 md:py-12 bg-brand-gray border-t border-gray-100">
+    <section className="py-12 md:py-16 lg:py-20 bg-brand-gray border-t border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-8 gap-2 md:gap-4">
