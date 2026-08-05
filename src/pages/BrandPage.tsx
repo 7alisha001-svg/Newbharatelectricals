@@ -11,7 +11,16 @@ export default function BrandPage() {
   const { addToCart } = useCart();
 
   if (loading) return <div className="p-20 text-center">Loading...</div>;
+console.log("Brand URL:", brandSlug);
+console.log("All Brands:", brands);
 
+const currentBrand = brands.find(
+  b =>
+    b.slug?.toLowerCase() === brandSlug?.toLowerCase() ||
+    b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-') === brandSlug?.toLowerCase()
+);
+
+console.log("Matched Brand:", currentBrand);
   const currentBrand = brands.find(b => b.slug?.toLowerCase() === brandSlug?.toLowerCase() || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-') === brandSlug?.toLowerCase());
   
   if (!currentBrand) {
