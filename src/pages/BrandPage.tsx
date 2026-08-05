@@ -56,7 +56,28 @@ export default function BrandPage() {
             </div>
           </div>
         </div>
+{/* Brand Hero Banner */}
+<section className="relative h-[350px] md:h-[500px] overflow-hidden">
+  <img
+    src={currentBrand.banner_url || "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2000&auto=format&fit=crop"}
+    alt={currentBrand.name}
+    className="w-full h-full object-cover"
+  />
 
+  <div className="absolute inset-0 bg-black/50"></div>
+
+  <div className="absolute inset-0 flex items-center">
+    <div className="max-w-[1600px] mx-auto w-full px-4 lg:px-8 text-white">
+      <h1 className="text-4xl md:text-6xl font-black mb-4">
+        {currentBrand.name}
+      </h1>
+
+      <p className="max-w-2xl text-lg md:text-xl">
+        {currentBrand.description || `Explore premium ${currentBrand.name} products at New Bharat Electricals.`}
+      </p>
+    </div>
+  </div>
+</section>
         {/* Brand Header */}
         <section className="bg-gray-50/50 border-b border-gray-100 py-6 md:py-10 mb-8">
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
