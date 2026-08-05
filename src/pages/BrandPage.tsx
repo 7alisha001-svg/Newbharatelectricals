@@ -21,11 +21,10 @@ const currentBrand = brands.find(
 );
 
 console.log("Matched Brand:", currentBrand);
-  const currentBrand = brands.find(b => b.slug?.toLowerCase() === brandSlug?.toLowerCase() || b.name?.toLowerCase().replace(/[^a-z0-9]/g, '-') === brandSlug?.toLowerCase());
-  
-  if (!currentBrand) {
-    return <div className="p-20 text-center">Brand not found</div>;
-  }
+
+if (!currentBrand) {
+  return <div className="p-20 text-center">Brand not found</div>;
+}
 
   // Robustly filter products by brand name or slug
   const matchBrand = (prodBrand: string, brandName: string, brandSlug: string) => {
