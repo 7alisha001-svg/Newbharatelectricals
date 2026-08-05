@@ -78,7 +78,7 @@ const PublicLayout = () => {
   return (
     <div className="min-h-screen top-0 bg-white selection:bg-brand-green selection:text-white flex flex-col">
       <Navbar settings={settings} categories={categories} brands={brands} loading={loading} />
-      <main className="flex-grow pt-24">
+      <main className="flex-grow">
         <Outlet />
       </main>
       <Footer />
