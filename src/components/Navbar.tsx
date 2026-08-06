@@ -360,7 +360,7 @@ export default function Navbar(props: HeaderProps = {}) {
                   {link.hasDropdown && (
                     <div className="absolute top-full left-0 w-64 bg-white shadow-xl rounded-b-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
                       <div className="py-2">
-                        {link.dropdownItems?.map((item) => (
+                        {link.dropdownItems?.map((item: any) => (
                           <Link 
                             key={item.href} 
                             to={item.href} 
@@ -398,7 +398,7 @@ export default function Navbar(props: HeaderProps = {}) {
                         <ChevronDown size={20} className={`transition-transform duration-200 ${expandedMenus[link.name] ? 'rotate-180 text-brand-green' : 'text-gray-400'}`} />
                       </button>
                       <div className={`pl-4 space-y-1 border-l-2 border-brand-green/20 ml-5 overflow-hidden transition-all duration-300 ${expandedMenus[link.name] ? 'max-h-[500px] py-2 opacity-100' : 'max-h-0 py-0 opacity-0'}`}>
-                        {link.dropdownItems?.map((item) => (
+                        {link.dropdownItems?.map((item: any) => (
                           <Link 
                             key={item.href} 
                             to={item.href} 

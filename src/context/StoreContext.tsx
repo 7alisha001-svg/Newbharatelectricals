@@ -28,6 +28,7 @@ interface Brand {
   name: string;
   slug: string;
   logo_url?: string;
+  banner_url?: string;
 }
 
 interface Product {
