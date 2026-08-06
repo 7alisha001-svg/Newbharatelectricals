@@ -1,4 +1,4 @@
-import { Phone, MessageCircle, ChevronDown, Menu, X, Heart, User, MapPin, Search, ShoppingCart, Store, Headset } from 'lucide-react';
+import {Phone,MessageCircle,ChevronDown,Menu,X,Heart,User,MapPin,Search,ShoppingCart,Store,Headset,} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
@@ -296,10 +296,10 @@ export default function Navbar(props: HeaderProps = {}) {
 
             {/* Right Side Icons (Retail Style) */}
             <div className="hidden lg:flex flex-shrink-0 items-center space-x-6 text-gray-900 ml-4">
-              <Link to="/store-locator" className="hover:text-brand-green transition-colors flex items-center group">
-                <Store size={22} strokeWidth={1.5} className="mr-1.5" />
-                <span className="text-sm font-bold">Store Locator</span>
-              </Link>
+              
+                
+                
+            
               
               <Link to="/contact" className="hover:text-brand-green transition-colors flex items-center group">
                 <Headset size={22} strokeWidth={1.5} className="mr-1.5" />
@@ -428,13 +428,7 @@ export default function Navbar(props: HeaderProps = {}) {
             ))}
             
             <div className="flex flex-col gap-3 sm:gap-4 pt-5 sm:pt-6">
-              <Link 
-                to="/store-locator" 
-                className="flex items-center justify-center border-2 border-brand-green text-brand-green py-3 px-6 rounded-2xl font-bold hover:bg-brand-green hover:text-white transition-colors uppercase text-sm tracking-wider min-h-[46px]"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <MapPin size={20} className="mr-2" /> Find Store
-              </Link>
+              
               <a 
                 href="tel:+919457002000" 
                 className="flex items-center justify-center border border-gray-300 text-gray-900 py-3 px-6 rounded-2xl font-bold hover:border-brand-green hover:text-brand-green transition-colors uppercase text-sm tracking-wider min-h-[46px]"

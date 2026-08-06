@@ -12,7 +12,6 @@ const GenericCategoryPage = React.lazy(() => import('./pages/GenericCategoryPage
 const GenericSubCategoryPage = React.lazy(() => import('./pages/GenericSubCategoryPage'));
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const Catalogue = React.lazy(() => import('./pages/Catalogue'));
-const StoreLocator = React.lazy(() => import('./pages/StoreLocator'));
 const Contact = React.lazy(() => import('./pages/Contact'));
 const CartPage = React.lazy(() => import('./pages/CartPage'));
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
@@ -175,7 +174,7 @@ export default function App() {
               <Route element={<PublicLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/catalogue" element={<Catalogue />} />
-                <Route path="/store-locator" element={<StoreLocator />} />
+                 
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
