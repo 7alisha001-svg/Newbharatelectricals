@@ -68,7 +68,7 @@ export default function Footer() {
            <div className="col-span-1">
               <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">Quick Links</h4>
               <ul className="space-y-4 md:space-y-2.5 text-sm">
-                 {mainNavLinks.map(link => (
+                 {mainNavLinks.map((link: any) => (
                     <li key={link.name}>
                       <Link to={link.href} className="text-neutral-100 font-semibold hover:text-brand-green transition-colors duration-200 block py-1 md:py-0">
                         {link.name}
@@ -87,24 +87,20 @@ export default function Footer() {
                  </li>
               </ul>
            </div>
-
-           {/* Column 2: Our Products */}
-           <div className="col-span-1">
-              <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">Categories</h4>
-              <ul className="space-y-4 md:space-y-2.5 text-sm">
-                 {mainNavLinks
-                   .filter(link => link.hasDropdown && link.dropdownItems)
-                   .flatMap(link => link.dropdownItems || [])
-                   .slice(0, 7)
-                   .map(item => (
-                     <li key={item.name}>
-                       <Link to={item.href} className="text-neutral-100 font-semibold hover:text-brand-green transition-colors duration-200 block py-1 md:py-0">
-                         {item.name}
-                       </Link>
-                     </li>
-                   ))}
-              </ul>
-           </div>
+{mainNavLinks
+  .filter((link: any) => link.hasDropdown && link.dropdownItems)
+  .flatMap((link: any) => link.dropdownItems || [])
+  .slice(0, 7)
+  .map((item: any) => (
+    <li key={item.name}>
+      <Link
+        to={item.href}
+        className="text-neutral-100 font-semibold hover:text-brand-green transition-colors duration-200 block py-1 md:py-0"
+      >
+        {item.name}
+      </Link>
+    </li>
+  ))}
 
            {/* Column 3: Contact Info */}
            <div className="col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-8 mt-4 md:border-t-0 md:pt-0 md:mt-0">
@@ -153,7 +149,7 @@ export default function Footer() {
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
                        {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'warehouse')?.address) || 
                         settings?.warehouse_address || 
-                        ''New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh''}
+                        'New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh'
                      </p>
                    </div>
                 </div>
