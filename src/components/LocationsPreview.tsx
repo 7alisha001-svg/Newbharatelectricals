@@ -10,7 +10,14 @@ interface LocationCardProps {
   openMapsUrl: string;
 }
 
-function LocationCard({ icon, title, companyName, address, mapUrl, openMapsUrl }: LocationCardProps) {
+function LocationCard({
+  icon,
+  title,
+  companyName,
+  address,
+  mapUrl,
+  openMapsUrl,
+}: LocationCardProps) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -19,90 +26,110 @@ function LocationCard({ icon, title, companyName, address, mapUrl, openMapsUrl }
       transition={{ delay: 0.2 }}
       className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-md sm:p-8"
     >
-      <div className="flex flex-col gap-4">
-        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
-          {icon}
-        </div>
-
-        <div className="flex-1">
-          <h3 className="mb-2 text-2xl font-black text-gray-900">
-            {title}
-          </h3>
-
-          <p className="mb-2 text-base font-semibold tracking-wide text-brand-green">
-            {companyName}
-          </p>
-
-          <p className="mb-4 text-lg font-medium tracking-wide text-gray-900 whitespace-pre-line">
-            {address}
-          </p>
-        </div>
+      {/* Icon */}
+      <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-brand-green/10">
+        {icon}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-gray-200">
-        <iframe
-          src={mapUrl}
-          title={`${title} map`}
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-          className="h-48 w-full border-0"
-        />
-      </div>
+      {/* Location Information */}
+      <div className="flex flex-1 flex-col">
+        {/* Fixed title area for consistent alignment */}
+        <h3 className="mb-2 min-h-[36px] text-2xl font-black text-gray-900">
+          {title}
+        </h3>
 
-      <a
-        href={openMapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-4 inline-flex items-center justify-center rounded-full border border-brand-green/20 bg-brand-green/10 px-4 py-2.5 font-bold text-brand-green transition-colors hover:bg-brand-green hover:text-white"
-      >
-        Open in Maps <MapPin size={16} className="ml-2" />
-      </a>
+        {/* Fixed company name area */}
+        <p className="mb-2 min-h-[24px] text-base font-semibold tracking-wide text-brand-green">
+          {companyName}
+        </p>
+
+        {/* Fixed address area */}
+        <p className="mb-4 min-h-[128px] text-lg font-medium leading-relaxed tracking-wide text-gray-900 whitespace-pre-line">
+          {address}
+        </p>
+
+        {/* Google Map */}
+        <div className="mt-auto overflow-hidden rounded-xl border border-gray-200">
+          <iframe
+            src={mapUrl}
+            title={`${title} map`}
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            className="h-48 w-full border-0"
+          />
+        </div>
+
+        {/* Open in Maps */}
+        <a
+          href={openMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex h-14 items-center justify-center rounded-full border border-brand-green/20 bg-brand-green/10 px-4 py-2.5 font-bold text-brand-green transition-colors hover:bg-brand-green hover:text-white"
+        >
+          Open in Maps
+          <MapPin size={16} className="ml-2" />
+        </a>
+      </div>
     </motion.article>
   );
 }
 
 export default function LocationsPreview() {
-  const locations = [
-  {
-  title: 'Head Office',
-  companyName: 'NEW BHARAT ELECTRICALS',
-  address: 'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun – 243601,\nUttar Pradesh, India',
-  mapUrl: 'https://www.google.com/maps?q=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India&output=embed',
-  openMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India',
-  icon: <Building size={28} />
- },
+  const locations: LocationCardProps[] = [
+    {
+      title: 'Head Office',
+      companyName: 'NEW BHARAT ELECTRICALS',
+      address:
+        'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun – 243601,\nUttar Pradesh, India',
+      mapUrl:
+        'https://www.google.com/maps?q=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India&output=embed',
+      openMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India',
+      icon: <Building size={34} className="text-brand-green" />,
+    },
+
     {
       title: 'Branch Office',
       companyName: 'NEW BHARAT ELECTRICALS',
-      address: 'Kargaina Market,\nOpp. Bharat Motors,\nChaupla Road,\nBareilly - 243001,\nUttar Pradesh, India',
-      mapUrl: 'https://www.google.com/maps?q=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India&output=embed',
-      openMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India',
-      icon: <Building2 size={28} />
+      address:
+        'Kargaina Market,\nOpp. Bharat Motors,\nChaupla Road,\nBareilly - 243001,\nUttar Pradesh, India',
+      mapUrl:
+        'https://www.google.com/maps?q=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India&output=embed',
+      openMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India',
+      icon: <Building2 size={34} className="text-brand-green" />,
     },
+
     {
       title: 'Warehouse',
       companyName: 'NEW BHARAT ELECTRICALS',
-      address: 'Loda Bahedi,\nBudaun,\nUttar Pradesh – 243601,\nIndia',
-      mapUrl: 'https://www.google.com/maps?q=Loda+Bahedi%2C+Budaun%2C+Uttar+Pradesh+243601%2C+India&output=embed',
-      openMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Loda+Bahedi%2C+Budaun%2C+Uttar+Pradesh+243601%2C+India',
-      icon: <Warehouse size={28} />
-    }
+      address:
+        'New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh',
+      mapUrl:
+        'https://www.google.com/maps?q=New+Bharat+Electricals,+National+Highway+530B,+Opp.+Florence+Nightingale,+Ujhani+Road,+Badaun+243601,+Uttar+Pradesh,+India&output=embed',
+      openMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=New+Bharat+Electricals,+National+Highway+530B,+Opp.+Florence+Nightingale,+Ujhani+Road,+Badaun+243601,+Uttar+Pradesh,+India',
+      icon: <Warehouse size={34} className="text-brand-green" />,
+    },
   ];
 
   return (
-        <section className="bg-white py-12 md:py-16 lg:py-20">
-      <div className="mx-auto max-w-[1600px] px-4 lg:px-6 xl:px-8">
+    <section className="bg-white py-12 md:py-16">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
+        {/* Section Heading */}
         <div className="mb-10 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-brand-green">
+          <h2 className="text-3xl font-black text-gray-900 md:text-4xl">
             Our Locations
-          </p>
-          <h2 className="mt-3 text-3xl font-black text-gray-900 sm:text-4xl">
-            Visit our offices and service points
           </h2>
+
+          <p className="mt-2 text-base font-medium text-gray-600">
+            Visit our offices and service points
+          </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        {/* Location Cards */}
+        <div className="grid items-stretch gap-6 lg:grid-cols-3">
           {locations.map((location) => (
             <LocationCard key={location.title} {...location} />
           ))}
