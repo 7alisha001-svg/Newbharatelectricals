@@ -20,7 +20,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-brand-dark pt-8 sm:pt-10 relative text-sm border-t-4 border-brand-green">
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
+      <div></div> className="max-w-[1600px] mx-auto px-4 lg:px-8"
         
         {/* Desktop Social Bar & Partner Call */}
         <div className="hidden md:flex flex-row justify-between items-center border-b border-gray-800 pb-4 mb-6 md:mb-8">
@@ -141,19 +141,23 @@ export default function Footer() {
                 </div>
 
                 <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
-                   <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
-                     <MapPin className="text-brand-green md:text-white" size={16} />
-                   </div>
-                   <div className="text-left">
-                     <p className="font-bold text-sm mb-1 text-white">Warehouse</p>
-                     <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
-                       {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'warehouse')?.address) || 
-                        settings?.warehouse_address || 
-                        'New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh'
-                     </p>
-                   </div>
-                </div>
-              </div>
+  <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
+    <MapPin className="text-brand-green md:text-white" size={16} />
+  </div>
+
+  <div className="text-left">
+    <p className="font-bold text-sm mb-1 text-white">Warehouse</p>
+
+    <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
+      {(Array.isArray(settings?.social_links?.locations) &&
+        settings.social_links.locations.find(
+          (l: any) => l.type === 'warehouse'
+        )?.address) ||
+        settings?.warehouse_address ||
+        'New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh'}
+    </p>
+  </div>
+</div>
 
               {/* Mobile Extra Contact Info */}
               <div className="flex md:hidden flex-col w-full mt-4 space-y-4">
