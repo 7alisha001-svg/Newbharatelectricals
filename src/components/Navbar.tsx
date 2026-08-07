@@ -271,15 +271,7 @@ export default function Navbar(props: HeaderProps = {}) {
               </Link>
             </div>
 
-            {/* Location Selector */}
-            <div className="hidden xl:flex items-center text-sm lg:pr-2">
-              <MapPin size={24} className="text-gray-900 mr-2" strokeWidth={1.5} />
-              <div className="flex flex-col leading-tight">
-                <span className="text-gray-700 font-medium text-[11px]">Deliver to</span>
-                <span className="font-bold text-gray-900 text-xs border-b border-gray-900 hover:text-brand-green hover:border-brand-green cursor-pointer transition-colors pb-0.5">Select your location</span>
-              </div>
-            </div>
-
+            
             {/* Search Bar - Center */}
             <div className="hidden lg:flex flex-grow max-w-[700px] relative">
               <div className="relative w-full">
