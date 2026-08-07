@@ -153,7 +153,7 @@ export default function Footer() {
                      <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
                        {(Array.isArray(settings?.social_links?.locations) && settings.social_links.locations.find((l: any) => l.type === 'warehouse')?.address) || 
                         settings?.warehouse_address || 
-                        'Loda Bahedi,\nBudaun,\nUttar Pradesh – 243601'}
+                        ''New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh''}
                      </p>
                    </div>
                 </div>
