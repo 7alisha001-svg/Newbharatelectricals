@@ -271,7 +271,7 @@ export default function Navbar(props: HeaderProps = {}) {
               </Link>
             </div>
 
-            
+          
             {/* Search Bar - Center */}
             <div className="hidden lg:flex flex-grow max-w-[700px] relative">
               <div className="relative w-full">
