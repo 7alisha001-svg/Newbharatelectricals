@@ -50,10 +50,10 @@ if (!currentBrand) {
         <meta name="description" content={`Explore all ${title} products available at New Bharat Electricals.`} />
       </Helmet>
 
-      <div className="w-full bg-white pb-20">
+      <div className="w-full bg-white pb-12 md:pb-20">
         
         {/* Breadcrumb Header */}
-        <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
+        <div className="bg-brand-gray/50 py-3 md:py-4 border-b border-gray-100">
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
             <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
               <Link to="/" className="text-gray-900 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
@@ -65,7 +65,7 @@ if (!currentBrand) {
           </div>
         </div>
 {/* Brand Hero Banner */}
-<section className="relative h-[350px] md:h-[500px] overflow-hidden">
+<section className="relative h-[200px] md:h-[500px] overflow-hidden">
   <img
     src={
       currentBrand.banner_url ||
@@ -76,13 +76,13 @@ if (!currentBrand) {
   />
 </section>
         {/* Brand Header */}
-        <section className="bg-gray-50/50 border-b border-gray-100 py-6 md:py-10 mb-8">
+        <section className="bg-gray-50/50 border-b border-gray-100 py-4 md:py-10 mb-6 md:mb-8">
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
             <motion.h1 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="text-2xl md:text-4xl font-heading font-black mb-2 text-gray-900 uppercase tracking-tight"
+              className="text-xl md:text-4xl font-heading font-black mb-1.5 md:mb-2 text-gray-900 uppercase tracking-tight"
             >
               {title}
             </motion.h1>
@@ -99,8 +99,8 @@ if (!currentBrand) {
 
       {/* Products Grid */}
       <section className="max-w-[1600px] mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
+        <div className="flex items-center justify-between mb-4 md:mb-8">
+          <h2 className="text-lg md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             {title} Products <span className="text-sm font-normal text-gray-700 font-medium ml-2">({brandProducts.length} Products)</span>
           </h2>
         </div>
@@ -115,7 +115,7 @@ if (!currentBrand) {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
             {brandProducts.map((product, idx) => {
               const regPrice = Number(product.regular_price) || 0;
               const salePrice = Number(product.sale_price) || 0;
@@ -133,13 +133,13 @@ if (!currentBrand) {
                 transition={{ delay: idx * 0.05 }}
                 className="bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col group transition-all duration-300"
               >
-                <div className="p-3 sm:p-5 relative bg-white h-40 sm:h-56 flex items-center justify-center">
+                <div className="p-2 sm:p-5 relative bg-white h-32 sm:h-56 flex items-center justify-center">
                    {discountPercent > 0 && (
-                    <span className="absolute top-3 left-3 bg-brand-orange text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider z-10">
+                    <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-brand-orange text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded uppercase tracking-wider z-10">
                       {discountPercent}% OFF
                     </span>
                   )}
-                  <Link to={`/${catSlug}/all/${product.id}`} className="block w-full h-full p-2">
+                  <Link to={`/${catSlug}/all/${product.id}`} className="block w-full h-full p-1 sm:p-2">
                     <img 
                       src={product.image_url} 
                       alt={product.name} 
@@ -149,25 +149,25 @@ if (!currentBrand) {
                   </Link>
                 </div>
                 
-                <div className="p-4 sm:p-5 flex flex-col flex-grow border-t border-gray-50">
-                   <div className="flex items-center text-[10px] sm:text-xs text-yellow-400 mb-2">
-                      <Star fill="currentColor" size={12} className="mr-0.5" />
-                      <Star fill="currentColor" size={12} className="mr-0.5" />
-                      <Star fill="currentColor" size={12} className="mr-0.5" />
-                      <Star fill="currentColor" size={12} className="mr-0.5" />
-                      <Star fill="currentColor" size={12} className="text-gray-200" />
+                <div className="p-3 sm:p-5 flex flex-col flex-grow border-t border-gray-50">
+                   <div className="flex items-center text-[10px] sm:text-xs text-yellow-400 mb-1.5 sm:mb-2">
+                      <Star fill="currentColor" size={11} className="mr-0.5" />
+                      <Star fill="currentColor" size={11} className="mr-0.5" />
+                      <Star fill="currentColor" size={11} className="mr-0.5" />
+                      <Star fill="currentColor" size={11} className="mr-0.5" />
+                      <Star fill="currentColor" size={11} className="text-gray-200" />
                     </div>
                   <Link to={`/${catSlug}/all/${product.id}`}>
-                    <h3 className="font-bold text-gray-900 text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
+                    <h3 className="font-bold text-gray-900 text-sm sm:text-base leading-snug mb-1.5 sm:mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-xs text-gray-700 font-medium line-clamp-2 mb-4">{product.short_description || product.description}</p>
+                  <p className="text-[11px] sm:text-xs text-gray-700 font-medium line-clamp-2 mb-3">{product.short_description || product.description}</p>
                   
                   <div className="mt-auto">
-                    <div className="flex flex-col sm:flex-row sm:items-end mb-3 sm:mb-4">
-                      <span className="text-base sm:text-lg font-bold text-gray-900 mr-2">₹{salePrice || regPrice}</span>
-                      {regPrice > salePrice && <span className="text-xs sm:text-sm text-gray-900 line-through">₹{regPrice}</span>}
+                    <div className="flex flex-col sm:flex-row sm:items-end mb-2 sm:mb-4">
+                      <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{salePrice || regPrice}</span>
+                      {regPrice > salePrice && <span className="text-[10px] sm:text-sm text-gray-900 line-through">₹{regPrice}</span>}
                     </div>
                     <button 
                       onClick={() => addToCart({
@@ -177,9 +177,9 @@ if (!currentBrand) {
                         imageUrl: product.image_url,
                         quantity: 1
                       })}
-                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-2xl font-bold tracking-wide text-xs uppercase flex items-center justify-center"
+                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-xl sm:rounded-2xl font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
                     >
-                      <ShoppingCart size={14} className="mr-2" /> Add to Cart
+                      <ShoppingCart size={12} className="mr-1.5 sm:mr-2" /> Add to Cart
                     </button>
                   </div>
                 </div>

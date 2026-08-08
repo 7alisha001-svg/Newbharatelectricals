@@ -13,9 +13,9 @@ export default function CartPage() {
         <title>Shopping Cart | New Bharat Electricals</title>
       </Helmet>
       
-      <div className="bg-gradient-to-b from-gray-50 to-white min-h-[80vh] py-16">
+      <div className="bg-gradient-to-b from-gray-50 to-white min-h-[80vh] py-8 md:py-16">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-gray-900 mb-8 tracking-tight">Shopping Cart</h1>
+          <h1 className="text-2xl md:text-4xl font-heading font-extrabold text-gray-900 mb-5 md:mb-8 tracking-tight">Shopping Cart</h1>
           
           {cart.length === 0 ? (
             <motion.div 
@@ -52,15 +52,16 @@ export default function CartPage() {
                   
                   <div className="divide-y divide-gray-100">
                     {cart.map((item) => (
-                      <div key={item.id} className="p-4 sm:p-6 md:p-8 flex flex-col md:flex-row items-center gap-4 sm:gap-6 hover:bg-gray-50/30 transition-colors">
-                        <div className="w-full md:w-1/2 flex items-center gap-4 sm:gap-6 relative">
+                      <div key={item.id} className="p-3 sm:p-6 md:p-8 flex flex-col md:flex-row items-center gap-3 sm:gap-6 hover:bg-gray-50/30 transition-colors">
+                        <div className="w-full md:w-1/2 flex items-center gap-3 sm:gap-6 relative">
                           <button 
                             onClick={() => removeFromCart(item.id)}
                             className="absolute sm:relative -top-2 sm:top-0 -right-2 sm:right-0 text-gray-300 hover:text-red-500 transition-colors bg-white hover:bg-red-50 p-2 rounded-full shadow-sm sm:shadow-none z-10"
+                            aria-label="Remove item"
                           >
-                            <Trash2 size={18} />
+                            <Trash2 size={16} />
                           </button>
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border border-gray-100 p-2 shadow-sm flex items-center justify-center overflow-hidden">
+                          <div className="w-16 h-16 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border border-gray-100 p-1.5 sm:p-2 shadow-sm flex items-center justify-center overflow-hidden">
                             <img 
                               src={item.imageUrl || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'} 
                               alt={item.name} 
@@ -73,35 +74,37 @@ export default function CartPage() {
                               }} 
                             />
                           </div>
-                          <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-base sm:text-lg line-clamp-2 pr-6 sm:pr-0">{item.name}</Link>
+                          <Link to={`/products/cat/${item.id}`} className="font-bold text-gray-900 hover:text-brand-green text-sm sm:text-lg line-clamp-2 pr-6 sm:pr-0">{item.name}</Link>
                         </div>
                         
-                        <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-900 font-medium">
+                        <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center text-gray-900 font-medium text-sm">
                           <span className="md:hidden">Price:</span>
                           ₹{item.price}
                         </div>
                         
                         <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center">
-                           <span className="md:hidden text-gray-900 font-medium">Quantity:</span>
-                           <div className="flex items-center border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm">
+                           <span className="md:hidden text-gray-900 font-medium text-sm">Quantity:</span>
+                           <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
                               <button 
                                 onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                className="px-3 py-2 text-gray-700 font-medium hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                                className="px-2.5 py-2 text-gray-700 font-medium hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                                aria-label="Decrease quantity"
                               >
                                 <Minus size={14} />
                               </button>
-                              <span className="w-10 text-center text-sm font-bold">{item.quantity}</span>
+                              <span className="w-9 text-center text-sm font-bold">{item.quantity}</span>
                               <button 
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="px-3 py-2 text-gray-700 font-medium hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                                className="px-2.5 py-2 text-gray-700 font-medium hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                                aria-label="Increase quantity"
                               >
                                 <Plus size={14} />
                               </button>
                            </div>
                         </div>
                         
-                        <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center font-black text-gray-900 text-lg">
-                          <span className="md:hidden text-gray-900 font-medium text-base">Subtotal:</span>
+                        <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center font-black text-gray-900 text-base sm:text-lg">
+                          <span className="md:hidden text-gray-900 font-medium text-sm">Subtotal:</span>
                           ₹{(parseFloat(String(item.price || '0').replace(/,/g, '')) * item.quantity).toLocaleString()}
                         </div>
                       </div>

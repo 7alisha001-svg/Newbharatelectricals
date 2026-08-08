@@ -149,7 +149,7 @@ export default function AboutUsPage() {
       />
 
       {/* Hero Banner */}
-      <section className="relative bg-brand-dark py-16 md:py-28 lg:py-36 overflow-hidden">
+      <section className="relative bg-brand-dark py-10 md:py-28 lg:py-36 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-dark/80 to-brand-dark z-10" />
           <MediaImage 
@@ -163,7 +163,7 @@ export default function AboutUsPage() {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl lg:text-7xl font-heading font-black text-white mb-6 uppercase tracking-tight drop-shadow-lg"
+            className="text-2xl md:text-5xl lg:text-7xl font-heading font-black text-white mb-4 md:mb-6 uppercase tracking-tight drop-shadow-lg"
             style={{ color: '#FFFFFF' }}
           >
             Powering Trust.<br />
@@ -173,13 +173,13 @@ export default function AboutUsPage() {
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: "6rem" }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="h-1.5 bg-brand-green mx-auto mb-8 rounded-full"
+            className="h-1.5 bg-brand-green mx-auto mb-5 md:mb-8 rounded-full"
           />
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-[#D1D5DB] text-lg md:text-2xl max-w-3xl mx-auto font-semibold tracking-wide drop-shadow-md"
+            className="text-[#D1D5DB] text-sm md:text-2xl max-w-3xl mx-auto font-semibold tracking-wide drop-shadow-md"
           >
             Your premier destination for high-performance Power Solutions, Solar Energy Systems, and essential Electrical Products.
           </motion.p>

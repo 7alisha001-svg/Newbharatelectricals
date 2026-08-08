@@ -117,11 +117,11 @@ export default function BrandsSection() {
   const animationDuration = repeatedItems.length * baseSpeedPerItem;
 
   return (
-    <section id="brands" className="py-12 md:py-16 lg:py-20 bg-white border-none overflow-hidden">
+    <section id="brands" className="py-8 md:py-16 lg:py-20 bg-white border-none overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="flex items-center justify-between mb-6 md:mb-10">
-          <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
+        <div className="flex items-center justify-between mb-4 md:mb-10">
+          <h2 className="text-lg md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Shop by Brands
           </h2>
         </div>

@@ -34,19 +34,19 @@ const stats = [
 
 export default function CompanyStats() {
   return (
-    <section className="py-12 md:py-16 lg:py-20 bg-gray-50/50 border-none">
+    <section className="py-8 md:py-16 lg:py-20 bg-gray-50/50 border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black text-gray-900 mb-4 uppercase tracking-tight">
+        <div className="text-center max-w-3xl mx-auto mb-6 md:mb-14">
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-heading font-black text-gray-900 mb-3 md:mb-4 uppercase tracking-tight">
             Our Achievements
           </h2>
-          <p className="text-base md:text-lg text-gray-700 font-medium">
+          <p className="text-sm md:text-lg text-gray-700 font-medium">
             Delivering trusted solar and electrical solutions with proven expertise and measurable results.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-6">
           {stats.map((stat, idx) => (
             <motion.div
               key={idx}
@@ -54,12 +54,12 @@ export default function CompanyStats() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-sm border border-gray-100 hover:shadow-md hover:border-brand-green hover:-translate-y-1 transition-all duration-300"
+              className="bg-white rounded-xl md:rounded-2xl p-3 md:p-6 flex flex-col items-center justify-center text-center shadow-sm border border-gray-100 hover:shadow-md hover:border-brand-green hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-heading font-black text-brand-green mb-2 drop-shadow-sm">
+              <div className="text-2xl sm:text-4xl lg:text-3xl xl:text-4xl font-heading font-black text-brand-green mb-1 md:mb-2 drop-shadow-sm">
                 <Counter from={0} to={stat.value} decimals={stat.decimals} suffix={stat.suffix} />
               </div>
-              <p className="text-sm md:text-sm text-gray-700 font-bold leading-snug">
+              <p className="text-[10px] sm:text-sm text-gray-700 font-bold leading-snug">
                 {stat.title}
               </p>
             </motion.div>

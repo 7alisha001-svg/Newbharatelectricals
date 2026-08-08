@@ -99,20 +99,20 @@ export default function ProductPage() {
           </div>
         </div>
 
-        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col md:flex-row">
+        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          <div className="bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col md:flex-row">
             
             {/* Left - Image Gallery */}
-            <div className="w-full md:w-1/2 p-6 sm:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
-              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-6 min-h-[300px] sm:min-h-[400px]">
+            <div className="w-full md:w-1/2 p-4 sm:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
+              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-4 min-h-[250px] sm:min-h-[400px]">
                 <img src={selectedImg || product.images[0] || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'} alt={product.name} className="max-w-full max-h-full object-contain" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop')) { target.src = 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'; } }} />
               </div>
-              <div className="flex gap-4 overflow-x-auto pb-2">
+              <div className="flex gap-3 overflow-x-auto pb-2">
                 {(product.images || []).map((thumb, idx) => (
                   <button 
                     key={idx} 
                     onClick={() => setSelectedImg(thumb)}
-                    className={`w-24 h-24 border-2 rounded-2xl overflow-hidden bg-white p-2 transition-all flex-shrink-0 ${
+                    className={`w-20 h-20 sm:w-24 sm:h-24 border-2 rounded-xl sm:rounded-2xl overflow-hidden bg-white p-1.5 sm:p-2 transition-all flex-shrink-0 ${
                       (selectedImg || product.images[0]) === thumb ? 'border-brand-orange shadow-md' : 'border-gray-200 hover:border-brand-orange/50'
                     }`}
                   >
@@ -123,43 +123,44 @@ export default function ProductPage() {
             </div>
 
             {/* Right - Product Info */}
-            <div className="w-full md:w-1/2 p-6 sm:p-10 lg:p-14 relative">
+            <div className="w-full md:w-1/2 p-5 sm:p-10 lg:p-14 relative">
               <button className="absolute top-4 sm:top-8 right-4 sm:right-8 text-gray-900 hover:text-gray-900 transition-colors">
-                <Share2 size={24} />
+                <Share2 size={22} />
               </button>
               
-              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-gray-900 mb-2 pr-12">{product.name}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-700 font-medium mb-6">
+              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-gray-900 mb-2 pr-12">{product.name}</h1>
+              <div className="flex items-center gap-3 text-sm text-gray-700 font-medium mb-4 md:mb-6">
                  <span>SKU: <span className="font-medium text-gray-900">{product.sku}</span></span>
                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                  <span className="text-brand-green font-bold flex items-center"><CheckCircle2 size={14} className="mr-1" /> {product.stockStatus}</span>
               </div>
               
-              <p className="text-gray-900 font-medium mb-8 leading-relaxed text-sm md:text-base">
+              <p className="text-gray-900 font-medium mb-5 md:mb-8 leading-relaxed text-sm md:text-base">
                 {product.description}
               </p>
 
-              <div className="space-y-3 mb-10">
+              <div className="space-y-2.5 mb-6 md:mb-10">
                 {product.features.map((feature, idx) => (
                   <div key={idx} className="flex items-start">
-                    <CheckCircle2 size={20} className="text-brand-green mr-3 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 size={18} className="text-brand-green mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-700 text-sm md:text-base">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-gray-200 pt-8 mb-8">
-                <div className="flex items-baseline text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <div className="border-t border-gray-200 pt-6 md:pt-8 mb-6 md:mb-8">
+                <div className="flex items-baseline text-2xl md:text-4xl font-bold text-gray-900 mb-5 md:mb-6">
                   MRP: ₹{product.price}
-                  <span className="text-sm text-brand-green font-normal ml-2 tracking-tight">Inclusive of all taxes</span>
+                  <span className="text-xs md:text-sm text-brand-green font-normal ml-2 tracking-tight">Inclusive of all taxes</span>
                 </div>
 
-                <div className="flex items-center mb-8">
+                <div className="flex items-center mb-6 md:mb-8">
                   <span className="text-gray-900 font-medium mr-4">Quantity:</span>
-                  <div className="flex items-center border border-gray-300 rounded">
+                  <div className="flex items-center border border-gray-300 rounded-xl">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 text-gray-900 font-medium hover:bg-gray-100 transition-colors"
+                      className="px-3.5 py-2.5 text-gray-900 font-medium hover:bg-gray-100 transition-colors"
+                      aria-label="Decrease quantity"
                     >
                       <Minus size={16} />
                     </button>
@@ -171,30 +172,31 @@ export default function ProductPage() {
                     />
                     <button 
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 text-gray-900 font-medium hover:bg-gray-100 transition-colors"
+                      className="px-3.5 py-2.5 text-gray-900 font-medium hover:bg-gray-100 transition-colors"
+                      aria-label="Increase quantity"
                     >
                       <Plus size={16} />
                     </button>
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 md:mb-8">
                   <button 
                     onClick={handleAddToCart}
-                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm"
+                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm"
                   >
                     <ShoppingCart size={18} className="mr-2" /> Add to Cart
                   </button>
                   <a 
                     href={`https://wa.me/919457002000?text=${whatsappMessage}`}
                     target="_blank" rel="noreferrer"
-                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
+                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
                   >
                     <MessageCircle size={18} className="mr-2" /> Query on WhatsApp
                   </a>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                <div className="bg-gray-50 p-4 md:p-6 rounded-xl border border-gray-100">
                   <p className="text-sm text-gray-700 mb-3">
                     <span className="text-brand-green font-bold">Expected Delivery</span> in 5-7 Business Days.
                   </p>
@@ -204,9 +206,9 @@ export default function ProductPage() {
                       placeholder="Enter pincode to check delivery" 
                       value={pincode}
                       onChange={(e) => setPincode(e.target.value)}
-                      className="flex-1 bg-white border border-gray-300 rounded-l-xl px-6 py-3.5 focus:outline-none focus:border-brand-orange text-sm"
+                      className="flex-1 bg-white border border-gray-300 rounded-l-xl px-4 md:px-6 py-3 focus:outline-none focus:border-brand-orange text-sm min-w-0"
                     />
-                    <button className="bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-r-xl px-8 transition-colors text-sm">
+                    <button className="bg-gray-600 hover:bg-gray-700 text-white font-bold px-4 md:px-6 rounded-r-xl transition-colors text-sm flex-shrink-0">
                       Check
                     </button>
                   </div>
@@ -216,13 +218,13 @@ export default function ProductPage() {
           </div>
 
           {/* Product Specifications Section */}
-          <div className="mt-8 sm:mt-12 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-6 sm:p-8 lg:p-12">
-            <h2 className="text-xl sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">Product Specifications</h2>
+          <div className="mt-6 sm:mt-12 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-5 sm:p-8 lg:p-12">
+            <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">Product Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                {product.specifications.map((spec, idx) => (
-                 <div key={idx} className="flex justify-between py-3 border-b border-gray-100 last:border-0 md:last:border-b">
-                   <span className="text-gray-700 font-medium">{spec.label}</span>
-                   <span className="text-gray-900 font-bold">{spec.value}</span>
+                 <div key={idx} className="flex justify-between py-3 border-b border-gray-100 last:border-0 md:last:border-b gap-4">
+                   <span className="text-gray-700 font-medium text-sm md:text-base">{spec.label}</span>
+                   <span className="text-gray-900 font-bold text-sm md:text-base text-right">{spec.value}</span>
                  </div>
                ))}
             </div>

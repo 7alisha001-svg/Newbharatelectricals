@@ -313,20 +313,20 @@ export default function Navbar(props: HeaderProps = {}) {
             </div>
 
             {/* Mobile Actions */}
-            <div className="flex items-center lg:hidden space-x-2 sm:space-x-3">
-              <button className="text-gray-900 hover:text-brand-green p-2.5 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px]" aria-label="Search">
-                <Search size={22} className="sm:w-6 sm:h-6" />
+            <div className="flex items-center lg:hidden space-x-1 sm:space-x-2">
+              <button className="text-gray-900 hover:text-brand-green p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Search">
+                <Search size={20} className="sm:w-6 sm:h-6" />
               </button>
-              <Link to="/cart" className="text-gray-900 hover:text-brand-green relative p-2.5 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px]" aria-label="Cart">
-                <ShoppingCart size={22} className="sm:w-6 sm:h-6" />
-                {cartCount > 0 && <span className="absolute top-1 right-1 w-4.5 h-4.5 bg-brand-green text-white text-[9px] sm:text-[10px] font-black rounded-full flex items-center justify-center shadow-sm">{cartCount}</span>}
+              <Link to="/cart" className="text-gray-900 hover:text-brand-green relative p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Cart">
+                <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
+                {cartCount > 0 && <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-brand-green text-white text-[9px] sm:text-[10px] font-black rounded-full flex items-center justify-center shadow-sm">{cartCount}</span>}
               </Link>
               <button 
-                className="text-gray-900 hover:text-brand-green transition-colors p-2.5 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px] focus:outline-none"
+                className="text-gray-900 hover:text-brand-green transition-colors p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px] focus:outline-none"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle Menu"
               >
-                {mobileMenuOpen ? <X size={24} className="sm:w-6 sm:h-6" /> : <Menu size={24} className="sm:w-6 sm:h-6" />}
+                {mobileMenuOpen ? <X size={22} className="sm:w-6 sm:h-6" /> : <Menu size={22} className="sm:w-6 sm:h-6" />}
               </button>
             </div>
           </div>

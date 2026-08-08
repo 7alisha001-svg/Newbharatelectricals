@@ -141,7 +141,7 @@ export default function Contact() {
       />
       <div className="w-full bg-white">
         {/* Header */}
-        <section className="bg-brand-dark py-10 md:py-16 text-center px-4 md:px-6 relative overflow-hidden">
+        <section className="bg-brand-dark py-8 md:py-16 text-center px-4 md:px-6 relative overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <MediaImage 
               imageKey="contact_hero_banner"
@@ -154,7 +154,7 @@ export default function Contact() {
             <motion.h1 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-3xl md:text-5xl font-heading font-bold text-white mb-4 md:mb-6"
+              className="text-2xl md:text-5xl font-heading font-bold text-white mb-3 md:mb-6"
               style={{ color: '#FFFFFF' }}
             >
               Contact Us
@@ -163,23 +163,23 @@ export default function Contact() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-lg md:text-xl text-[#D1D5DB] max-w-2xl mx-auto font-medium"
+              className="text-sm md:text-xl text-[#D1D5DB] max-w-2xl mx-auto font-medium"
             >
               Have questions about our products, dealer opportunities, or require support? We are here to help.
             </motion.p>
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 lg:px-6 py-8 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
+        <section className="max-w-7xl mx-auto px-4 lg:px-6 py-6 md:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-16">
             
             {/* Contact Form */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="lg:col-span-7 bg-white p-6 sm:p-8 md:p-12 rounded-3xl shadow-xl border border-gray-100 relative"
+              className="lg:col-span-7 bg-white p-5 sm:p-8 md:p-12 rounded-2xl md:rounded-3xl shadow-xl border border-gray-100 relative"
             >
-              <h2 className="text-3xl font-heading font-bold text-gray-900 mb-8">Send an Inquiry</h2>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 mb-5 md:mb-8">Send an Inquiry</h2>
               
               {submitted ? (
                 <motion.div 
@@ -192,37 +192,37 @@ export default function Contact() {
                   <p className="text-gray-900">Thank you for contacting New Bharat Electricals. We have received your enquiry and our team will contact you shortly.</p>
                 </motion.div>
               ) : (
-                <form className="space-y-6" onSubmit={handleSubmit}>
+                <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                   {error && (
                     <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-200">
                       {error}
                     </div>
                   )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
-                      <input id="name" name="name" required type="text" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="John Doe" />
+                      <input id="name" name="name" required type="text" className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="John Doe" />
                     </div>
                     <div>
                       <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-2">Phone Number *</label>
-                      <input id="phone" name="phone" required type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="+91 94570 02000" />
+                      <input id="phone" name="phone" required type="tel" className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="+91 94570 02000" />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">Email Address *</label>
-                      <input id="email" name="email" required type="email" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="name@domain.com" />
+                      <input id="email" name="email" required type="email" className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="name@domain.com" />
                     </div>
                     <div>
                       <label htmlFor="company" className="block text-sm font-bold text-gray-700 mb-2">Company Name <span className="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                      <input id="company" name="company" type="text" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Your Company Name" />
+                      <input id="company" name="company" type="text" className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Your Company Name" />
                     </div>
                   </div>
 
                   <div>
                     <label htmlFor="inquiry-type" className="block text-sm font-bold text-gray-700 mb-2">Product Inquiry</label>
-                    <select id="inquiry-type" name="inquiry-type" required defaultValue="" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all text-gray-700">
+                    <select id="inquiry-type" name="inquiry-type" required defaultValue="" className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all text-gray-700">
                       <option value="" disabled>Select a category...</option>
                       <option value="Power Solutions (Inverters/UPS)">Power Solutions (Inverters/UPS)</option>
                       <option value="Solar Solutions">Solar Solutions</option>
@@ -235,14 +235,14 @@ export default function Contact() {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-bold text-gray-700 mb-2">Message</label>
-                    <textarea id="message" name="message" required rows={5} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Tell us how we can help you..."></textarea>
+                    <textarea id="message" name="message" required rows={5} className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all" placeholder="Tell us how we can help you..."></textarea>
                   </div>
 
-                  <div className="pt-4 flex flex-col sm:flex-row gap-4">
-                    <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-green text-white font-bold py-4 px-8 rounded-2xl hover:bg-brand-green-dark transition-colors flex items-center justify-center shadow-lg shadow-brand-green/30 disabled:opacity-70">
+                  <div className="pt-3 md:pt-4 flex flex-col sm:flex-row gap-3 md:gap-4">
+                    <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-green text-white font-bold py-3.5 md:py-4 px-8 rounded-xl md:rounded-2xl hover:bg-brand-green-dark transition-colors flex items-center justify-center shadow-lg shadow-brand-green/30 disabled:opacity-70">
                       {isSubmitting ? 'Sending...' : 'Send Inquiry'} {!isSubmitting && <Send size={18} className="ml-2" />}
                     </button>
-                    <a href="https://wa.me/919457002000" target="_blank" rel="noreferrer" className="sm:flex-1 bg-white border-2 border-[#25D366] text-[#25D366] font-bold py-4 px-8 rounded-2xl hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center text-center">
+                    <a href="https://wa.me/919457002000" target="_blank" rel="noreferrer" className="sm:flex-1 bg-white border-2 border-[#25D366] text-[#25D366] font-bold py-3.5 md:py-4 px-8 rounded-xl md:rounded-2xl hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center text-center">
                       <MessageCircle size={18} className="mr-2" /> Quick WhatsApp
                     </a>
                   </div>

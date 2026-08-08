@@ -8,16 +8,16 @@ export default function Categories() {
   if (loading) return null;
 
   return (
-    <section id="solutions" className="py-8 md:py-12 bg-white border-none">
+    <section id="solutions" className="py-6 md:py-12 bg-white border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="flex items-center justify-between mb-4 md:mb-8">
-          <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
+        <div className="flex items-center justify-between mb-3 md:mb-8">
+          <h2 className="text-lg md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Shop by Category
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 md:gap-6">
           {categories.map((cat, idx) => (
             <motion.div 
               key={cat.id}
@@ -27,7 +27,7 @@ export default function Categories() {
               transition={{ delay: idx * 0.1 }}
             >
               <Link to={`/${cat.slug}`} className="flex flex-col items-center group">
-                <div className="w-full aspect-square bg-brand-gray rounded-xl overflow-hidden mb-2 sm:mb-4 shadow-md border-none group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative">
+                <div className="w-full aspect-square bg-brand-gray rounded-xl overflow-hidden mb-1.5 sm:mb-4 shadow-md border-none group-hover:border-brand-green group-hover:shadow-md transition-all duration-300 relative">
                   <img 
                     src={cat.image_url || 'https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=400&auto=format&fit=crop'} 
                     alt={cat.name} 
@@ -36,7 +36,7 @@ export default function Categories() {
                   {/* Subtle overlay on hover */}
                   <div className="absolute inset-0 bg-brand-dark/0 group-hover:bg-brand-dark/10 transition-colors duration-300"></div>
                 </div>
-                <h3 className="font-heading font-bold text-gray-900 text-center text-xs sm:text-sm md:text-base group-hover:text-brand-green transition-colors">
+                <h3 className="font-heading font-bold text-gray-900 text-center text-[11px] sm:text-sm md:text-base group-hover:text-brand-green transition-colors">
                   {cat.name}
                 </h3>
               </Link>

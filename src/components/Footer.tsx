@@ -25,7 +25,7 @@ export default function Footer() {
   const mediaFooterLogo = getMediaUrl('footer_logo');
 
   return (
-    <footer className="bg-brand-dark pt-8 sm:pt-10 relative text-sm border-t-4 border-brand-green">
+    <footer className="bg-brand-dark pt-6 sm:pt-10 relative text-sm border-t-4 border-brand-green">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
 
         {/* Desktop Social Bar & Partner Call */}
