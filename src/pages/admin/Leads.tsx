@@ -70,7 +70,9 @@ export default function Leads() {
             (lead.phone || '').toLowerCase().includes(lowerSearch) ||
             (lead.email || '').toLowerCase().includes(lowerSearch) ||
             (lead.city || '').toLowerCase().includes(lowerSearch) ||
-            (lead.interestedIn || '').toLowerCase().includes(lowerSearch)
+            (lead.interestedIn || '').toLowerCase().includes(lowerSearch) ||
+            (lead.productName || '').toLowerCase().includes(lowerSearch) ||
+            (lead.productSku || '').toLowerCase().includes(lowerSearch)
           );
         }
 
@@ -149,7 +151,7 @@ export default function Leads() {
       return;
     }
 
-    const headers = ['Lead ID', 'Name', 'Mobile Number', 'Email', 'City', 'Interested Product', 'Date & Time', 'Status'];
+    const headers = ['Lead ID', 'Name', 'Mobile Number', 'Email', 'City', 'Interested Product', 'Product Name', 'Product SKU', 'Date & Time', 'Status'];
     const rows = leads.map(lead => [
       lead.id,
       lead.name,
@@ -157,6 +159,8 @@ export default function Leads() {
       lead.email,
       lead.city,
       lead.interestedIn,
+      lead.productName || '',
+      lead.productSku || '',
       new Date(lead.created_at).toLocaleString(),
       lead.status
     ]);
@@ -304,9 +308,25 @@ export default function Leads() {
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-green-light text-brand-green uppercase tracking-wide">
-                        {lead.interestedIn}
-                      </span>
+                      {lead.productName ? (
+                        <div>
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-green-light text-brand-green uppercase tracking-wide mb-1">
+                            {lead.interestedIn}
+                          </span>
+                          <div className="text-xs text-gray-800 font-semibold mt-1 max-w-[200px] truncate" title={lead.productName}>
+                            {lead.productName}
+                          </div>
+                          {lead.productSku && (
+                            <div className="text-[10px] text-gray-500 font-medium">
+                              SKU: {lead.productSku}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-green-light text-brand-green uppercase tracking-wide">
+                          {lead.interestedIn}
+                        </span>
+                      )}
                     </td>
                     <td className="py-4 px-6 text-xs text-gray-800 font-medium">
                       <div className="flex items-center gap-1.5">
