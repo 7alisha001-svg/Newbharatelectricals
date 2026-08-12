@@ -15,7 +15,7 @@ export default function Leads() {
       let query = supabase
         .from('inquiries')
         .select('*')
-        .eq('inquiry_type', 'Lead Capture')
+        .in('inquiry_type', ['Lead Capture', 'Product Enquiry'])
         .order('created_at', { ascending: false });
 
       const { data, error } = await query;
@@ -28,6 +28,9 @@ export default function Leads() {
           let interestedIn = 'Other';
           let status = 'New';
           let parsedMessage = '';
+          let productName = '';
+          let productSku = '';
+          let productId = '';
 
           try {
             const parsed = JSON.parse(item.message);
@@ -36,6 +39,9 @@ export default function Leads() {
             interestedIn = parsed.interested_in || 'Other';
             status = parsed.status || 'New';
             parsedMessage = parsed.message || '';
+            productName = parsed.product_name || '';
+            productSku = parsed.product_sku || '';
+            productId = parsed.product_id || '';
           } catch (e) {
             // Fallback for non-JSON or partial message
             parsedMessage = item.message || '';
@@ -47,7 +53,10 @@ export default function Leads() {
             city,
             interestedIn,
             status,
-            parsedMessage
+            parsedMessage,
+            productName,
+            productSku,
+            productId
           };
         });
 

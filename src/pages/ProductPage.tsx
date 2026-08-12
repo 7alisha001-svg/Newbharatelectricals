@@ -6,14 +6,17 @@ import {
   Share2,
   MessageCircle,
   ChevronRight,
-  Home
+  Home,
+  Send
 } from 'lucide-react';
 
 import { formatSlugToTitle } from '../utils/formatters';
 import { useStore } from '../context/StoreContext';
+import ProductEnquiryModal from '../components/ProductEnquiryModal';
 
 export default function ProductPage() {
   const { products, loading } = useStore();
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
 
   const {
     category,
@@ -346,15 +349,18 @@ export default function ProductPage() {
                 {/* Lead Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
 
-                  {/* Send Enquiry */}
-                  <a
-                    href={`https://wa.me/919457002000?text=${enquiryMessage}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm"
+                  {/* Enquiry Now */}
+                  <button
+                    type="button"
+                    onClick={() => setIsEnquiryOpen(true)}
+                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm cursor-pointer"
                   >
-                    Send Enquiry
-                  </a>
+                    <Send
+                      size={18}
+                      className="mr-2"
+                    />
+                    Enquiry Now
+                  </button>
 
                   {/* WhatsApp */}
                   <a
@@ -427,6 +433,17 @@ export default function ProductPage() {
         </section>
 
       </div>
+
+      {/* Product Enquiry Modal */}
+      <ProductEnquiryModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        product={{
+          id: product.id,
+          name: product.name,
+          sku: product.sku
+        }}
+      />
     </>
   );
 }

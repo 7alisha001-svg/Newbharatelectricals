@@ -205,6 +205,9 @@ async function startServer() {
     message: string;
     pageUrl: string;
     dateTime?: string;
+    productName?: string;
+    productSku?: string;
+    productId?: string;
   }) {
     const transporter = await getEmailTransporter();
 
@@ -240,6 +243,15 @@ async function startServer() {
     );
     const pageUrl = escapeHtml(
       submission.pageUrl
+    );
+    const productName = escapeHtml(
+      submission.productName || "N/A"
+    );
+    const productSku = escapeHtml(
+      submission.productSku || "N/A"
+    );
+    const productId = escapeHtml(
+      submission.productId || "N/A"
     );
 
     const fromHeader =
@@ -422,6 +434,65 @@ async function startServer() {
                   </span>
                 </td>
               </tr>
+
+              ${
+                submission.productName && submission.productName !== "N/A"
+                  ? `
+                    <tr>
+                      <td style="
+                        padding:12px 0;
+                        border-bottom:1px solid #f3f4f6;
+                        font-weight:bold;
+                      ">
+                        Product
+                      </td>
+
+                      <td style="
+                        padding:12px 0;
+                        border-bottom:1px solid #f3f4f6;
+                      ">
+                        <strong style="color:#047857;">
+                          ${productName}
+                        </strong>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="
+                        padding:12px 0;
+                        border-bottom:1px solid #f3f4f6;
+                        font-weight:bold;
+                      ">
+                        Product SKU
+                      </td>
+
+                      <td style="
+                        padding:12px 0;
+                        border-bottom:1px solid #f3f4f6;
+                      ">
+                        ${productSku}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="
+                        padding:12px 0;
+                        border-bottom:1px solid #f3f4f6;
+                        font-weight:bold;
+                      ">
+                        Product ID
+                      </td>
+
+                      <td style="
+                        padding:12px 0;
+                        border-bottom:1px solid #f3f4f6;
+                      ">
+                        ${productId}
+                      </td>
+                    </tr>
+                  `
+                  : ""
+              }
 
               <tr>
                 <td style="
@@ -1635,6 +1706,9 @@ async function startServer() {
         pageUrl,
         dateTime,
         source,
+        productName,
+        productSku,
+        productId,
       } = req.body;
 
       const validationError =
@@ -1693,6 +1767,15 @@ async function startServer() {
             "https://newbharatelectricals.com/",
 
           dateTime,
+
+          productName:
+            productName || undefined,
+
+          productSku:
+            productSku || undefined,
+
+          productId:
+            productId || undefined,
         });
 
         // Google Sheets sync
