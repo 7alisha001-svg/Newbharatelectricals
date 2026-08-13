@@ -689,10 +689,15 @@ export default function Contact() {
                   Electricals distributor?
                 </p>
 
-                <button className="text-brand-green font-bold text-sm uppercase tracking-wider hover:text-brand-green-dark transition-colors flex items-center">
-                  Learn More
-                  <Send size={14} className="ml-1" />
-                </button>
+                <a
+  href="https://wa.me/919457002000?text=Hello%20New%20Bharat%20Electricals,%20I%20am%20interested%20in%20becoming%20a%20dealer%20partner.%20Please%20share%20the%20dealer%20partnership%20details%20and%20requirements."
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center justify-center bg-brand-green text-white font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-xl hover:bg-brand-green-dark transition-colors shadow-md"
+>
+  Dealer Partnership
+  <MessageCircle size={16} className="ml-2" />
+</a>
 
               </div>
 
