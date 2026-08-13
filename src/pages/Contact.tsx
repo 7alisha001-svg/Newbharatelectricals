@@ -8,7 +8,8 @@ import {
   Send,
   CheckCircle2,
   Building,
-  Warehouse
+  Building2,
+  Warehouse,
 } from 'lucide-react';
 
 import { supabaseAnon } from '../lib/supabase';
@@ -17,8 +18,84 @@ import { SEO } from '../components/SEO';
 import { trackLeadSubmission } from '../lib/analytics';
 import MediaImage from '../components/MediaImage';
 
+interface LocationCardProps {
+  icon: React.ReactNode;
+  title: string;
+  companyName: string;
+  address: string;
+  mapUrl: string;
+  openMapsUrl: string;
+}
+
+function LocationCard({
+  icon,
+  title,
+  companyName,
+  address,
+  mapUrl,
+  openMapsUrl,
+}: LocationCardProps) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.1 }}
+      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-4 shadow-md sm:p-8"
+    >
+      {/* Icon */}
+      <div className="mb-4 flex h-14 w-14 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-brand-green/10">
+        {icon}
+      </div>
+
+      {/* Location Information */}
+      <div className="flex flex-1 flex-col">
+
+        {/* Title */}
+        <h3 className="mb-2 min-h-[30px] text-xl sm:min-h-[36px] sm:text-2xl font-black text-gray-900">
+          {title}
+        </h3>
+
+        {/* Company Name */}
+        <p className="mb-2 min-h-[20px] text-sm sm:min-h-[24px] sm:text-base font-semibold tracking-wide text-brand-green">
+          {companyName}
+        </p>
+
+        {/* Address */}
+        <p className="mb-3 min-h-[100px] text-sm sm:mb-4 sm:min-h-[128px] sm:text-lg font-medium leading-relaxed tracking-wide text-gray-900 whitespace-pre-line">
+          {address}
+        </p>
+
+        {/* Google Map */}
+        <div className="mt-auto overflow-hidden rounded-xl border border-gray-200">
+          <iframe
+            src={mapUrl}
+            title={`${title} map`}
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            className="h-40 sm:h-48 w-full border-0"
+          />
+        </div>
+
+        {/* Open in Maps */}
+        <a
+          href={openMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 sm:mt-4 inline-flex h-12 sm:h-14 items-center justify-center rounded-full border border-brand-green/20 bg-brand-green/10 px-4 py-2.5 font-bold text-brand-green transition-colors hover:bg-brand-green hover:text-white"
+        >
+          Open in Maps
+          <MapPin size={16} className="ml-2" />
+        </a>
+      </div>
+    </motion.article>
+  );
+}
+
 export default function Contact() {
   const { settings } = useStore();
+
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,12 +106,30 @@ export default function Contact() {
     setError(null);
 
     const form = e.target as HTMLFormElement;
-    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
-    const phone = (form.elements.namedItem('phone') as HTMLInputElement).value.trim();
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
-    const company = (form.elements.namedItem('company') as HTMLInputElement).value.trim();
-    const inquiryType = (form.elements.namedItem('inquiry-type') as HTMLSelectElement).value;
-    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim();
+
+    const name = (
+      form.elements.namedItem('name') as HTMLInputElement
+    ).value.trim();
+
+    const phone = (
+      form.elements.namedItem('phone') as HTMLInputElement
+    ).value.trim();
+
+    const email = (
+      form.elements.namedItem('email') as HTMLInputElement
+    ).value.trim();
+
+    const company = (
+      form.elements.namedItem('company') as HTMLInputElement
+    ).value.trim();
+
+    const inquiryType = (
+      form.elements.namedItem('inquiry-type') as HTMLSelectElement
+    ).value;
+
+    const message = (
+      form.elements.namedItem('message') as HTMLTextAreaElement
+    ).value.trim();
 
     if (!name) {
       setError('Full name is required.');
@@ -52,7 +147,9 @@ export default function Contact() {
     const phoneRegex = /^\+?[0-9\s\-()]{10,}$/;
 
     if (!phoneRegex.test(phone) || phoneClean.length < 10) {
-      setError('Please enter a valid phone number (minimum 10 digits).');
+      setError(
+        'Please enter a valid phone number (minimum 10 digits).'
+      );
       setIsSubmitting(false);
       return;
     }
@@ -77,27 +174,28 @@ export default function Contact() {
         company,
         status: 'New',
         is_contact: true,
-        message
+        message,
       };
 
-      const { data: insertedData, error: dbError } = await supabaseAnon
-        .from('inquiries')
-        .insert([
-          {
-            name,
-            phone,
-            inquiry_type: inquiryType,
-            message: JSON.stringify(payloadData)
-          }
-        ])
-        .select();
+      const { data: insertedData, error: dbError } =
+        await supabaseAnon
+          .from('inquiries')
+          .insert([
+            {
+              name,
+              phone,
+              inquiry_type: inquiryType,
+              message: JSON.stringify(payloadData),
+            },
+          ])
+          .select();
 
       if (dbError) throw dbError;
 
       const response = await fetch('/api/inquiries/submit', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           id: insertedData?.[0]?.id,
@@ -109,25 +207,31 @@ export default function Contact() {
           message,
           pageUrl: window.location.href,
           dateTime: new Date().toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata'
+            timeZone: 'Asia/Kolkata',
           }),
-          source: 'Contact Page'
-        })
+          source: 'Contact Page',
+        }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to deliver email.');
+        throw new Error(
+          result.error || 'Failed to deliver email.'
+        );
       }
 
       setSubmitted(true);
       trackLeadSubmission('Contact Form', inquiryType);
+
       form.reset();
 
-      setTimeout(() => setSubmitted(false), 10000);
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 10000);
     } catch (err: any) {
       console.error('Error submitting inquiry:', err);
+
       setError(
         err.message ||
           'There was a problem submitting your inquiry. Please try again.'
@@ -139,85 +243,78 @@ export default function Contact() {
 
   const breadcrumbs = [
     { name: 'Home', url: '/' },
-    { name: 'Contact Us', url: '/contact' }
+    { name: 'Contact Us', url: '/contact' },
   ];
 
   const contactFaqs = [
     {
       question: 'What are your business hours?',
       answer:
-        'We are open Monday to Saturday from 09:00 AM to 08:00 PM.'
+        'We are open Monday to Saturday from 09:00 AM to 08:00 PM.',
     },
     {
-      question: 'How do I request a site inspection or service call?',
+      question:
+        'How do I request a site inspection or service call?',
       answer:
-        'You can submit the contact form, click our WhatsApp floating button, or call our certified technical support directly.'
-    }
+        'You can submit the contact form, click our WhatsApp floating button, or call our certified technical support directly.',
+    },
   ];
 
   /*
-   * Get the same locations that are already stored in settings.
-   * No duplicate location data is created here.
+   * EXACT SAME 3 LOCATIONS AS HOME PAGE
    */
-  const locations = Array.isArray(settings?.social_links?.locations)
-    ? settings.social_links.locations
-    : [];
+  const locations: LocationCardProps[] = [
+    {
+      title: 'Head Office',
+      companyName: 'NEW BHARAT ELECTRICALS',
+      address:
+        'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun – 243601,\nUttar Pradesh, India',
+      mapUrl:
+        'https://www.google.com/maps?q=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India&output=embed',
+      openMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India',
+      icon: (
+        <Building
+          size={34}
+          className="text-brand-green"
+        />
+      ),
+    },
 
-  /*
-   * Keep the same three-location order:
-   * Office -> Branch -> Warehouse
-   */
-  const locationOrder = ['office', 'branch', 'warehouse'];
+    {
+      title: 'Branch Office',
+      companyName: 'NEW BHARAT ELECTRICALS',
+      address:
+        'Kargaina Market,\nOpp. Bharat Motors,\nChaupla Road,\nBareilly - 243001,\nUttar Pradesh, India',
+      mapUrl:
+        'https://www.google.com/maps?q=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India&output=embed',
+      openMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India',
+      icon: (
+        <Building2
+          size={34}
+          className="text-brand-green"
+        />
+      ),
+    },
 
-  const orderedLocations = locationOrder
-    .map((type) => locations.find((location: any) => location?.type === type))
-    .filter(Boolean);
-
-  /*
-   * If there are additional location records in the settings,
-   * add them only if we still have fewer than 3 locations.
-   */
-  if (orderedLocations.length < 3) {
-    locations.forEach((location: any) => {
-      if (
-        orderedLocations.length < 3 &&
-        location &&
-        !orderedLocations.includes(location)
-      ) {
-        orderedLocations.push(location);
-      }
-    });
-  }
-
-  const getLocationTitle = (location: any) => {
-    if (location?.type === 'warehouse') return 'Warehouse';
-    if (location?.type === 'branch') return 'Branch Office';
-    return 'Head Office';
-  };
-
-  const getLocationSubtitle = (location: any) => {
-    if (location?.type === 'warehouse') {
-      return 'Distribution & Logistics';
-    }
-
-    if (location?.type === 'branch') {
-      return 'Branch Office';
-    }
-
-    return (
-      location?.business_name ||
-      settings?.business_name ||
-      'New Bharat Electricals'
-    );
-  };
-
-  const getLocationIcon = (location: any) => {
-    if (location?.type === 'warehouse') {
-      return <Warehouse size={32} />;
-    }
-
-    return <Building size={32} />;
-  };
+    {
+      title: 'Warehouse',
+      companyName: 'NEW BHARAT ELECTRICALS',
+      address:
+        'New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh',
+      mapUrl:
+        'https://www.google.com/maps?q=New+Bharat+Electricals,+National+Highway+530B,+Opp.+Florence+Nightingale,+Ujhani+Road,+Badaun+243601,+Uttar+Pradesh,+India&output=embed',
+      openMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=New+Bharat+Electricals,+National+Highway+530B,+Opp.+Florence+Nightingale,+Ujhani+Road,+Badaun+243601,+Uttar+Pradesh,+India',
+      icon: (
+        <Warehouse
+          size={34}
+          className="text-brand-green"
+        />
+      ),
+    },
+  ];
 
   return (
     <>
@@ -231,8 +328,9 @@ export default function Contact() {
 
       <div className="w-full bg-white">
 
-        {/* Header */}
+        {/* ================= HEADER ================= */}
         <section className="bg-brand-dark py-8 md:py-16 text-center px-4 md:px-6 relative overflow-hidden">
+
           <div className="absolute inset-0 opacity-20">
             <MediaImage
               imageKey="contact_hero_banner"
@@ -243,6 +341,7 @@ export default function Contact() {
           </div>
 
           <div className="relative z-10">
+
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -258,13 +357,16 @@ export default function Contact() {
               transition={{ delay: 0.1 }}
               className="text-sm md:text-xl text-[#D1D5DB] max-w-2xl mx-auto font-medium"
             >
-              Have questions about our products, dealer opportunities, or require support? We are here to help.
+              Have questions about our products, dealer opportunities,
+              or require support? We are here to help.
             </motion.p>
+
           </div>
         </section>
 
-        {/* Contact Form + Sidebar */}
+        {/* ================= CONTACT FORM + SIDEBAR ================= */}
         <section className="max-w-7xl mx-auto px-4 lg:px-6 py-6 md:py-16">
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-16">
 
             {/* Contact Form */}
@@ -273,16 +375,19 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-7 bg-white p-5 sm:p-8 md:p-12 rounded-2xl md:rounded-3xl shadow-xl border border-gray-100 relative"
             >
+
               <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 mb-5 md:mb-8">
                 Send an Inquiry
               </h2>
 
               {submitted ? (
+
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-brand-green/10 border border-brand-green/30 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[300px]"
                 >
+
                   <CheckCircle2
                     size={64}
                     className="text-brand-green mb-4"
@@ -293,15 +398,20 @@ export default function Contact() {
                   </h3>
 
                   <p className="text-gray-900">
-                    Thank you for contacting New Bharat Electricals. We have
-                    received your enquiry and our team will contact you shortly.
+                    Thank you for contacting New Bharat Electricals.
+                    We have received your enquiry and our team will
+                    contact you shortly.
                   </p>
+
                 </motion.div>
+
               ) : (
+
                 <form
                   className="space-y-4 md:space-y-6"
                   onSubmit={handleSubmit}
                 >
+
                   {error && (
                     <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-200">
                       {error}
@@ -309,6 +419,7 @@ export default function Contact() {
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
                     <div>
                       <label
                         htmlFor="name"
@@ -344,9 +455,11 @@ export default function Contact() {
                         placeholder="+91 94570 02000"
                       />
                     </div>
+
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
                     <div>
                       <label
                         htmlFor="email"
@@ -384,9 +497,11 @@ export default function Contact() {
                         placeholder="Your Company Name"
                       />
                     </div>
+
                   </div>
 
                   <div>
+
                     <label
                       htmlFor="inquiry-type"
                       className="block text-sm font-bold text-gray-700 mb-2"
@@ -401,6 +516,7 @@ export default function Contact() {
                       defaultValue=""
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all text-gray-700"
                     >
+
                       <option value="" disabled>
                         Select a category...
                       </option>
@@ -428,10 +544,13 @@ export default function Contact() {
                       <option value="Other / Support">
                         Other / Support
                       </option>
+
                     </select>
+
                   </div>
 
                   <div>
+
                     <label
                       htmlFor="message"
                       className="block text-sm font-bold text-gray-700 mb-2"
@@ -447,15 +566,19 @@ export default function Contact() {
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all"
                       placeholder="Tell us how we can help you..."
                     />
+
                   </div>
 
                   <div className="pt-3 md:pt-4 flex flex-col sm:flex-row gap-3 md:gap-4">
+
                     <button
                       type="submit"
                       disabled={isSubmitting}
                       className="flex-1 bg-brand-green text-white font-bold py-3.5 md:py-4 px-8 rounded-xl md:rounded-2xl hover:bg-brand-green-dark transition-colors flex items-center justify-center shadow-lg shadow-brand-green/30 disabled:opacity-70"
                     >
-                      {isSubmitting ? 'Sending...' : 'Send Inquiry'}
+                      {isSubmitting
+                        ? 'Sending...'
+                        : 'Send Inquiry'}
 
                       {!isSubmitting && (
                         <Send size={18} className="ml-2" />
@@ -468,12 +591,19 @@ export default function Contact() {
                       rel="noreferrer"
                       className="sm:flex-1 bg-white border-2 border-[#25D366] text-[#25D366] font-bold py-3.5 md:py-4 px-8 rounded-xl md:rounded-2xl hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center text-center"
                     >
-                      <MessageCircle size={18} className="mr-2" />
+                      <MessageCircle
+                        size={18}
+                        className="mr-2"
+                      />
+
                       Quick WhatsApp
                     </a>
+
                   </div>
+
                 </form>
               )}
+
             </motion.div>
 
             {/* Contact Info Sidebar */}
@@ -482,18 +612,22 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-5 bg-brand-gray p-6 sm:p-8 md:p-12 rounded-3xl"
             >
+
               <h3 className="text-2xl font-heading font-bold text-gray-900 mb-8">
                 Reach Out Directly
               </h3>
 
               <div className="space-y-8">
 
+                {/* Phone */}
                 <div className="flex">
+
                   <div className="bg-white p-3 rounded-xl shadow-sm text-brand-green mr-5 h-min">
                     <Phone size={24} />
                   </div>
 
                   <div>
+
                     <p className="font-bold text-gray-900 text-lg">
                       Call Us
                     </p>
@@ -508,15 +642,20 @@ export default function Contact() {
                     >
                       +91 94570 02000
                     </a>
+
                   </div>
+
                 </div>
 
+                {/* Email */}
                 <div className="flex">
+
                   <div className="bg-white p-3 rounded-xl shadow-sm text-brand-green mr-5 h-min">
                     <Mail size={24} />
                   </div>
 
                   <div>
+
                     <p className="font-bold text-gray-900 text-lg">
                       Email Support
                     </p>
@@ -531,213 +670,69 @@ export default function Contact() {
                     >
                       info@newbharatelectricals.com
                     </a>
+
                   </div>
+
                 </div>
 
               </div>
 
+              {/* Dealer Partnership */}
               <div className="mt-12 bg-white p-6 rounded-2xl border border-brand-green/20">
+
                 <h4 className="font-bold text-gray-900 mb-2">
                   Dealer Partnership
                 </h4>
 
                 <p className="text-gray-900 text-sm mb-4">
-                  Interested in becoming a certified New Bharat Electricals
-                  distributor?
+                  Interested in becoming a certified New Bharat
+                  Electricals distributor?
                 </p>
 
                 <button className="text-brand-green font-bold text-sm uppercase tracking-wider hover:text-brand-green-dark transition-colors flex items-center">
                   Learn More
                   <Send size={14} className="ml-1" />
                 </button>
+
               </div>
+
             </motion.div>
+
           </div>
         </section>
 
-        {/* Our Locations */}
-        <section className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
-          <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+        {/* ================= OUR LOCATIONS ================= */}
+        <section className="bg-white py-8 md:py-16">
 
-            <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 uppercase tracking-tight mb-4">
+          <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
+
+            {/* Section Heading */}
+            <div className="mb-6 md:mb-10 text-center">
+
+              <h2 className="text-2xl md:text-4xl font-black text-gray-900">
                 Our Locations
               </h2>
 
-              <div className="w-16 h-1 bg-brand-green mx-auto mb-6" />
-
-              <p className="text-gray-900 max-w-2xl mx-auto text-lg">
-                Visit our head office, branch office or warehouse.
+              <p className="mt-1 md:mt-2 text-sm md:text-base font-medium text-gray-600">
+                Visit our offices and service points
               </p>
+
             </div>
 
-            {orderedLocations.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {/* EXACT SAME 3 LOCATION CARDS AS HOME PAGE */}
+            <div className="grid items-stretch gap-3 md:gap-6 lg:grid-cols-3">
 
-                {orderedLocations.slice(0, 3).map((location: any, index: number) => {
-                  const locationTitle = getLocationTitle(location);
-                  const locationSubtitle = getLocationSubtitle(location);
-
-                  return (
-                    <motion.div
-                      key={`${location?.type || 'location'}-${index}`}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col border border-gray-100"
-                    >
-
-                      {/* Location Information */}
-                      <div className="p-8 pb-6 flex-1">
-
-                        <div
-                          className={`w-16 h-16 ${
-                            location?.type === 'warehouse'
-                              ? 'bg-brand-dark/5 text-brand-dark'
-                              : 'bg-brand-green/10 text-brand-green'
-                          } rounded-xl flex items-center justify-center mb-6`}
-                        >
-                          {getLocationIcon(location)}
-                        </div>
-
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                          {locationTitle}
-                        </h3>
-
-                        <h4
-                          className={`${
-                            location?.type === 'warehouse'
-                              ? 'text-gray-700'
-                              : 'text-brand-green'
-                          } font-semibold mb-4`}
-                        >
-                          {locationSubtitle}
-                        </h4>
-
-                        {/* Address */}
-                        <div className="flex items-start text-gray-900 mb-4 gap-3">
-                          <MapPin
-                            size={20}
-                            className="mt-1 flex-shrink-0 text-gray-900"
-                          />
-
-                          <p className="leading-relaxed whitespace-pre-line">
-                            {location?.address ||
-                              (location?.type === 'office'
-                                ? settings?.office_address ||
-                                  'Near Dr Amar Singh,\nChaudhry Sarai,\nLalpul Road,\nBudaun HO,\nBudaun – 243601,\nUttar Pradesh'
-                                : location?.type === 'warehouse'
-                                ? settings?.warehouse_address ||
-                                  'Budaun,\nLoda Bahedi,\nUttar Pradesh – 243601'
-                                : 'Address not available')}
-                          </p>
-                        </div>
-
-                        {/* Phone */}
-                        {location?.phone && (
-                          <div className="flex items-center text-gray-900 gap-3 mb-4">
-                            <Phone
-                              size={20}
-                              className="flex-shrink-0 text-gray-900"
-                            />
-
-                            <a
-                              href={`tel:${location.phone}`}
-                              className="hover:text-brand-green transition-colors"
-                            >
-                              {location.phone}
-                            </a>
-                          </div>
-                        )}
-
-                        {/* Business Hours */}
-                        {location?.business_hours && (
-                          <div className="flex items-center text-gray-900 gap-3 mb-6">
-                            <div className="flex items-center">
-                              <span className="font-bold text-sm">
-                                Hours:
-                              </span>
-
-                              <span className="ml-2">
-                                {location.business_hours}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Google Maps */}
-                      <div className="w-full h-[250px] bg-gray-100 relative">
-
-                        {location?.map_embed_code ? (
-                          <div
-                            className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
-                            dangerouslySetInnerHTML={{
-                              __html: location.map_embed_code
-                            }}
-                          />
-                        ) : location?.map_link ? (
-                          <iframe
-                            src={`https://www.google.com/maps?q=${encodeURIComponent(
-                              location.map_link
-                            )}&output=embed`}
-                            width="100%"
-                            height="100%"
-                            style={{ border: 0 }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            title={`${locationTitle} Google Maps`}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm px-6 text-center">
-                            Google Maps location is not available.
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Directions */}
-                      <div className="p-6 bg-gray-50 border-t border-gray-100">
-                        <a
-                          href={
-                            location?.map_link ||
-                            `https://maps.google.com/?q=${encodeURIComponent(
-                              location?.address ||
-                                settings?.business_name ||
-                                'New Bharat Electricals'
-                            )}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block w-full bg-brand-dark text-white text-center font-bold py-3 rounded-2xl hover:bg-brand-green transition-colors"
-                        >
-                          Get Directions
-                        </a>
-                      </div>
-
-                    </motion.div>
-                  );
-                })}
-
-              </div>
-            ) : (
-              <div className="text-center bg-white rounded-2xl p-10 border border-gray-100">
-                <MapPin
-                  size={40}
-                  className="mx-auto mb-4 text-brand-green"
+              {locations.map((location) => (
+                <LocationCard
+                  key={location.title}
+                  {...location}
                 />
+              ))}
 
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Our Locations
-                </h3>
+            </div>
 
-                <p className="text-gray-600">
-                  Location information will appear here.
-                </p>
-              </div>
-            )}
           </div>
+
         </section>
 
       </div>
