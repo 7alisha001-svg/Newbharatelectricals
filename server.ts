@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
@@ -50,10 +49,14 @@ async function getEmailTransporter() {
     host,
     port,
     secure: port === 465,
+    requireTLS: port === 587,
     auth: {
       user,
       pass,
     },
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
   });
 
   await emailTransporter.verify();
@@ -727,14 +730,22 @@ async function startServer() {
         `,
       };
 
-      const infoCustomer =
-        await transporter.sendMail(
-          customerMailOptions
-        );
+      try {
+        const infoCustomer =
+          await transporter.sendMail(
+            customerMailOptions
+          );
 
-      console.log(
-        `[SMTP] Customer confirmation sent. Message ID: ${infoCustomer.messageId}`
-      );
+        console.log(
+          `[SMTP] Customer confirmation sent. Message ID: ${infoCustomer.messageId}`
+        );
+      } catch (customerEmailError: any) {
+        // Customer confirmation failure must NOT make the admin enquiry fail.
+        console.error(
+          "[SMTP-CUSTOMER-ERROR]",
+          customerEmailError?.message || customerEmailError
+        );
+      }
     }
   }
 
