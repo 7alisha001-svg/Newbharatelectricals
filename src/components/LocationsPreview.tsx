@@ -83,9 +83,9 @@ export default function LocationsPreview() {
       address:
         'Near Dr Amar Singh,\nChaudhary Saray Lalpul Road,\nBudaun HO, Budaun – 243601,\nUttar Pradesh, India',
       mapUrl:
-        'https://www.google.com/maps?q=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India&output=embed',
+        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3521.7371184971817!2d79.1197182!3d28.0325095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397545e7cafc0c57%3A0x3098962b9f18e640!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1786708046453!5m2!1sen!2sin',
       openMapsUrl:
-        'https://www.google.com/maps/search/?api=1&query=Near+Dr+Amar+Singh,+Chaudhary+Saray+Lalpul+Road,+Budaun+243601,+Uttar+Pradesh,+India',
+        'https://maps.app.goo.gl/BppsGWKx33j5uj6J7',
       icon: <Building size={34} className="text-brand-green" />,
     },
 
@@ -95,9 +95,9 @@ export default function LocationsPreview() {
       address:
         'Kargaina Market,\nOpp. Bharat Motors,\nChaupla Road,\nBareilly - 243001,\nUttar Pradesh, India',
       mapUrl:
-        'https://www.google.com/maps?q=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India&output=embed',
+        'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3512.0906264151263!2d79.3913840754896!3d28.325858975833693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjjCsDE5JzMzLjEiTiA3OcKwMjMnMzguMyJF!5e0!3m2!1sen!2sin!4v1786708131537!5m2!1sen!2sin',
       openMapsUrl:
-        'https://www.google.com/maps/search/?api=1&query=Kargaina+Market%2C+Opp.+Bharat+Motors%2C+Chaupla+Road%2C+Bareilly+243001%2C+Uttar+Pradesh%2C+India',
+        'https://maps.app.goo.gl/RX1CE19EW7p5LDgz5',
       icon: <Building2 size={34} className="text-brand-green" />,
     },
 
@@ -107,9 +107,9 @@ export default function LocationsPreview() {
       address:
         'New Bharat Electricals\nNational Highway 530B\nOpp. Florence Nightingale\nUjhani Road\nBadaun – 243601\nUttar Pradesh',
       mapUrl:
-        'https://www.google.com/maps?q=New+Bharat+Electricals,+National+Highway+530B,+Opp.+Florence+Nightingale,+Ujhani+Road,+Badaun+243601,+Uttar+Pradesh,+India&output=embed',
+        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3521.980147224596!2d79.103706!3d28.0250826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3975471789b6cc9b%3A0x6148611cea0ac42e!2sBharat%20Energies!5e0!3m2!1sen!2sin!4v1786707864307!5m2!1sen!2sin',
       openMapsUrl:
-        'https://www.google.com/maps/search/?api=1&query=New+Bharat+Electricals,+National+Highway+530B,+Opp.+Florence+Nightingale,+Ujhani+Road,+Badaun+243601,+Uttar+Pradesh,+India',
+        'https://maps.app.goo.gl/t2mqDyMLAfRsUybg9',
       icon: <Warehouse size={34} className="text-brand-green" />,
     },
   ];
