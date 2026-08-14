@@ -35,8 +35,8 @@ const defaultWarehouse: LocationData = {
   phone: '',
   email: '',
   business_hours: 'Mon - Sat: 10:00 AM - 7:00 PM',
-  map_embed_code: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3513.3102435798993!2d79.11718047535552!3d28.02640207599026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a008c2306d1dd5%3A0xe979dcc4999f7d0c!2sNew%20Bharat%20Electricals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
-  map_link: 'https://maps.google.com/?q=Loda+Bahedi,Budaun',
+  map_embed_code: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3187.2085967722574!2d79.103706!3d28.0250826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3975471789b6cc9b%3A0x6148611cea0ac42e!2sBharat%20Energies!5e1!3m2!1sen!2sin!4v1786642702074!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>',
+  map_link: 'https://maps.app.goo.gl/xe516YUtZfAUSDrR9?g_st=ic',
   status: 'active'
 };
 

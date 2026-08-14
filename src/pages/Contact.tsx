@@ -177,17 +177,7 @@ export default function Contact() {
         message,
       };
 
-      const { data: insertedData, error: dbError } =
-        await supabaseAnon
-          .from('inquiries')
-          .insert([
-            {
-              name,
-              phone,
-              inquiry_type: inquiryType,
-              message: JSON.stringify(payloadData),
-            },
-          ])
+     
           .select();
 
       if (dbError) throw dbError;
