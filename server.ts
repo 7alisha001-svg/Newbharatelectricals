@@ -781,6 +781,21 @@ async function startServer() {
     const socialLinks =
       settings?.social_links || {};
 
+    const syncEnabled =
+      socialLinks.google_sheets_sync_enabled !== false;
+
+    if (!syncEnabled) {
+      console.log(
+        "[SHEETS] Sync is disabled in settings."
+      );
+
+      return {
+        success: true,
+        method: "skipped",
+        skipped: true,
+      };
+    }
+
     const appScriptUrl =
       socialLinks.google_sheets_app_script_url;
 
@@ -2123,6 +2138,198 @@ async function startServer() {
           success: false,
           error:
             "Failed to send inquiry email.",
+        });
+      }
+    }
+  );
+
+  // ====================================================
+  // SHEETS SYNC PENDING RECORDS
+  // ====================================================
+
+  app.post(
+    "/api/sheets/sync-pending",
+    async (req, res) => {
+      const { accessToken } = req.body;
+
+      if (!accessToken) {
+        return res.status(400).json({
+          error: "Missing access token",
+        });
+      }
+
+      const results = {
+        successCount: 0,
+        failCount: 0,
+        errors: [] as string[],
+      };
+
+      try {
+        const { data: pendingInquiries } =
+          await supabaseClient
+            .from("inquiries")
+            .select("*")
+            .or(
+              "sheets_sync_status.eq.pending,sheets_sync_status.eq.failed,sheets_sync_status.is.null"
+            );
+
+        for (const inquiry of pendingInquiries ||
+          []) {
+          try {
+            let messageObj: any = {};
+            try {
+              messageObj = JSON.parse(
+                inquiry.message || "{}"
+              );
+            } catch {
+              messageObj = {
+                raw_text: inquiry.message,
+              };
+            }
+
+            if (messageObj.sheets_sync_status ===
+              "synced") {
+              continue;
+            }
+
+            await syncRowToSheets(
+              "inquiry",
+              {
+                dateTime: inquiry.created_at,
+                fullName: inquiry.name,
+                phoneNumber: inquiry.phone,
+                emailAddress:
+                  messageObj.email ||
+                  "N/A",
+                companyName:
+                  messageObj.company ||
+                  "N/A",
+                subject:
+                  inquiry.inquiry_type ||
+                  "General Enquiry",
+                message:
+                  messageObj.message ||
+                  inquiry.message ||
+                  "",
+                source:
+                  messageObj.source ||
+                  "Popup/Contact Page",
+              },
+              accessToken
+            );
+
+            await updateSyncStatus(
+              "inquiries",
+              inquiry.id,
+              "synced"
+            );
+
+            results.successCount++;
+          } catch (err: any) {
+            results.failCount++;
+            results.errors.push(
+              `Inquiry ${inquiry.id}: ${err.message}`
+            );
+
+            await updateSyncStatus(
+              "inquiries",
+              inquiry.id,
+              "pending",
+              err.message || String(err)
+            );
+          }
+        }
+
+        const { data: pendingOrders } =
+          await supabaseClient
+            .from("orders")
+            .select("*")
+            .or(
+              "sheets_sync_status.eq.pending,sheets_sync_status.eq.failed,sheets_sync_status.is.null"
+            );
+
+        for (const order of pendingOrders ||
+          []) {
+          try {
+            const rawCart = order.cart_items || [];
+            const cartItems = Array.isArray(
+              rawCart
+            )
+              ? rawCart
+              : [];
+
+            let cartObj: any = {};
+            try {
+              cartObj =
+                typeof rawCart === "object"
+                  ? rawCart
+                  : JSON.parse(
+                      rawCart || "{}"
+                    );
+            } catch {
+              cartObj = { raw: rawCart };
+            }
+
+            if (cartObj.sheets_sync_status ===
+              "synced") {
+              continue;
+            }
+
+            await syncRowToSheets(
+              "order",
+              {
+                orderId: order.order_id,
+                dateTime: order.created_at,
+                firstName: order.first_name,
+                lastName: order.last_name,
+                email: order.email,
+                phone: order.phone,
+                address: order.address,
+                city: order.city,
+                state: order.state,
+                pincode: order.pincode,
+                paymentMethod:
+                  order.payment_method,
+                totalAmount: order.total_amount,
+                cartItems,
+                status: order.status ||
+                  "Pending",
+              },
+              accessToken
+            );
+
+            await updateSyncStatus(
+              "orders",
+              order.id,
+              "synced"
+            );
+
+            results.successCount++;
+          } catch (err: any) {
+            results.failCount++;
+            results.errors.push(
+              `Order ${order.id}: ${err.message}`
+            );
+
+            await updateSyncStatus(
+              "orders",
+              order.id,
+              "pending",
+              err.message || String(err)
+            );
+          }
+        }
+
+        return res.json(results);
+      } catch (err: any) {
+        console.error(
+          "[SHEETS-SYNC-ERROR]",
+          err
+        );
+
+        return res.status(500).json({
+          error:
+            err.message || "Sync failed",
         });
       }
     }

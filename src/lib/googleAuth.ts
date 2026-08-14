@@ -72,7 +72,14 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
     } catch (e) {}
     return { user: result.user, accessToken: cachedAccessToken };
   } catch (error: any) {
-    console.error('Sign in error:', error);
+    const origin =
+      typeof window !== 'undefined'
+        ? window.location.origin
+        : 'unknown';
+    console.error(
+      `Sign in error from origin ${origin}:`,
+      error
+    );
     throw error;
   } finally {
     isSigningIn = false;
