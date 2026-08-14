@@ -125,7 +125,7 @@ export default function ProductEnquiryModal({
         message: message.trim() || ''
       };
 
-      const { data: insertedData, error: dbError } = await supabaseAnon
+      const { error: dbError } = await supabaseAnon
         .from('inquiries')
         .insert([
           {
@@ -134,45 +134,49 @@ export default function ProductEnquiryModal({
             inquiry_type: 'Product Enquiry',
             message: JSON.stringify(payloadData)
           }
-        ])
-        .select();
+        ]);
 
       if (dbError) {
         throw dbError;
       }
 
       // 2. Send email notification via server API
-      const response = await fetch('/api/inquiries/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: insertedData?.[0]?.id,
-          fullName: fullName.trim(),
-          emailAddress: email.trim(),
-          phoneNumber: phone.trim(),
-          companyName: undefined,
-          subject: `Product Enquiry: ${product.name}`,
-          message:
-            message.trim() || 'No additional message provided.',
-          pageUrl: window.location.href,
-          dateTime: new Date().toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata'
-          }),
-          source: 'Product Page',
-          productName: product.name,
-          productSku: product.sku,
-          productId: product.id
-        })
-      });
+      let emailWarning = false;
 
-      const result = await response.json();
+      try {
+        const response = await fetch('/api/inquiries/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fullName: fullName.trim(),
+            emailAddress: email.trim(),
+            phoneNumber: phone.trim(),
+            companyName: undefined,
+            subject: `Product Enquiry: ${product.name}`,
+            message:
+              message.trim() || 'No additional message provided.',
+            pageUrl: window.location.href,
+            dateTime: new Date().toLocaleString('en-IN', {
+              timeZone: 'Asia/Kolkata'
+            }),
+            source: 'Product Page',
+            productName: product.name,
+            productSku: product.sku,
+            productId: product.id
+          })
+        });
 
-      if (!response.ok) {
-        throw new Error(
-          result.error || 'Failed to submit enquiry.'
-        );
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          emailWarning = true;
+          console.warn('Product enquiry saved but email notification failed:', result.error);
+        }
+      } catch (apiErr) {
+        emailWarning = true;
+        console.warn('Product enquiry saved but email API error:', apiErr);
       }
 
       // Show success message

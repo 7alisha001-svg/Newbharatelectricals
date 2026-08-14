@@ -106,42 +106,48 @@ export default function LeadCapturePopup() {
         message: 'Lead captured from first-time visitor popup'
       };
 
-      const { data: insertedData, error: dbError } = await supabaseAnon
+      const { error: dbError } = await supabaseAnon
         .from('inquiries')
         .insert([{
           name: fullName.trim(),
           phone: mobile.trim(),
           inquiry_type: 'Lead Capture',
           message: JSON.stringify(leadPayload)
-        }])
-        .select();
+        }]);
 
       if (dbError) throw dbError;
 
       // 2. Trigger email notification via unified API
-      const response = await fetch('/api/inquiries/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: insertedData?.[0]?.id,
-          fullName: fullName.trim(),
-          emailAddress: email.trim() || 'N/A',
-          phoneNumber: mobile.trim(),
-          companyName: undefined,
-          subject: `Consultation: ${interestedIn}`,
-          message: `Product Segment: ${interestedIn}\nPreferred City: ${city.trim()}`,
-          pageUrl: window.location.href,
-          dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-          source: 'Popup'
-        }),
-      });
+      let emailWarning = false;
 
-      const result = await response.json();
+      try {
+        const response = await fetch('/api/inquiries/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullName: fullName.trim(),
+            emailAddress: email.trim() || 'N/A',
+            phoneNumber: mobile.trim(),
+            companyName: undefined,
+            subject: `Consultation: ${interestedIn}`,
+            message: `Product Segment: ${interestedIn}\nPreferred City: ${city.trim()}`,
+            pageUrl: window.location.href,
+            dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            source: 'Popup'
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to dispatch lead notifications.");
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          emailWarning = true;
+          console.warn('Lead saved but email notification failed:', result.error);
+        }
+      } catch (apiErr) {
+        emailWarning = true;
+        console.warn('Lead saved but email API error:', apiErr);
       }
 
       setIsSuccess(true);

@@ -1837,7 +1837,7 @@ async function startServer() {
         return res.status(200).json({
           success: true,
           message:
-            "Thank you for contacting New Bharat Electricals. We have received your enquiry.",
+            "Thank you for visiting New Bharat Electricals. Your inquiry has been submitted successfully. Our team will get back to you soon.",
         });
       } catch (err: any) {
         console.error(
@@ -1856,10 +1856,13 @@ async function startServer() {
           );
         }
 
-        return res.status(500).json({
-          success: false,
-          error:
-            "Your enquiry could not be emailed right now. Please try again shortly.",
+        return res.status(200).json({
+          success: true,
+          message:
+            "Thank you for visiting New Bharat Electricals. Your inquiry has been submitted successfully. Our team will get back to you soon.",
+          emailWarning: true,
+          emailError:
+            err.message || String(err),
         });
       }
     }

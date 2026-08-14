@@ -177,48 +177,51 @@ export default function Contact() {
         message,
       };
 
-      const { data: insertedData, error: dbError } =
-        await supabaseAnon
-          .from('inquiries')
-          .insert([
-            {
-              name,
-              phone,
-              inquiry_type: inquiryType,
-              message: JSON.stringify(payloadData),
-            },
-          ])
-          .select();
+      const { error: dbError } = await supabaseAnon
+        .from('inquiries')
+        .insert([
+          {
+            name,
+            phone,
+            inquiry_type: inquiryType,
+            message: JSON.stringify(payloadData),
+          },
+        ]);
 
       if (dbError) throw dbError;
 
-      const response = await fetch('/api/inquiries/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: insertedData?.[0]?.id,
-          fullName: name,
-          emailAddress: email,
-          phoneNumber: phone,
-          companyName: company || undefined,
-          subject: inquiryType,
-          message,
-          pageUrl: window.location.href,
-          dateTime: new Date().toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
+      let emailWarning = false;
+
+      try {
+        const response = await fetch('/api/inquiries/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullName: name,
+            emailAddress: email,
+            phoneNumber: phone,
+            companyName: company || undefined,
+            subject: inquiryType,
+            message,
+            pageUrl: window.location.href,
+            dateTime: new Date().toLocaleString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+            }),
+            source: 'Contact Page',
           }),
-          source: 'Contact Page',
-        }),
-      });
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(
-          result.error || 'Failed to deliver email.'
-        );
+        if (!response.ok || !result.success) {
+          emailWarning = true;
+          console.warn('Inquiry saved but email notification failed:', result.error);
+        }
+      } catch (apiErr) {
+        emailWarning = true;
+        console.warn('Inquiry saved but email API error:', apiErr);
       }
 
       setSubmitted(true);
@@ -398,9 +401,9 @@ export default function Contact() {
                   </h3>
 
                   <p className="text-gray-900">
-                    Thank you for contacting New Bharat Electricals.
-                    We have received your enquiry and our team will
-                    contact you shortly.
+                    Thank you for visiting New Bharat Electricals.
+                    Your inquiry has been submitted successfully.
+                    Our team will get back to you soon.
                   </p>
 
                 </motion.div>
