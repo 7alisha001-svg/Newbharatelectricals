@@ -177,16 +177,13 @@ export default function Contact() {
         message,
       };
 
-      const { error: dbError } = await supabaseAnon
-        .from('inquiries')
-        .insert([
-          {
-            name,
-            phone,
-            inquiry_type: inquiryType,
-            message: JSON.stringify(payloadData),
-          },
-        ]);
+      const { data: inquiryId, error: dbError } = await supabaseAnon
+        .rpc('create_inquiry', {
+          p_name: name,
+          p_phone: phone,
+          p_inquiry_type: inquiryType,
+          p_message: JSON.stringify(payloadData)
+        });
 
       if (dbError) throw dbError;
 
@@ -199,6 +196,7 @@ export default function Contact() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            id: inquiryId,
             fullName: name,
             emailAddress: email,
             phoneNumber: phone,

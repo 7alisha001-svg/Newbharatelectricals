@@ -106,14 +106,13 @@ export default function LeadCapturePopup() {
         message: 'Lead captured from first-time visitor popup'
       };
 
-      const { error: dbError } = await supabaseAnon
-        .from('inquiries')
-        .insert([{
-          name: fullName.trim(),
-          phone: mobile.trim(),
-          inquiry_type: 'Lead Capture',
-          message: JSON.stringify(leadPayload)
-        }]);
+      const { data: inquiryId, error: dbError } = await supabaseAnon
+        .rpc('create_inquiry', {
+          p_name: fullName.trim(),
+          p_phone: mobile.trim(),
+          p_inquiry_type: 'Lead Capture',
+          p_message: JSON.stringify(leadPayload)
+        });
 
       if (dbError) throw dbError;
 
@@ -127,6 +126,7 @@ export default function LeadCapturePopup() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            id: inquiryId,
             fullName: fullName.trim(),
             emailAddress: email.trim() || 'N/A',
             phoneNumber: mobile.trim(),

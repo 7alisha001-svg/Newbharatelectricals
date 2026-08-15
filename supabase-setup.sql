@@ -45,3 +45,27 @@ CREATE POLICY "Allow anonymous inserts to orders"
 ON public.orders FOR INSERT 
 TO anon 
 WITH CHECK (true);
+
+-- 3. Inquiry creation helper (returns inserted id without requiring frontend SELECT)
+CREATE OR REPLACE FUNCTION public.create_inquiry(
+  p_name text,
+  p_phone text,
+  p_inquiry_type text,
+  p_message text
+)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_id uuid;
+BEGIN
+  INSERT INTO public.inquiries (name, phone, inquiry_type, message)
+  VALUES (p_name, p_phone, p_inquiry_type, p_message)
+  RETURNING id INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.create_inquiry(text, text, text, text) TO anon;
+GRANT EXECUTE ON FUNCTION public.create_inquiry(text, text, text, text) TO authenticated;

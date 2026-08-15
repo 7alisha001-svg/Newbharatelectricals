@@ -125,16 +125,13 @@ export default function ProductEnquiryModal({
         message: message.trim() || ''
       };
 
-      const { error: dbError } = await supabaseAnon
-        .from('inquiries')
-        .insert([
-          {
-            name: fullName.trim(),
-            phone: phone.trim(),
-            inquiry_type: 'Product Enquiry',
-            message: JSON.stringify(payloadData)
-          }
-        ]);
+      const { data: inquiryId, error: dbError } = await supabaseAnon
+        .rpc('create_inquiry', {
+          p_name: fullName.trim(),
+          p_phone: phone.trim(),
+          p_inquiry_type: 'Product Enquiry',
+          p_message: JSON.stringify(payloadData)
+        });
 
       if (dbError) {
         throw dbError;
@@ -150,6 +147,7 @@ export default function ProductEnquiryModal({
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            id: inquiryId,
             fullName: fullName.trim(),
             emailAddress: email.trim(),
             phoneNumber: phone.trim(),

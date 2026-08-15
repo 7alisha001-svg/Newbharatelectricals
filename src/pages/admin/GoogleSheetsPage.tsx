@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
-import { 
-  initAuth, 
-  googleSignIn, 
-  logout, 
-  
-} from '../../lib/googleAuth';
-import { 
-  listUserSpreadsheets, 
-  createSpreadsheet, 
-  readSpreadsheetValues, 
-  updateSpreadsheetValues, 
+import {
+  connectGoogleAccount,
+  disconnectGoogleAccount,
+} from '../../lib/googleSheetsAuth';
+import {
+  listUserSpreadsheets,
+  createSpreadsheet,
+  readSpreadsheetValues,
+  updateSpreadsheetValues,
   getSpreadsheetSheets,
-  GoogleSpreadsheet 
+  GoogleSpreadsheet
 } from '../../lib/googleSheetsService';
-import { 
-  FileSpreadsheet, 
-  Download, 
-  Upload, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Loader2, 
-  LogOut, 
-  User, 
-  RefreshCw, 
+import {
+  FileSpreadsheet,
+  Download,
+  Upload,
+  CheckCircle2,
+  AlertTriangle,
+  Loader2,
+  LogOut,
+  User as UserIcon,
+  RefreshCw,
   ExternalLink,
 
   Database,
@@ -32,13 +30,13 @@ import {
 
   Sparkles
 } from 'lucide-react';
-import { User as FirebaseUser } from 'firebase/auth';
+import { User } from '@supabase/supabase-js';
 
 export default function GoogleSheetsPage() {
   const { refreshStore } = useStore();
-  
+
   // Auth state
-  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [signingIn, setSigningIn] = useState(false);
@@ -268,18 +266,50 @@ export default function GoogleSheetsPage() {
 
   // Load auth on mount
   useEffect(() => {
-    const unsubscribe = initAuth(
-      (currentUser, token) => {
-        setUser(currentUser);
-        setAccessToken(token);
-        setLoadingAuth(false);
-      },
-      () => {
+    let isMounted = true;
+
+    const loadSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!isMounted) return;
+
+        const identities = session?.user?.user_metadata?.identities || {};
+        const googleIdentity = Object.values(identities).find(
+          (id: any) => id?.provider === 'google'
+        ) as { access_token?: string; provider?: string } | undefined;
+
+        if (googleIdentity?.access_token) {
+          setUser(session.user);
+          setAccessToken(googleIdentity.access_token);
+        } else {
+          setUser(null);
+          setAccessToken(null);
+        }
+      } catch (e) {
+        console.error('Error loading Google auth session:', e);
+      } finally {
+        if (isMounted) setLoadingAuth(false);
+      }
+    };
+
+    loadSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!isMounted) return;
+
+      const identities = session?.user?.user_metadata?.identities || {};
+      const googleIdentity = Object.values(identities).find(
+        (id: any) => id?.provider === 'google'
+      ) as { access_token?: string; provider?: string } | undefined;
+
+      if (googleIdentity?.access_token) {
+        setUser(session.user);
+        setAccessToken(googleIdentity.access_token);
+      } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setAccessToken(null);
-        setLoadingAuth(false);
       }
-    );
+    });
 
     // Fetch total products count from Supabase and Sheets Settings
     const initData = async () => {
@@ -293,7 +323,10 @@ export default function GoogleSheetsPage() {
     };
     initData();
 
-    return () => unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Fetch spreadsheets once token is available
@@ -348,11 +381,13 @@ export default function GoogleSheetsPage() {
     setSigningIn(true);
     setAlert(null);
     try {
-      const result = await googleSignIn();
-      if (result) {
+      const result = await connectGoogleAccount(supabase);
+      if (result && result.googleIdentity) {
         setUser(result.user);
-        setAccessToken(result.accessToken);
+        setAccessToken(result.googleIdentity.access_token);
         setAlert({ type: 'success', text: 'Successfully authenticated with Google!' });
+      } else {
+        throw new Error('Google account linked but no access token was returned.');
       }
     } catch (err: any) {
       setAlert({ type: 'error', text: `Google Login Failed: ${err.message || err}` });
@@ -362,11 +397,16 @@ export default function GoogleSheetsPage() {
   };
 
   const handleGoogleLogout = async () => {
-    await logout();
-    setUser(null);
-    setAccessToken(null);
-    setSpreadsheets([]);
-    setAlert({ type: 'info', text: 'Disconnected from Google Account.' });
+    try {
+      await disconnectGoogleAccount(supabase);
+    } catch (err: any) {
+      console.error('Error disconnecting Google account:', err);
+    } finally {
+      setUser(null);
+      setAccessToken(null);
+      setSpreadsheets([]);
+      setAlert({ type: 'info', text: 'Disconnected from Google Account.' });
+    }
   };
 
   const generateSlug = (name: string) => {
@@ -732,19 +772,19 @@ export default function GoogleSheetsPage() {
         </div>
         {user && (
           <div className="flex items-center gap-3 bg-gray-100/80 p-2 rounded-xl border border-gray-200">
-            {user.photoURL ? (
-              <img src={user.photoURL} alt={user.displayName || ''} className="w-8 h-8 rounded-full" />
+            {user.user_metadata?.avatar_url ? (
+              <img src={user.user_metadata.avatar_url} alt={user.user_metadata.full_name || ''} className="w-8 h-8 rounded-full" />
             ) : (
               <div className="w-8 h-8 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-xs uppercase">
-                {user.displayName?.charAt(0) || <User size={16} />}
+                {(user.user_metadata?.full_name || user.user_metadata?.name || 'G').charAt(0)}
               </div>
             )}
             <div className="text-left">
-              <p className="text-xs font-bold text-gray-900 line-clamp-1">{user.displayName || 'Google Account'}</p>
+              <p className="text-xs font-bold text-gray-900 line-clamp-1">{user.user_metadata?.full_name || user.user_metadata?.name || 'Google Account'}</p>
               <p className="text-[10px] text-gray-500 line-clamp-1">{user.email}</p>
             </div>
-            <button 
-              onClick={handleGoogleLogout} 
+            <button
+              onClick={handleGoogleLogout}
               title="Sign Out Google Account"
               className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg transition-colors ml-1"
             >
