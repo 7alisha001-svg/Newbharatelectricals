@@ -386,16 +386,6 @@ export default function GoogleSheetsPage() {
         setUser(result.user);
         setAccessToken(result.googleIdentity.access_token);
         setAlert({ type: 'success', text: 'Successfully authenticated with Google!' });
-
-        try {
-          await fetch('/api/settings/google-token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accessToken: result.googleIdentity.access_token }),
-          });
-        } catch (persistErr) {
-          console.error('Failed to persist Google token:', persistErr);
-        }
       } else {
         throw new Error('Google account linked but no access token was returned.');
       }
@@ -416,16 +406,6 @@ export default function GoogleSheetsPage() {
       setAccessToken(null);
       setSpreadsheets([]);
       setAlert({ type: 'info', text: 'Disconnected from Google Account.' });
-
-      try {
-        await fetch('/api/settings/google-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accessToken: null }),
-        });
-      } catch (persistErr) {
-        console.error('Failed to clear Google token:', persistErr);
-      }
     }
   };
 

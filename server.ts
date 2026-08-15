@@ -1808,20 +1808,6 @@ async function startServer() {
         // Google Sheets sync
         if (id) {
           try {
-            const {
-              data: settingsData,
-            } = await supabaseClient
-              .from("settings")
-              .select("*")
-              .eq("id", "global")
-              .single();
-
-            const socialLinks =
-              settingsData?.social_links || {};
-
-            const storedAccessToken =
-              socialLinks.google_access_token;
-
             await syncRowToSheets(
               "inquiry",
               {
@@ -1839,8 +1825,7 @@ async function startServer() {
                   )
                     ? "Contact Page"
                     : "Popup"),
-              },
-              storedAccessToken
+              }
             );
 
             await updateSyncStatus(
@@ -1958,20 +1943,6 @@ async function startServer() {
 
         if (id) {
           try {
-            const {
-              data: settingsData,
-            } = await supabaseClient
-              .from("settings")
-              .select("*")
-              .eq("id", "global")
-              .single();
-
-            const socialLinks =
-              settingsData?.social_links || {};
-
-            const storedAccessToken =
-              socialLinks.google_access_token;
-
             await syncRowToSheets(
               "order",
               {
@@ -1989,8 +1960,7 @@ async function startServer() {
                 cartItems,
                 dateTime,
                 status,
-              },
-              storedAccessToken
+              }
             );
 
             await updateSyncStatus(
@@ -2109,59 +2079,6 @@ async function startServer() {
           success: false,
           error:
             "Failed to send lead notification.",
-        });
-      }
-    }
-  );
-
-  // ====================================================
-  // STORE GOOGLE ACCESS TOKEN
-  // ====================================================
-
-  app.post(
-    "/api/settings/google-token",
-    async (req, res) => {
-      const { accessToken } = req.body;
-
-      try {
-        const { data: settingsData } =
-          await supabaseClient
-            .from("settings")
-            .select("*")
-            .eq("id", "global")
-            .single();
-
-        const existingSocialLinks =
-          settingsData?.social_links || {};
-
-        const { error } =
-          await supabaseClient
-            .from("settings")
-            .update({
-              social_links: {
-                ...existingSocialLinks,
-                google_access_token: accessToken || null,
-              },
-            })
-            .eq("id", "global");
-
-        if (error) throw error;
-
-        return res.status(200).json({
-          success: true,
-          message: accessToken
-            ? "Google access token saved"
-            : "Google access token cleared",
-        });
-      } catch (err: any) {
-        console.error(
-          "[SETTINGS] Failed to save Google token:",
-          err
-        );
-
-        return res.status(500).json({
-          error:
-            err.message || "Failed to save token",
         });
       }
     }

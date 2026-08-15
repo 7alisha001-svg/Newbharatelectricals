@@ -50,7 +50,10 @@ export async function disconnectGoogleAccount(
     return;
   }
 
-  const { error } = await supabase.auth.unlinkIdentity(googleIdentity as any);
+  const { error } = await supabase.auth.unlinkIdentity({
+    provider: 'google',
+    id: googleIdentity.id,
+  } as any);
 
   if (error) {
     throw error;
