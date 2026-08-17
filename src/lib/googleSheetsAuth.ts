@@ -49,15 +49,70 @@ export async function connectGoogleAccount(
 
     await waitForPopupReturn(popup);
 
-    const { data: sessionData } = await supabase.auth.getSession();
-    const identities = sessionData.session?.user?.user_metadata?.identities || {};
-    const googleIdentity = Object.values(identities).find(
-      (id: any) => id?.provider === 'google'
-    ) as GoogleIdentity | undefined;
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
+
+    if (sessionError) {
+      throw sessionError;
+    }
+
+    const session = sessionData.session;
+    const user = session?.user;
+
+    if (!session || !user) {
+      throw new Error('No active Supabase session found after Google OAuth.');
+    }
+
+    // The Google OAuth access token is provided by Supabase
+    // on the session as provider_token.
+    const accessToken = session.provider_token;
+
+    // The Google identity itself is stored in user.identities.
+    const googleIdentityRecord = user.identities?.find(
+      (identity) => identity.provider === 'google'
+    );
+
+    console.log(
+      '[Google Sheets Auth] Google identity:',
+      googleIdentityRecord ? 'found' : 'not found'
+    );
+
+    console.log(
+      '[Google Sheets Auth] Token source:',
+      accessToken ? 'session.provider_token' : 'not available'
+    );
+
+    if (!googleIdentityRecord) {
+      console.warn(
+        '[Google Sheets Auth] Google identity was not found in user.identities.'
+      );
+
+      return {
+        user,
+        googleIdentity: null,
+      };
+    }
+
+    if (!accessToken) {
+      console.warn(
+        '[Google Sheets Auth] Google provider access token is not available in session.provider_token.'
+      );
+
+      return {
+        user,
+        googleIdentity: null,
+      };
+    }
+
+    const googleIdentity: GoogleIdentity = {
+      provider: 'google',
+      access_token: accessToken,
+      id: googleIdentityRecord.identity_id,
+    };
 
     return {
-      user: sessionData.session?.user as User,
-      googleIdentity: googleIdentity || null,
+      user,
+      googleIdentity,
     };
   } catch (err: any) {
     popup.close();
@@ -68,19 +123,31 @@ export async function connectGoogleAccount(
 export async function disconnectGoogleAccount(
   supabase: SupabaseClient
 ): Promise<void> {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const identities = sessionData.session?.user?.user_metadata?.identities || {};
-  const googleIdentity = Object.values(identities).find(
-    (id: any) => id?.provider === 'google'
-  ) as GoogleIdentity | undefined;
+  const { data: sessionData, error: sessionError } =
+    await supabase.auth.getSession();
 
-  if (!googleIdentity?.id) {
+  if (sessionError) {
+    throw sessionError;
+  }
+
+  const user = sessionData.session?.user;
+
+  if (!user) {
+    return;
+  }
+
+  // Identity records are stored directly on user.identities.
+  const googleIdentity = user.identities?.find(
+    (identity) => identity.provider === 'google'
+  );
+
+  if (!googleIdentity?.identity_id) {
     return;
   }
 
   const { error } = await supabase.auth.unlinkIdentity({
     provider: 'google',
-    id: googleIdentity.id,
+    id: googleIdentity.identity_id,
   } as any);
 
   if (error) {
@@ -89,7 +156,7 @@ export async function disconnectGoogleAccount(
 }
 
 function waitForPopupReturn(popup: Window): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const expectedOrigin = window.location.origin;
     let resolved = false;
 
@@ -105,16 +172,18 @@ function waitForPopupReturn(popup: Window): Promise<void> {
 
       try {
         const popupOrigin = new URL(popup.location.href).origin;
+
         if (popupOrigin === expectedOrigin) {
           clearInterval(poll);
           resolved = true;
+
           setTimeout(() => {
             popup.close();
             resolve();
           }, 300);
         }
       } catch (e) {
-        // Cross-origin access error during OAuth flow is expected and safe to ignore
+        // Cross-origin access error during OAuth flow is expected.
       }
     }, 500);
   });
