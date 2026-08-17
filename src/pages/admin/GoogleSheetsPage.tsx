@@ -11,7 +11,7 @@ import {
   readSpreadsheetValues,
   updateSpreadsheetValues,
   getSpreadsheetSheets,
-  GoogleSpreadsheet
+  GoogleSpreadsheet,
 } from '../../lib/googleSheetsService';
 import {
   FileSpreadsheet,
@@ -24,62 +24,156 @@ import {
   RefreshCw,
   ExternalLink,
   Database,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import { User, Session } from '@supabase/supabase-js';
-
-type ActiveTab = 'export' | 'import' | 'realtime';
-
-interface GoogleIdentity {
-  provider?: string;
-  access_token?: string;
-  identity_data?: {
-    access_token?: string;
-    provider?: string;
-    [key: string]: any;
-  };
-  [key: string]: any;
-}
 
 export default function GoogleSheetsPage() {
   const { refreshStore } = useStore();
 
-  // Auth state
+  // ============================================================
+  // AUTH STATE
+  // ============================================================
+
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [signingIn, setSigningIn] = useState(false);
 
-  // General state
+  // ============================================================
+  // GOOGLE TOKEN RESOLVER
+  // Priority:
+  // 1. session.provider_token
+  // 2. user.identities[].identity_data.access_token
+  // 3. user_metadata.identities[].access_token
+  // ============================================================
+
+  const getGoogleAccessToken = (session: Session | null): string | null => {
+    if (!session?.user) {
+      return null;
+    }
+
+    // ------------------------------------------------------------
+    // LEVEL 1 — Supabase session.provider_token
+    // ------------------------------------------------------------
+    if (session.provider_token) {
+      return session.provider_token;
+    }
+
+    // ------------------------------------------------------------
+    // LEVEL 2 — user.identities[].identity_data.access_token
+    // ------------------------------------------------------------
+    const identities = session.user.identities || [];
+
+    const googleIdentity = identities.find(
+      (identity) => identity.provider === 'google'
+    );
+
+    const identityData = googleIdentity?.identity_data as
+      | Record<string, any>
+      | undefined;
+
+    if (
+      identityData &&
+      typeof identityData.access_token === 'string' &&
+      identityData.access_token
+    ) {
+      return identityData.access_token;
+    }
+
+    // ------------------------------------------------------------
+    // LEVEL 3 — user_metadata.identities[].access_token
+    // ------------------------------------------------------------
+    const metadataIdentities = session.user.user_metadata?.identities;
+
+    if (Array.isArray(metadataIdentities)) {
+      const metadataGoogleIdentity = metadataIdentities.find(
+        (identity: any) => identity?.provider === 'google'
+      );
+
+      if (
+        metadataGoogleIdentity &&
+        typeof metadataGoogleIdentity.access_token === 'string' &&
+        metadataGoogleIdentity.access_token
+      ) {
+        return metadataGoogleIdentity.access_token;
+      }
+    }
+
+    // Some older structures may store identities as an object.
+    if (
+      metadataIdentities &&
+      typeof metadataIdentities === 'object' &&
+      !Array.isArray(metadataIdentities)
+    ) {
+      const metadataGoogleIdentity = Object.values(
+        metadataIdentities
+      ).find(
+        (identity: any) => identity?.provider === 'google'
+      ) as any;
+
+      if (
+        metadataGoogleIdentity &&
+        typeof metadataGoogleIdentity.access_token === 'string' &&
+        metadataGoogleIdentity.access_token
+      ) {
+        return metadataGoogleIdentity.access_token;
+      }
+    }
+
+    return null;
+  };
+
+  // ============================================================
+  // GENERAL STATE
+  // ============================================================
+
   const [spreadsheets, setSpreadsheets] = useState<GoogleSpreadsheet[]>([]);
   const [loadingSheets, setLoadingSheets] = useState(false);
-  const [activeTab, setActiveTab] = useState<ActiveTab>('export');
+  const [activeTab, setActiveTab] = useState<
+    'export' | 'import' | 'realtime'
+  >('export');
+
   const [alert, setAlert] = useState<{
     text: string;
     type: 'success' | 'error' | 'info';
   } | null>(null);
 
-  // Export State
+  // ============================================================
+  // EXPORT STATE
+  // ============================================================
+
   const [exportMode, setExportMode] = useState<'new' | 'existing'>('new');
   const [newSheetTitle, setNewSheetTitle] = useState(
     'New Bharat Electricals Products'
   );
   const [selectedExportSheetId, setSelectedExportSheetId] = useState('');
   const [exporting, setExporting] = useState(false);
-  const [exportedSheetUrl, setExportedSheetUrl] = useState<string | null>(null);
+  const [exportedSheetUrl, setExportedSheetUrl] = useState<string | null>(
+    null
+  );
   const [totalProducts, setTotalProducts] = useState(0);
 
-  // Import State
+  // ============================================================
+  // IMPORT STATE
+  // ============================================================
+
   const [selectedImportSheetId, setSelectedImportSheetId] = useState('');
-  const [sheetsInSpreadsheet, setSheetsInSpreadsheet] = useState<string[]>([]);
+  const [sheetsInSpreadsheet, setSheetsInSpreadsheet] = useState<string[]>(
+    []
+  );
   const [selectedTabName, setSelectedTabName] = useState('');
   const [loadingTabs, setLoadingTabs] = useState(false);
 
   const [sheetRows, setSheetRows] = useState<string[][]>([]);
   const [fetchingRows, setFetchingRows] = useState(false);
-  const [duplicateStrategy, setDuplicateStrategy] =
-    useState<'update' | 'skip'>('update');
+
+  const [duplicateStrategy, setDuplicateStrategy] = useState<
+    'update' | 'skip'
+  >('update');
+
   const [importing, setImporting] = useState(false);
+
   const [importResult, setImportResult] = useState<{
     added: number;
     updated: number;
@@ -87,7 +181,10 @@ export default function GoogleSheetsPage() {
     errors: string[];
   } | null>(null);
 
-  // Real-time Integration settings state
+  // ============================================================
+  // REAL-TIME INTEGRATION SETTINGS
+  // ============================================================
+
   const [spreadsheetIdSetting, setSpreadsheetIdSetting] = useState('');
   const [appScriptUrlSetting, setAppScriptUrlSetting] = useState('');
   const [inquirySheetNameSetting, setInquirySheetNameSetting] =
@@ -97,137 +194,31 @@ export default function GoogleSheetsPage() {
   const [syncEnabledSetting, setSyncEnabledSetting] = useState(true);
   const [savingSettings, setSavingSettings] = useState(false);
 
-  // Sync Stats State
+  // ============================================================
+  // SYNC STATS
+  // ============================================================
+
   const [pendingInquiriesCount, setPendingInquiriesCount] = useState(0);
   const [syncedInquiriesCount, setSyncedInquiriesCount] = useState(0);
   const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
   const [syncedOrdersCount, setSyncedOrdersCount] = useState(0);
   const [loadingStats, setLoadingStats] = useState(false);
   const [syncingAll, setSyncingAll] = useState(false);
+
   const [syncResult, setSyncResult] = useState<{
     successCount: number;
     failCount: number;
     errors: string[];
   } | null>(null);
 
-  /**
-   * Get Google OAuth provider token.
-   *
-   * Priority:
-   * 1. session.provider_token
-   * 2. user.identities[].identity_data.access_token
-   * 3. user.identities[].access_token
-   * 4. user.user_metadata.identities fallback
-   */
-  const getGoogleAccessToken = (
-    session: Session | null
-  ): string | null => {
-    if (!session?.user) {
-      return null;
-    }
-
-    // ---------------------------------------------------------
-    // 1. PRIMARY SOURCE
-    // Supabase stores OAuth provider token here after OAuth flow.
-    // ---------------------------------------------------------
-    if (session.provider_token) {
-      return session.provider_token;
-    }
-
-    const identities = session.user.identities || [];
-
-    // ---------------------------------------------------------
-    // 2. SECONDARY SOURCE
-    // user.identities[].identity_data.access_token
-    // ---------------------------------------------------------
-    const googleIdentity = identities.find(
-      (identity: any) => identity?.provider === 'google'
-    ) as GoogleIdentity | undefined;
-
-    if (googleIdentity?.identity_data?.access_token) {
-      return googleIdentity.identity_data.access_token;
-    }
-
-    // ---------------------------------------------------------
-    // 3. ADDITIONAL IDENTITY FALLBACK
-    // Some Supabase versions/data structures expose it directly.
-    // ---------------------------------------------------------
-    if (googleIdentity?.access_token) {
-      return googleIdentity.access_token;
-    }
-
-    // ---------------------------------------------------------
-    // 4. LAST FALLBACK
-    // Legacy user_metadata.identities structure.
-    // ---------------------------------------------------------
-    const metadataIdentities =
-      session.user.user_metadata?.identities;
-
-    if (Array.isArray(metadataIdentities)) {
-      const metadataGoogleIdentity = metadataIdentities.find(
-        (identity: any) => identity?.provider === 'google'
-      );
-
-      if (metadataGoogleIdentity?.access_token) {
-        return metadataGoogleIdentity.access_token;
-      }
-
-      if (metadataGoogleIdentity?.identity_data?.access_token) {
-        return metadataGoogleIdentity.identity_data.access_token;
-      }
-    } else if (
-      metadataIdentities &&
-      typeof metadataIdentities === 'object'
-    ) {
-      const metadataGoogleIdentity = Object.values(
-        metadataIdentities
-      ).find(
-        (identity: any) => identity?.provider === 'google'
-      ) as GoogleIdentity | undefined;
-
-      if (metadataGoogleIdentity?.access_token) {
-        return metadataGoogleIdentity.access_token;
-      }
-
-      if (metadataGoogleIdentity?.identity_data?.access_token) {
-        return metadataGoogleIdentity.identity_data.access_token;
-      }
-    }
-
-    return null;
-  };
-
-  const applySession = (session: Session | null) => {
-    if (!session?.user) {
-      setUser(null);
-      setAccessToken(null);
-      return;
-    }
-
-    const token = getGoogleAccessToken(session);
-
-    if (token) {
-      setUser(session.user);
-      setAccessToken(token);
-
-      console.log(
-        '[Google Sheets] Google access token found successfully.'
-      );
-    } else {
-      setUser(null);
-      setAccessToken(null);
-
-      console.warn(
-        '[Google Sheets] Google account exists, but no provider access token was found.'
-      );
-    }
-  };
+  // ============================================================
+  // SETTINGS + STATS
+  // ============================================================
 
   const fetchSettingsAndStats = async () => {
     setLoadingStats(true);
 
     try {
-      // 1. Fetch Global Settings
       const { data: settingsData } = await supabase
         .from('settings')
         .select('*')
@@ -246,13 +237,11 @@ export default function GoogleSheetsPage() {
         );
 
         setInquirySheetNameSetting(
-          socialLinks.google_sheets_inquiry_sheet_name ||
-            'Inquiries'
+          socialLinks.google_sheets_inquiry_sheet_name || 'Inquiries'
         );
 
         setOrderSheetNameSetting(
-          socialLinks.google_sheets_order_sheet_name ||
-            'Orders'
+          socialLinks.google_sheets_order_sheet_name || 'Orders'
         );
 
         setSyncEnabledSetting(
@@ -260,7 +249,10 @@ export default function GoogleSheetsPage() {
         );
       }
 
-      // 2. Fetch Inquiries Statistics
+      // ----------------------------------------------------------
+      // INQUIRY STATS
+      // ----------------------------------------------------------
+
       const { data: allInquiries } = await supabase
         .from('inquiries')
         .select('id, message, sheets_sync_status' as any);
@@ -296,7 +288,10 @@ export default function GoogleSheetsPage() {
       setSyncedInquiriesCount(syncedInq);
       setPendingInquiriesCount(pendingInq);
 
-      // 3. Fetch Orders Statistics
+      // ----------------------------------------------------------
+      // ORDER STATS
+      // ----------------------------------------------------------
+
       const { data: allOrders } = await supabase
         .from('orders')
         .select('id, cart_items, sheets_sync_status' as any);
@@ -319,9 +314,7 @@ export default function GoogleSheetsPage() {
 
               if (Array.isArray(cart)) {
                 pendingOrd++;
-              } else if (
-                cart.sheets_sync_status === 'synced'
-              ) {
+              } else if (cart.sheets_sync_status === 'synced') {
                 syncedOrd++;
               } else {
                 pendingOrd++;
@@ -345,6 +338,10 @@ export default function GoogleSheetsPage() {
     }
   };
 
+  // ============================================================
+  // SAVE SETTINGS
+  // ============================================================
+
   const handleSaveSettings = async () => {
     setSavingSettings(true);
     setAlert(null);
@@ -356,35 +353,31 @@ export default function GoogleSheetsPage() {
         .eq('id', 'global')
         .single();
 
-      const existingSocialLinks =
-        settingsData?.social_links || {};
+      const existingSocialLinks = settingsData?.social_links || {};
 
       const updatedSocialLinks = {
         ...existingSocialLinks,
-        google_sheets_spreadsheet_id:
-          spreadsheetIdSetting,
-        google_sheets_app_script_url:
-          appScriptUrlSetting,
-        google_sheets_inquiry_sheet_name:
-          inquirySheetNameSetting,
-        google_sheets_order_sheet_name:
-          orderSheetNameSetting,
-        google_sheets_sync_enabled:
-          syncEnabledSetting
+        google_sheets_spreadsheet_id: spreadsheetIdSetting,
+        google_sheets_app_script_url: appScriptUrlSetting,
+        google_sheets_inquiry_sheet_name: inquirySheetNameSetting,
+        google_sheets_order_sheet_name: orderSheetNameSetting,
+        google_sheets_sync_enabled: syncEnabledSetting,
       };
 
       const { error } = await supabase
         .from('settings')
         .update({
-          social_links: updatedSocialLinks
+          social_links: updatedSocialLinks,
         })
         .eq('id', 'global');
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       setAlert({
         text: 'Google Sheets integration settings updated successfully!',
-        type: 'success'
+        type: 'success',
       });
     } catch (err: any) {
       console.error(
@@ -396,12 +389,16 @@ export default function GoogleSheetsPage() {
         text: `Failed to save settings: ${
           err.message || String(err)
         }`,
-        type: 'error'
+        type: 'error',
       });
     } finally {
       setSavingSettings(false);
     }
   };
+
+  // ============================================================
+  // SYNC PENDING
+  // ============================================================
 
   const handleSyncPending = async () => {
     setSyncingAll(true);
@@ -414,11 +411,11 @@ export default function GoogleSheetsPage() {
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            accessToken
-          })
+            accessToken,
+          }),
         }
       );
 
@@ -433,18 +430,18 @@ export default function GoogleSheetsPage() {
       setSyncResult({
         successCount: result.successCount,
         failCount: result.failCount,
-        errors: result.errors || []
+        errors: result.errors || [],
       });
 
       if (result.failCount === 0) {
         setAlert({
           text: `Sync complete! Successfully processed ${result.successCount} records.`,
-          type: 'success'
+          type: 'success',
         });
       } else {
         setAlert({
           text: `Sync completed with warnings. Synced ${result.successCount} records, failed ${result.failCount}.`,
-          type: 'error'
+          type: 'error',
         });
       }
 
@@ -459,28 +456,39 @@ export default function GoogleSheetsPage() {
         text: `Synchronization failed: ${
           err.message || String(err)
         }`,
-        type: 'error'
+        type: 'error',
       });
     } finally {
       setSyncingAll(false);
     }
   };
 
-  // ---------------------------------------------------------
+  // ============================================================
   // LOAD AUTH SESSION
-  // ---------------------------------------------------------
+  // ============================================================
+
   useEffect(() => {
     let isMounted = true;
 
     const loadSession = async () => {
       try {
         const {
-          data: { session }
+          data: { session },
         } = await supabase.auth.getSession();
 
-        if (!isMounted) return;
+        if (!isMounted) {
+          return;
+        }
 
-        applySession(session);
+        const googleToken = getGoogleAccessToken(session);
+
+        if (session?.user && googleToken) {
+          setUser(session.user);
+          setAccessToken(googleToken);
+        } else {
+          setUser(null);
+          setAccessToken(null);
+        }
       } catch (e) {
         console.error(
           'Error loading Google auth session:',
@@ -496,17 +504,29 @@ export default function GoogleSheetsPage() {
     loadSession();
 
     const {
-      data: { subscription }
+      data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        if (!isMounted) return;
+        if (!isMounted) {
+          return;
+        }
 
-        console.log(
-          '[Google Sheets] Auth state changed:',
-          event
-        );
+        const googleToken =
+          getGoogleAccessToken(session);
 
-        applySession(session);
+        if (session?.user && googleToken) {
+          setUser(session.user);
+          setAccessToken(googleToken);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setAccessToken(null);
+          setSpreadsheets([]);
+        } else if (session?.user) {
+          // User is authenticated but no Google provider token
+          // is available.
+          setUser(null);
+          setAccessToken(null);
+        }
       }
     );
 
@@ -516,7 +536,7 @@ export default function GoogleSheetsPage() {
           .from('products')
           .select('*', {
             count: 'exact',
-            head: true
+            head: true,
           });
 
         setTotalProducts(count || 0);
@@ -538,17 +558,15 @@ export default function GoogleSheetsPage() {
     };
   }, []);
 
-  // ---------------------------------------------------------
-  // LOAD GOOGLE SPREADSHEETS
-  // ---------------------------------------------------------
-  const loadSpreadsheets = async (
-    token: string
-  ) => {
+  // ============================================================
+  // LOAD SPREADSHEETS
+  // ============================================================
+
+  const loadSpreadsheets = async (token: string) => {
     setLoadingSheets(true);
 
     try {
-      const list =
-        await listUserSpreadsheets(token);
+      const list = await listUserSpreadsheets(token);
 
       setSpreadsheets(list);
 
@@ -572,9 +590,10 @@ export default function GoogleSheetsPage() {
     }
   }, [accessToken]);
 
-  // ---------------------------------------------------------
-  // LOAD TABS INSIDE SELECTED SPREADSHEET
-  // ---------------------------------------------------------
+  // ============================================================
+  // LOAD SHEET TABS
+  // ============================================================
+
   useEffect(() => {
     const fetchTabs = async () => {
       if (
@@ -587,11 +606,10 @@ export default function GoogleSheetsPage() {
       setLoadingTabs(true);
 
       try {
-        const tabs =
-          await getSpreadsheetSheets(
-            accessToken,
-            selectedImportSheetId
-          );
+        const tabs = await getSpreadsheetSheets(
+          accessToken,
+          selectedImportSheetId
+        );
 
         setSheetsInSpreadsheet(tabs);
 
@@ -608,7 +626,7 @@ export default function GoogleSheetsPage() {
           type: 'error',
           text: `Could not load tabs from spreadsheet: ${
             err.message || err
-          }`
+          }`,
         });
       } finally {
         setLoadingTabs(false);
@@ -616,11 +634,15 @@ export default function GoogleSheetsPage() {
     };
 
     fetchTabs();
-  }, [selectedImportSheetId, accessToken]);
+  }, [
+    selectedImportSheetId,
+    accessToken,
+  ]);
 
-  // ---------------------------------------------------------
+  // ============================================================
   // GOOGLE LOGIN
-  // ---------------------------------------------------------
+  // ============================================================
+
   const handleGoogleLogin = async () => {
     setSigningIn(true);
     setAlert(null);
@@ -641,58 +663,32 @@ export default function GoogleSheetsPage() {
 
         setAlert({
           type: 'success',
-          text: 'Successfully authenticated with Google!'
+          text: 'Successfully authenticated with Google!',
         });
       } else {
-        // Re-check the current Supabase session because
-        // provider_token may be available there even if
-        // connectGoogleAccount does not return identity data.
-        const {
-          data: { session }
-        } = await supabase.auth.getSession();
-
-        const token =
-          getGoogleAccessToken(session);
-
-        if (session?.user && token) {
-          setUser(session.user);
-          setAccessToken(token);
-
-          setAlert({
-            type: 'success',
-            text: 'Successfully authenticated with Google!'
-          });
-        } else {
-          throw new Error(
-            'Google account linked but no Google access token was returned. Please reconnect the Google account.'
-          );
-        }
+        throw new Error(
+          'Google account linked but no access token was returned.'
+        );
       }
     } catch (err: any) {
-      console.error(
-        'Google Login Failed:',
-        err
-      );
-
       setAlert({
         type: 'error',
         text: `Google Login Failed: ${
           err.message || err
-        }`
+        }`,
       });
     } finally {
       setSigningIn(false);
     }
   };
 
-  // ---------------------------------------------------------
+  // ============================================================
   // GOOGLE LOGOUT
-  // ---------------------------------------------------------
+  // ============================================================
+
   const handleGoogleLogout = async () => {
     try {
-      await disconnectGoogleAccount(
-        supabase
-      );
+      await disconnectGoogleAccount(supabase);
     } catch (err: any) {
       console.error(
         'Error disconnecting Google account:',
@@ -705,14 +701,16 @@ export default function GoogleSheetsPage() {
 
       setAlert({
         type: 'info',
-        text: 'Disconnected from Google Account.'
+        text: 'Disconnected from Google Account.',
       });
     }
   };
 
-  const generateSlug = (
-    name: string
-  ) => {
+  // ============================================================
+  // HELPERS
+  // ============================================================
+
+  const generateSlug = (name: string) => {
     return name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
@@ -722,12 +720,14 @@ export default function GoogleSheetsPage() {
   const parseFeatures = (
     text: string
   ): string[] => {
-    if (!text) return [];
+    if (!text) {
+      return [];
+    }
 
     return text
       .split(',')
-      .map(f => f.trim())
-      .filter(f => f.length > 0);
+      .map((f) => f.trim())
+      .filter((f) => f.length > 0);
   };
 
   const parseSpecs = (
@@ -736,7 +736,9 @@ export default function GoogleSheetsPage() {
     label: string;
     value: string;
   }[] => {
-    if (!text) return [];
+    if (!text) {
+      return [];
+    }
 
     const pairs = text.split(',');
 
@@ -760,7 +762,7 @@ export default function GoogleSheetsPage() {
         if (label || value) {
           list.push({
             label,
-            value
+            value,
           });
         }
       }
@@ -769,11 +771,14 @@ export default function GoogleSheetsPage() {
     return list;
   };
 
-  // ---------------------------------------------------------
+  // ============================================================
   // EXPORT
-  // ---------------------------------------------------------
+  // ============================================================
+
   const handleExport = async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      return;
+    }
 
     setExporting(true);
     setAlert(null);
@@ -782,15 +787,17 @@ export default function GoogleSheetsPage() {
     try {
       const {
         data: dbProducts,
-        error: dbError
+        error: dbError,
       } = await supabase
         .from('products')
         .select('*')
         .order('name', {
-          ascending: true
+          ascending: true,
         });
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        throw dbError;
+      }
 
       if (
         !dbProducts ||
@@ -820,13 +827,11 @@ export default function GoogleSheetsPage() {
         targetSheetId = newSheet.id;
         targetSheetName = newSheet.name;
 
-        await loadSpreadsheets(
-          accessToken
-        );
+        await loadSpreadsheets(accessToken);
       } else {
         const matchingSheet =
           spreadsheets.find(
-            s =>
+            (s) =>
               s.id ===
               selectedExportSheetId
           );
@@ -851,49 +856,48 @@ export default function GoogleSheetsPage() {
         'Description',
         'Short Description',
         'Features (Comma-separated)',
-        'Specs (Label:Value, Label:Value)'
+        'Specs (Label:Value, Label:Value)',
       ];
 
-      const rows =
-        dbProducts.map(p => {
-          const featuresStr =
-            Array.isArray(p.features)
-              ? p.features.join(', ')
-              : '';
+      const rows = dbProducts.map((p) => {
+        const featuresStr =
+          Array.isArray(p.features)
+            ? p.features.join(', ')
+            : '';
 
-          let specsStr = '';
+        let specsStr = '';
 
-          if (Array.isArray(p.specs)) {
-            specsStr = p.specs
-              .map(
-                (s: any) =>
-                  `${s.label || ''}:${s.value || ''}`
-              )
-              .join(', ');
-          }
+        if (Array.isArray(p.specs)) {
+          specsStr = p.specs
+            .map(
+              (s: any) =>
+                `${s.label || ''}:${s.value || ''}`
+            )
+            .join(', ');
+        }
 
-          return [
-            p.id || '',
-            p.sku || '',
-            p.name || '',
-            p.brand || '',
-            p.category || '',
-            p.subcategory || '',
-            p.regular_price || 0,
-            p.sale_price || '',
-            p.stock_quantity || 0,
-            p.status || 'draft',
-            p.image_url || '',
-            p.description || '',
-            p.short_description || '',
-            featuresStr,
-            specsStr
-          ];
-        });
+        return [
+          p.id || '',
+          p.sku || '',
+          p.name || '',
+          p.brand || '',
+          p.category || '',
+          p.subcategory || '',
+          p.regular_price || 0,
+          p.sale_price || '',
+          p.stock_quantity || 0,
+          p.status || 'draft',
+          p.image_url || '',
+          p.description || '',
+          p.short_description || '',
+          featuresStr,
+          specsStr,
+        ];
+      });
 
       const finalValues = [
         headers,
-        ...rows
+        ...rows,
       ];
 
       const defaultRange =
@@ -913,7 +917,7 @@ export default function GoogleSheetsPage() {
 
       setAlert({
         type: 'success',
-        text: `Successfully exported ${dbProducts.length} products to "${targetSheetName}"!`
+        text: `Successfully exported ${dbProducts.length} products to "${targetSheetName}"!`,
       });
     } catch (err: any) {
       console.error(
@@ -925,81 +929,85 @@ export default function GoogleSheetsPage() {
         type: 'error',
         text: `Export failed: ${
           err.message || err
-        }`
+        }`,
       });
     } finally {
       setExporting(false);
     }
   };
 
-  // ---------------------------------------------------------
-  // FETCH PREVIEW
-  // ---------------------------------------------------------
-  const handleFetchPreview =
-    async () => {
-      if (
-        !accessToken ||
-        !selectedImportSheetId ||
-        !selectedTabName
-      ) {
-        return;
-      }
+  // ============================================================
+  // FETCH IMPORT PREVIEW
+  // ============================================================
 
-      setFetchingRows(true);
-      setAlert(null);
-      setImportResult(null);
+  const handleFetchPreview = async () => {
+    if (
+      !accessToken ||
+      !selectedImportSheetId ||
+      !selectedTabName
+    ) {
+      return;
+    }
 
-      try {
-        const values =
-          await readSpreadsheetValues(
-            accessToken,
-            selectedImportSheetId,
-            `${selectedTabName}!A1:Z1000`
-          );
+    setFetchingRows(true);
+    setAlert(null);
+    setImportResult(null);
 
-        if (values.length === 0) {
-          throw new Error(
-            'Spreadsheet tab is empty.'
-          );
-        }
-
-        setSheetRows(values);
-
-        setAlert({
-          type: 'info',
-          text: `Loaded ${values.length} rows (including header) from the spreadsheet. Check columns and preview below.`
-        });
-      } catch (err: any) {
-        console.error(
-          'Fetch rows error:',
-          err
+    try {
+      const values =
+        await readSpreadsheetValues(
+          accessToken,
+          selectedImportSheetId,
+          `${selectedTabName}!A1:Z1000`
         );
 
-        setAlert({
-          type: 'error',
-          text: `Could not read spreadsheet rows: ${
-            err.message || err
-          }`
-        });
-      } finally {
-        setFetchingRows(false);
+      if (values.length === 0) {
+        throw new Error(
+          'Spreadsheet tab is empty.'
+        );
       }
-    };
 
-  // ---------------------------------------------------------
-  // IMPORT
-  // ---------------------------------------------------------
-  const handleImport = async () => {
-    if (sheetRows.length < 2) return;
+      setSheetRows(values);
 
-    const proceed =
-      window.confirm(
-        `Are you sure you want to import/update products in the database? This will process ${
-          sheetRows.length - 1
-        } spreadsheet row(s) using the '${duplicateStrategy}' strategy.`
+      setAlert({
+        type: 'info',
+        text: `Loaded ${values.length} rows (including header) from the spreadsheet. Check columns and preview below.`,
+      });
+    } catch (err: any) {
+      console.error(
+        'Fetch rows error:',
+        err
       );
 
-    if (!proceed) return;
+      setAlert({
+        type: 'error',
+        text: `Could not read spreadsheet rows: ${
+          err.message || err
+        }`,
+      });
+    } finally {
+      setFetchingRows(false);
+    }
+  };
+
+  // ============================================================
+  // IMPORT
+  // ============================================================
+
+  const handleImport = async () => {
+    if (sheetRows.length < 2) {
+      return;
+    }
+
+    const proceed = window.confirm(
+      `Are you sure you want to import/update products in the database? This will process ${
+        sheetRows.length - 1
+      } spreadsheet row(s) using the '${duplicateStrategy}' strategy.`
+    );
+
+    if (!proceed) {
+      return;
+    }
 
     setImporting(true);
     setAlert(null);
@@ -1011,10 +1019,9 @@ export default function GoogleSheetsPage() {
     const errors: string[] = [];
 
     try {
-      const headers =
-        sheetRows[0].map(h =>
-          h.trim().toLowerCase()
-        );
+      const headers = sheetRows[0].map(
+        (h) => h.trim().toLowerCase()
+      );
 
       const dataRows =
         sheetRows.slice(1);
@@ -1041,9 +1048,7 @@ export default function GoogleSheetsPage() {
         description:
           headers.indexOf('description'),
         short_description:
-          headers.indexOf(
-            'short description'
-          ),
+          headers.indexOf('short description'),
         features:
           headers.indexOf(
             'features (comma-separated)'
@@ -1051,31 +1056,29 @@ export default function GoogleSheetsPage() {
         specs:
           headers.indexOf(
             'specs (label:value, label:value)'
-          )
+          ),
       };
 
-      if (
-        colIdx.regular_price === -1
-      ) {
+      if (colIdx.regular_price === -1) {
         colIdx.regular_price =
           headers.indexOf('price');
       }
 
-      if (
-        colIdx.stock_quantity === -1
-      ) {
+      if (colIdx.stock_quantity === -1) {
         colIdx.stock_quantity =
           headers.indexOf('stock');
       }
 
       const {
         data: existingProducts,
-        error: fetchErr
+        error: fetchErr,
       } = await supabase
         .from('products')
         .select('*');
 
-      if (fetchErr) throw fetchErr;
+      if (fetchErr) {
+        throw fetchErr;
+      }
 
       for (
         let i = 0;
@@ -1142,9 +1145,7 @@ export default function GoogleSheetsPage() {
             : null;
 
         const salePriceVal =
-          getVal(
-            colIdx.sale_price
-          );
+          getVal(colIdx.sale_price);
 
         const sale_price =
           salePriceVal
@@ -1190,10 +1191,15 @@ export default function GoogleSheetsPage() {
           getVal(
             colIdx.short_description
           ) ||
-          description.slice(0, 150);
+          description.slice(
+            0,
+            150
+          );
 
         const featuresStr =
-          getVal(colIdx.features);
+          getVal(
+            colIdx.features
+          );
 
         const features =
           parseFeatures(
@@ -1218,17 +1224,18 @@ export default function GoogleSheetsPage() {
         if (id) {
           existingMatch =
             existingProducts?.find(
-              p => p.id === id
+              (p) => p.id === id
             );
         } else if (sku) {
           existingMatch =
             existingProducts?.find(
-              p => p.sku === sku
+              (p) => p.sku === sku
             );
         } else {
           existingMatch =
             existingProducts?.find(
-              p => p.slug === slug
+              (p) =>
+                p.slug === slug
             );
         }
 
@@ -1249,7 +1256,7 @@ export default function GoogleSheetsPage() {
           features,
           specs,
           updated_at:
-            new Date().toISOString()
+            new Date().toISOString(),
         };
 
         if (existingMatch) {
@@ -1262,7 +1269,7 @@ export default function GoogleSheetsPage() {
           }
 
           const {
-            error: updateErr
+            error: updateErr,
           } = await supabase
             .from('products')
             .update(payload)
@@ -1280,7 +1287,7 @@ export default function GoogleSheetsPage() {
           }
         } else {
           const {
-            error: insertErr
+            error: insertErr,
           } = await supabase
             .from('products')
             .insert([payload]);
@@ -1299,14 +1306,14 @@ export default function GoogleSheetsPage() {
         added,
         updated,
         skipped,
-        errors
+        errors,
       });
 
       await refreshStore();
 
       setAlert({
         type: 'success',
-        text: `Completed importing spreadsheet data: added ${added}, updated ${updated}, skipped ${skipped}.`
+        text: `Completed importing spreadsheet data: added ${added}, updated ${updated}, skipped ${skipped}.`,
       });
 
       setSheetRows([]);
@@ -1320,12 +1327,16 @@ export default function GoogleSheetsPage() {
         type: 'error',
         text: `Import process failed: ${
           err.message || err
-        }`
+        }`,
       });
     } finally {
       setImporting(false);
     }
   };
+
+  // ============================================================
+  // LOADING SCREEN
+  // ============================================================
 
   if (loadingAuth) {
     return (
@@ -1338,8 +1349,14 @@ export default function GoogleSheetsPage() {
     );
   }
 
+  // ============================================================
+  // UI
+  // ============================================================
+
   return (
     <div className="space-y-6 max-w-4xl">
+      {/* HEADER */}
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -1356,7 +1373,8 @@ export default function GoogleSheetsPage() {
             {user.user_metadata?.avatar_url ? (
               <img
                 src={
-                  user.user_metadata.avatar_url
+                  user.user_metadata
+                    .avatar_url
                 }
                 alt={
                   user.user_metadata
@@ -1403,6 +1421,8 @@ export default function GoogleSheetsPage() {
         )}
       </div>
 
+      {/* ALERT */}
+
       {alert && (
         <div
           className={`p-4 rounded-xl text-sm flex items-start gap-3 ${
@@ -1413,8 +1433,7 @@ export default function GoogleSheetsPage() {
               : 'bg-blue-50 text-blue-700 border border-blue-200'
           }`}
         >
-          {alert.type ===
-          'success' ? (
+          {alert.type === 'success' ? (
             <CheckCircle2 className="w-5 h-5 shrink-0 text-green-500 mt-0.5" />
           ) : (
             <AlertTriangle className="w-5 h-5 shrink-0 text-amber-500 mt-0.5" />
@@ -1427,6 +1446,8 @@ export default function GoogleSheetsPage() {
           </div>
         </div>
       )}
+
+      {/* GOOGLE LOGIN */}
 
       {!user ? (
         <div className="bg-white rounded-2xl shadow-md border-none p-8 text-center flex flex-col items-center max-w-xl mx-auto space-y-6">
@@ -1493,14 +1514,17 @@ export default function GoogleSheetsPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Navigation Tabs */}
-          <div className="flex border-b border-gray-200">
+          {/* NAVIGATION TABS */}
+
+          <div className="flex border-b border-gray-200 overflow-x-auto">
             <button
               onClick={() => {
-                setActiveTab('export');
+                setActiveTab(
+                  'export'
+                );
                 setAlert(null);
               }}
-              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
+              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all whitespace-nowrap ${
                 activeTab === 'export'
                   ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
                   : 'border-transparent text-gray-500 hover:text-gray-900'
@@ -1512,10 +1536,12 @@ export default function GoogleSheetsPage() {
 
             <button
               onClick={() => {
-                setActiveTab('import');
+                setActiveTab(
+                  'import'
+                );
                 setAlert(null);
               }}
-              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
+              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all whitespace-nowrap ${
                 activeTab === 'import'
                   ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
                   : 'border-transparent text-gray-500 hover:text-gray-900'
@@ -1527,12 +1553,15 @@ export default function GoogleSheetsPage() {
 
             <button
               onClick={() => {
-                setActiveTab('realtime');
+                setActiveTab(
+                  'realtime'
+                );
                 setAlert(null);
                 fetchSettingsAndStats();
               }}
-              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all ${
-                activeTab === 'realtime'
+              className={`flex items-center gap-2 py-3 px-6 text-sm font-semibold border-b-2 transition-all whitespace-nowrap ${
+                activeTab ===
+                'realtime'
                   ? 'border-brand-green text-brand-green font-bold bg-white rounded-t-xl'
                   : 'border-transparent text-gray-500 hover:text-gray-900'
               }`}
@@ -1542,8 +1571,12 @@ export default function GoogleSheetsPage() {
             </button>
           </div>
 
+          {/* ================================================== */}
           {/* EXPORT TAB */}
-          {activeTab === 'export' && (
+          {/* ================================================== */}
+
+          {activeTab ===
+            'export' && (
             <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">
@@ -1551,7 +1584,8 @@ export default function GoogleSheetsPage() {
                 </h3>
 
                 <p className="text-gray-500 text-sm mt-1">
-                  Dump your entire database catalogue ({totalProducts} items) directly into a Google Spreadsheet.
+                  Dump your entire database catalogue (
+                  {totalProducts} items) directly into a Google Spreadsheet.
                 </p>
               </div>
 
@@ -1563,7 +1597,8 @@ export default function GoogleSheetsPage() {
                       name="exportMode"
                       value="new"
                       checked={
-                        exportMode === 'new'
+                        exportMode ===
+                        'new'
                       }
                       onChange={() =>
                         setExportMode(
@@ -1601,7 +1636,8 @@ export default function GoogleSheetsPage() {
                   </label>
                 </div>
 
-                {exportMode === 'new' ? (
+                {exportMode ===
+                'new' ? (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Spreadsheet Title
@@ -1612,7 +1648,7 @@ export default function GoogleSheetsPage() {
                       value={
                         newSheetTitle
                       }
-                      onChange={e =>
+                      onChange={(e) =>
                         setNewSheetTitle(
                           e.target.value
                         )
@@ -1632,7 +1668,8 @@ export default function GoogleSheetsPage() {
                         <Loader2 className="w-4 h-4 animate-spin" />
                         Loading your spreadsheets...
                       </div>
-                    ) : spreadsheets.length === 0 ? (
+                    ) : spreadsheets.length ===
+                      0 ? (
                       <p className="text-xs text-amber-600 font-medium">
                         No spreadsheets found in your Drive. Create a new one instead.
                       </p>
@@ -1641,15 +1678,16 @@ export default function GoogleSheetsPage() {
                         value={
                           selectedExportSheetId
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setSelectedExportSheetId(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm bg-white"
                       >
                         {spreadsheets.map(
-                          s => (
+                          (s) => (
                             <option
                               key={
                                 s.id
@@ -1728,9 +1766,7 @@ export default function GoogleSheetsPage() {
                     rel="noreferrer"
                     className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold py-1.5 px-4 rounded-lg text-xs inline-flex items-center gap-1.5 transition-colors"
                   >
-                    <ExternalLink
-                      size={14}
-                    />
+                    <ExternalLink size={14} />
                     Open Google Sheet
                   </a>
                 </div>
@@ -1738,8 +1774,12 @@ export default function GoogleSheetsPage() {
             </div>
           )}
 
+          {/* ================================================== */}
           {/* IMPORT TAB */}
-          {activeTab === 'import' && (
+          {/* ================================================== */}
+
+          {activeTab ===
+            'import' && (
             <div className="space-y-6">
               <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
                 <div>
@@ -1763,7 +1803,8 @@ export default function GoogleSheetsPage() {
                         <Loader2 className="w-4 h-4 animate-spin" />
                         Loading spreadsheets...
                       </div>
-                    ) : spreadsheets.length === 0 ? (
+                    ) : spreadsheets.length ===
+                      0 ? (
                       <p className="text-xs text-amber-600">
                         No spreadsheets found in your Drive.
                       </p>
@@ -1772,15 +1813,16 @@ export default function GoogleSheetsPage() {
                         value={
                           selectedImportSheetId
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setSelectedImportSheetId(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm bg-white"
                       >
                         {spreadsheets.map(
-                          s => (
+                          (s) => (
                             <option
                               key={
                                 s.id
@@ -1817,15 +1859,16 @@ export default function GoogleSheetsPage() {
                         value={
                           selectedTabName
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setSelectedTabName(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm bg-white"
                       >
                         {sheetsInSpreadsheet.map(
-                          t => (
+                          (t) => (
                             <option
                               key={t}
                               value={t}
@@ -1858,9 +1901,7 @@ export default function GoogleSheetsPage() {
                       </>
                     ) : (
                       <>
-                        <RefreshCw
-                          size={16}
-                        />
+                        <RefreshCw size={16} />
                         Fetch Sheet Data
                       </>
                     )}
@@ -1868,7 +1909,8 @@ export default function GoogleSheetsPage() {
                 </div>
               </div>
 
-              {sheetRows.length > 0 && (
+              {sheetRows.length >
+                0 && (
                 <div className="bg-white rounded-2xl shadow-md border-none p-6 space-y-6">
                   <div>
                     <h3 className="text-base font-bold text-gray-900">
@@ -1885,7 +1927,10 @@ export default function GoogleSheetsPage() {
                       <thead>
                         <tr className="bg-gray-50 text-gray-700 uppercase border-b border-gray-100">
                           {sheetRows[0]
-                            .slice(0, 8)
+                            .slice(
+                              0,
+                              8
+                            )
                             .map(
                               (
                                 header,
@@ -1916,7 +1961,10 @@ export default function GoogleSheetsPage() {
 
                       <tbody className="divide-y divide-gray-100 text-gray-700">
                         {sheetRows
-                          .slice(1, 4)
+                          .slice(
+                            1,
+                            4
+                          )
                           .map(
                             (
                               row,
@@ -2021,7 +2069,9 @@ export default function GoogleSheetsPage() {
                       onClick={
                         handleImport
                       }
-                      disabled={importing}
+                      disabled={
+                        importing
+                      }
                       className="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-2.5 px-6 rounded-xl transition-all inline-flex items-center gap-2 self-end disabled:opacity-50"
                     >
                       {importing ? (
@@ -2031,9 +2081,7 @@ export default function GoogleSheetsPage() {
                         </>
                       ) : (
                         <>
-                          <Database
-                            size={16}
-                          />
+                          <Database size={16} />
                           Import{' '}
                           {sheetRows.length -
                             1}{' '}
@@ -2091,7 +2139,8 @@ export default function GoogleSheetsPage() {
                   </div>
 
                   {importResult.errors
-                    .length > 0 && (
+                    .length >
+                    0 && (
                     <div className="space-y-2 mt-4">
                       <p className="text-xs font-bold text-red-600 uppercase tracking-wide">
                         Import Warnings / Errors:
@@ -2127,10 +2176,15 @@ export default function GoogleSheetsPage() {
             </div>
           )}
 
-          {/* REAL-TIME FORMS SYNC */}
+          {/* ================================================== */}
+          {/* REAL-TIME TAB */}
+          {/* ================================================== */}
+
           {activeTab ===
             'realtime' && (
             <div className="space-y-6">
+              {/* STATUS CARDS */}
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white rounded-2xl shadow-md p-6 border-none flex flex-col justify-between">
                   <div>
@@ -2247,6 +2301,8 @@ export default function GoogleSheetsPage() {
                 </div>
               </div>
 
+              {/* ACTION TOOLBAR */}
+
               <div className="bg-white rounded-2xl shadow-md p-6 border-none flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-base font-bold text-gray-900">
@@ -2309,6 +2365,8 @@ export default function GoogleSheetsPage() {
                 </div>
               </div>
 
+              {/* SYNC RESULT */}
+
               {syncResult && (
                 <div className="bg-white rounded-2xl shadow-md p-6 border-none space-y-4">
                   <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -2343,7 +2401,8 @@ export default function GoogleSheetsPage() {
                   </div>
 
                   {syncResult.errors
-                    .length > 0 && (
+                    .length >
+                    0 && (
                     <div className="space-y-1.5 pt-2">
                       <p className="text-[11px] font-bold text-rose-600 uppercase tracking-wide">
                         Sync Failures Log:
@@ -2370,6 +2429,8 @@ export default function GoogleSheetsPage() {
                 </div>
               )}
 
+              {/* CONFIGURATION */}
+
               <div className="bg-white rounded-2xl shadow-md p-6 border-none space-y-6">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">
@@ -2393,9 +2454,10 @@ export default function GoogleSheetsPage() {
                         value={
                           spreadsheetIdSetting
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setSpreadsheetIdSetting(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         placeholder="e.g. 1a2b3c4d5e6f7g8h9i0j..."
@@ -2417,9 +2479,10 @@ export default function GoogleSheetsPage() {
                         value={
                           appScriptUrlSetting
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setAppScriptUrlSetting(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         placeholder="https://script.google.com/macros/s/.../exec"
@@ -2438,7 +2501,7 @@ export default function GoogleSheetsPage() {
                           checked={
                             syncEnabledSetting
                           }
-                          onChange={e =>
+                          onChange={(e) =>
                             setSyncEnabledSetting(
                               e.target
                                 .checked
@@ -2465,9 +2528,10 @@ export default function GoogleSheetsPage() {
                         value={
                           inquirySheetNameSetting
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setInquirySheetNameSetting(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         placeholder="Inquiries"
@@ -2485,9 +2549,10 @@ export default function GoogleSheetsPage() {
                         value={
                           orderSheetNameSetting
                         }
-                        onChange={e =>
+                        onChange={(e) =>
                           setOrderSheetNameSetting(
-                            e.target.value
+                            e.target
+                              .value
                           )
                         }
                         placeholder="Orders"
@@ -2521,7 +2586,8 @@ export default function GoogleSheetsPage() {
                   </div>
                 </div>
 
-                {/* Apps Script Guide */}
+                {/* APPS SCRIPT GUIDE */}
+
                 <div className="border-t border-gray-100 pt-6 space-y-4">
                   <div className="bg-amber-50/50 rounded-2xl p-6 border border-amber-100/60 text-gray-700">
                     <h4 className="text-sm font-bold text-amber-800 flex items-center gap-1.5">
@@ -2540,7 +2606,9 @@ export default function GoogleSheetsPage() {
                         </span>
 
                         <span>
-                          Open your target Google Sheet, click on <b>Extensions</b> &gt; <b>Apps Script</b>.
+                          Open your target Google Sheet, click on{' '}
+                          <b>Extensions</b> &gt;{' '}
+                          <b>Apps Script</b>.
                         </span>
                       </div>
 
@@ -2560,7 +2628,9 @@ export default function GoogleSheetsPage() {
                         </span>
 
                         <span>
-                          Click <b>Deploy</b> (top-right) &gt; <b>New Deployment</b>. Set type as <b>Web App</b>.
+                          Click <b>Deploy</b> (top-right) &gt;{' '}
+                          <b>New Deployment</b>. Set type as{' '}
+                          <b>Web App</b>.
                         </span>
                       </div>
 
@@ -2570,7 +2640,9 @@ export default function GoogleSheetsPage() {
                         </span>
 
                         <span>
-                          Under "Execute as", choose <b>Me (your email)</b>. Under "Who has access", choose <b>Anyone</b>.
+                          Under "Execute as", choose{' '}
+                          <b>Me (your email)</b>. Under "Who has access", choose{' '}
+                          <b>Anyone</b>.
                         </span>
                       </div>
 
@@ -2584,6 +2656,8 @@ export default function GoogleSheetsPage() {
                         </span>
                       </div>
                     </div>
+
+                    {/* SCRIPT */}
 
                     <div className="mt-5 space-y-1.5">
                       <div className="flex items-center justify-between">
@@ -2600,17 +2674,17 @@ export default function GoogleSheetsPage() {
     var sheetName = data.sheetName || "Sheet1";
     var row = data.row;
     var headers = data.headers;
-
+    
     var ss = spreadsheetId
       ? SpreadsheetApp.openById(spreadsheetId)
       : SpreadsheetApp.getActiveSpreadsheet();
 
     var sheet = ss.getSheetByName(sheetName);
-
+    
     if (!sheet) {
       sheet = ss.insertSheet(sheetName);
     }
-
+    
     if (
       sheet.getLastRow() === 0 &&
       headers &&
@@ -2618,9 +2692,9 @@ export default function GoogleSheetsPage() {
     ) {
       sheet.appendRow(headers);
     }
-
+    
     sheet.appendRow(row);
-
+    
     return ContentService
       .createTextOutput(
         JSON.stringify({ success: true })
@@ -2628,7 +2702,6 @@ export default function GoogleSheetsPage() {
       .setMimeType(
         ContentService.MimeType.JSON
       );
-
   } catch (err) {
     return ContentService
       .createTextOutput(
@@ -2649,7 +2722,7 @@ export default function GoogleSheetsPage() {
 
                             setAlert({
                               text: 'Apps Script copied to clipboard!',
-                              type: 'success'
+                              type: 'success',
                             });
                           }}
                           className="bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 rounded px-2 py-0.5 text-[10px] font-bold transition-all inline-flex items-center gap-1"
@@ -2666,17 +2739,17 @@ export default function GoogleSheetsPage() {
     var sheetName = data.sheetName || "Sheet1";
     var row = data.row;
     var headers = data.headers;
-
+    
     var ss = spreadsheetId
       ? SpreadsheetApp.openById(spreadsheetId)
       : SpreadsheetApp.getActiveSpreadsheet();
 
     var sheet = ss.getSheetByName(sheetName);
-
+    
     if (!sheet) {
       sheet = ss.insertSheet(sheetName);
     }
-
+    
     if (
       sheet.getLastRow() === 0 &&
       headers &&
@@ -2684,9 +2757,9 @@ export default function GoogleSheetsPage() {
     ) {
       sheet.appendRow(headers);
     }
-
+    
     sheet.appendRow(row);
-
+    
     return ContentService
       .createTextOutput(
         JSON.stringify({ success: true })
@@ -2694,7 +2767,6 @@ export default function GoogleSheetsPage() {
       .setMimeType(
         ContentService.MimeType.JSON
       );
-
   } catch (err) {
     return ContentService
       .createTextOutput(
