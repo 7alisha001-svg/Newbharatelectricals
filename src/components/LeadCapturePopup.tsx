@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, User, Phone, Mail, MapPin, Tag, Check, AlertCircle, Zap, ShieldCheck } from 'lucide-react';
+import { X, User, Phone, Mail, MapPin, Check, AlertCircle, Zap, ShieldCheck } from 'lucide-react';
 import { supabaseAnon } from '../lib/supabase';
 
 export default function LeadCapturePopup() {
@@ -9,7 +9,6 @@ export default function LeadCapturePopup() {
   const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
-  const [interestedIn, setInterestedIn] = useState('Solar Panel');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -32,7 +31,6 @@ export default function LeadCapturePopup() {
       if (hasShown) return;
       hasShown = true;
       setIsOpen(true);
-      // Clean up listeners
       window.removeEventListener('scroll', handleScroll);
     };
 
@@ -40,8 +38,10 @@ export default function LeadCapturePopup() {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
       if (docHeight > 0) {
         const scrollPercent = (scrollTop / docHeight) * 100;
+
         if (scrollPercent >= 40) {
           showPopup();
         }
@@ -63,6 +63,7 @@ export default function LeadCapturePopup() {
 
   const handleClose = () => {
     setIsOpen(false);
+
     // Store dismissal time
     localStorage.setItem('lead_popup_dismissed_time', Date.now().toString());
   };
@@ -70,25 +71,34 @@ export default function LeadCapturePopup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-    
+
     // Validations
     if (!fullName.trim()) {
       setErrorMessage('Full name is required.');
       return;
     }
+
     const cleanMobile = mobile.trim().replace(/[\s\-()]/g, '');
     const mobileRegex = /^\+?[0-9\s\-()]{10,}$/;
-    if (!mobile.trim() || !mobileRegex.test(mobile.trim()) || cleanMobile.length < 10) {
+
+    if (
+      !mobile.trim() ||
+      !mobileRegex.test(mobile.trim()) ||
+      cleanMobile.length < 10
+    ) {
       setErrorMessage('Please enter a valid phone number (minimum 10 digits).');
       return;
     }
+
     if (email.trim() && email.trim() !== 'N/A') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
       if (!emailRegex.test(email.trim())) {
         setErrorMessage('Please enter a valid email address.');
         return;
       }
     }
+
     if (!city.trim()) {
       setErrorMessage('City is required.');
       return;
@@ -101,9 +111,8 @@ export default function LeadCapturePopup() {
       const leadPayload = {
         email: email.trim() || 'N/A',
         city: city.trim(),
-        interested_in: interestedIn,
         status: 'New',
-        message: 'Lead captured from first-time visitor popup'
+        message: 'Lead captured from first-time visitor popup',
       };
 
       const { data: inquiryId, error: dbError } = await supabaseAnon
@@ -111,7 +120,7 @@ export default function LeadCapturePopup() {
           p_name: fullName.trim(),
           p_phone: mobile.trim(),
           p_inquiry_type: 'Lead Capture',
-          p_message: JSON.stringify(leadPayload)
+          p_message: JSON.stringify(leadPayload),
         });
 
       if (dbError) throw dbError;
@@ -131,11 +140,13 @@ export default function LeadCapturePopup() {
             emailAddress: email.trim() || 'N/A',
             phoneNumber: mobile.trim(),
             companyName: undefined,
-            subject: `Consultation: ${interestedIn}`,
-            message: `Product Segment: ${interestedIn}\nPreferred City: ${city.trim()}`,
+            subject: 'Free Solar & Power Consultation',
+            message: `Preferred City: ${city.trim()}`,
             pageUrl: window.location.href,
-            dateTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-            source: 'Popup'
+            dateTime: new Date().toLocaleString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+            }),
+            source: 'Popup',
           }),
         });
 
@@ -143,7 +154,10 @@ export default function LeadCapturePopup() {
 
         if (!response.ok || !result.success) {
           emailWarning = true;
-          console.warn('Lead saved but email notification failed:', result.error);
+          console.warn(
+            'Lead saved but email notification failed:',
+            result.error
+          );
         }
       } catch (apiErr) {
         emailWarning = true;
@@ -151,17 +165,22 @@ export default function LeadCapturePopup() {
       }
 
       setIsSuccess(true);
-      // Store success in localstorage (30 days exclusion)
-      localStorage.setItem('lead_popup_dismissed_time', Date.now().toString());
 
-      // Auto close after 3 seconds
+      // Store success in localstorage (30 days exclusion)
+      localStorage.setItem(
+        'lead_popup_dismissed_time',
+        Date.now().toString()
+      );
+
+      // Auto close after 4 seconds
       setTimeout(() => {
         setIsOpen(false);
       }, 4000);
-
     } catch (err: any) {
       console.error('Error submitting lead:', err);
-      setErrorMessage(err.message || 'Something went wrong. Please try again.');
+      setErrorMessage(
+        err.message || 'Something went wrong. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -197,10 +216,12 @@ export default function LeadCapturePopup() {
                 <div className="w-12 h-12 rounded-2xl bg-brand-green-light text-brand-green flex items-center justify-center flex-shrink-0 shadow-sm">
                   <Zap size={24} className="fill-brand-green/10" />
                 </div>
+
                 <div>
                   <h3 className="text-xl sm:text-2xl font-heading font-black text-gray-900 leading-tight">
                     Get a Free Solar & Power Consultation
                   </h3>
+
                   <p className="text-brand-orange text-xs font-bold uppercase tracking-wider mt-1">
                     Expert Guidance • Guaranteed Best Rates
                   </p>
@@ -208,7 +229,9 @@ export default function LeadCapturePopup() {
               </div>
 
               <p className="text-gray-700 text-sm mb-6 font-medium leading-relaxed">
-                Looking for the right inverter, battery, or solar solution? Leave your details and our team of engineering experts will contact you.
+                Looking for the right inverter, battery, or solar solution?
+                Leave your details and our team of engineering experts will
+                contact you.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -221,37 +244,49 @@ export default function LeadCapturePopup() {
 
                 {/* Name */}
                 <div className="relative">
-                  <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <User
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
+
                   <input
                     type="text"
                     required
-                    placeholder="Full Name *"
+                    placeholder="Name *"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-green transition-all font-semibold"
                   />
                 </div>
 
-                {/* Mobile Number */}
+                {/* Phone Number */}
                 <div className="relative">
-                  <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Phone
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
+
                   <input
                     type="tel"
                     required
                     pattern="[0-9]{10,}"
-                    placeholder="Mobile Number (10+ digits) *"
+                    placeholder="Phone No. *"
                     value={mobile}
                     onChange={(e) => setMobile(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-green transition-all font-semibold"
                   />
                 </div>
 
-                {/* Email Address */}
+                {/* Email */}
                 <div className="relative">
-                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Mail
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
+
                   <input
                     type="email"
-                    placeholder="Email Address (Optional)"
+                    placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-green transition-all font-semibold"
@@ -260,7 +295,11 @@ export default function LeadCapturePopup() {
 
                 {/* City */}
                 <div className="relative">
-                  <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <MapPin
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
+
                   <input
                     type="text"
                     required
@@ -269,23 +308,6 @@ export default function LeadCapturePopup() {
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-green transition-all font-semibold"
                   />
-                </div>
-
-                {/* Interested In */}
-                <div className="relative">
-                  <Tag size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <select
-                    value={interestedIn}
-                    onChange={(e) => setInterestedIn(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-green transition-all font-semibold text-gray-700 cursor-pointer appearance-none"
-                  >
-                    <option value="Solar Panel">Solar Panel</option>
-                    <option value="Solar Inverter">Solar Inverter</option>
-                    <option value="Battery">Battery</option>
-                    <option value="UPS">UPS</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-xs">▼</div>
                 </div>
 
                 {/* Form Buttons */}
@@ -297,6 +319,7 @@ export default function LeadCapturePopup() {
                   >
                     Close
                   </button>
+
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -317,11 +340,19 @@ export default function LeadCapturePopup() {
               <div className="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-4 animate-bounce">
                 <Check size={32} strokeWidth={3} />
               </div>
+
               <h3 className="text-2xl font-black text-gray-900 mb-2 font-heading">
                 Consultation Requested!
               </h3>
+
               <p className="text-gray-700 text-sm max-w-sm mx-auto font-medium leading-relaxed">
-                Thank you, <span className="font-bold text-brand-green">{fullName}</span>. Your request has been logged successfully. Our engineering experts will call you shortly on <span className="font-bold">{mobile}</span>!
+                Thank you,{' '}
+                <span className="font-bold text-brand-green">
+                  {fullName}
+                </span>
+                . Your request has been logged successfully. Our engineering
+                experts will call you shortly on{' '}
+                <span className="font-bold">{mobile}</span>!
               </p>
             </div>
           )}
