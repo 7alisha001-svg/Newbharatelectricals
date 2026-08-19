@@ -50,7 +50,6 @@ function LocationCard({
 
       {/* Location Information */}
       <div className="flex flex-1 flex-col">
-
         {/* Title */}
         <h3 className="mb-2 min-h-[30px] text-xl sm:min-h-[36px] sm:text-2xl font-black text-gray-900">
           {title}
@@ -119,17 +118,21 @@ export default function Contact() {
       form.elements.namedItem('email') as HTMLInputElement
     ).value.trim();
 
-    const company = (
-      form.elements.namedItem('company') as HTMLInputElement
+    const city = (
+      form.elements.namedItem('city') as HTMLInputElement
     ).value.trim();
 
-    const inquiryType = (
-      form.elements.namedItem('inquiry-type') as HTMLSelectElement
-    ).value;
+    const dealerPartnership = (
+      form.elements.namedItem('dealer-partnership') as HTMLInputElement
+    ).checked;
 
-    const message = (
-      form.elements.namedItem('message') as HTMLTextAreaElement
-    ).value.trim();
+    const inquiryType = dealerPartnership
+      ? 'Dealer Partnership'
+      : 'Contact Us';
+
+    const message = dealerPartnership
+      ? 'User is interested in Dealer Partnership.'
+      : 'General Contact Inquiry';
 
     if (!name) {
       setError('Full name is required.');
@@ -168,12 +171,19 @@ export default function Contact() {
       return;
     }
 
+    if (!city) {
+      setError('City is required.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const payloadData = {
         email,
-        company,
+        city,
         status: 'New',
         is_contact: true,
+        dealer_partnership: dealerPartnership,
         message,
       };
 
@@ -182,7 +192,7 @@ export default function Contact() {
           p_name: name,
           p_phone: phone,
           p_inquiry_type: inquiryType,
-          p_message: JSON.stringify(payloadData)
+          p_message: JSON.stringify(payloadData),
         });
 
       if (dbError) throw dbError;
@@ -200,9 +210,11 @@ export default function Contact() {
             fullName: name,
             emailAddress: email,
             phoneNumber: phone,
-            companyName: company || undefined,
+            companyName: undefined,
             subject: inquiryType,
             message,
+            city,
+            dealerPartnership,
             pageUrl: window.location.href,
             dateTime: new Date().toLocaleString('en-IN', {
               timeZone: 'Asia/Kolkata',
@@ -215,7 +227,10 @@ export default function Contact() {
 
         if (!response.ok || !result.success) {
           emailWarning = true;
-          console.warn('Inquiry saved but email notification failed:', result.error);
+          console.warn(
+            'Inquiry saved but email notification failed:',
+            result.error
+          );
         }
       } catch (apiErr) {
         emailWarning = true;
@@ -419,6 +434,7 @@ export default function Contact() {
                     </div>
                   )}
 
+                  {/* Name + Phone */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
                     <div>
@@ -426,7 +442,7 @@ export default function Contact() {
                         htmlFor="name"
                         className="block text-sm font-bold text-gray-700 mb-2"
                       >
-                        Full Name *
+                        Name *
                       </label>
 
                       <input
@@ -435,7 +451,7 @@ export default function Contact() {
                         required
                         type="text"
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all"
-                        placeholder="John Doe"
+                        placeholder="Your Name"
                       />
                     </div>
 
@@ -444,7 +460,7 @@ export default function Contact() {
                         htmlFor="phone"
                         className="block text-sm font-bold text-gray-700 mb-2"
                       >
-                        Phone Number *
+                        Phone No. *
                       </label>
 
                       <input
@@ -459,6 +475,7 @@ export default function Contact() {
 
                   </div>
 
+                  {/* Email + City */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
                     <div>
@@ -466,7 +483,7 @@ export default function Contact() {
                         htmlFor="email"
                         className="block text-sm font-bold text-gray-700 mb-2"
                       >
-                        Email Address *
+                        Email *
                       </label>
 
                       <input
@@ -481,95 +498,48 @@ export default function Contact() {
 
                     <div>
                       <label
-                        htmlFor="company"
+                        htmlFor="city"
                         className="block text-sm font-bold text-gray-700 mb-2"
                       >
-                        Company Name{' '}
-                        <span className="text-gray-400 font-normal text-xs ml-1">
-                          (Optional)
-                        </span>
+                        City *
                       </label>
 
                       <input
-                        id="company"
-                        name="company"
+                        id="city"
+                        name="city"
+                        required
                         type="text"
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all"
-                        placeholder="Your Company Name"
+                        placeholder="Your City"
                       />
                     </div>
 
                   </div>
 
-                  <div>
+                  {/* Dealer Partnership */}
+                  <div className="flex items-start gap-3 rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-4 md:px-5 py-4">
 
-                    <label
-                      htmlFor="inquiry-type"
-                      className="block text-sm font-bold text-gray-700 mb-2"
-                    >
-                      Product Inquiry
-                    </label>
-
-                    <select
-                      id="inquiry-type"
-                      name="inquiry-type"
-                      required
-                      defaultValue=""
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all text-gray-700"
-                    >
-
-                      <option value="" disabled>
-                        Select a category...
-                      </option>
-
-                      <option value="Power Solutions (Inverters/UPS)">
-                        Power Solutions (Inverters/UPS)
-                      </option>
-
-                      <option value="Solar Solutions">
-                        Solar Solutions
-                      </option>
-
-                      <option value="Mobility & EV Batteries">
-                        Mobility & EV Batteries
-                      </option>
-
-                      <option value="Electrical Accessories">
-                        Electrical Accessories
-                      </option>
-
-                      <option value="Dealer Partnership">
-                        Dealer Partnership
-                      </option>
-
-                      <option value="Other / Support">
-                        Other / Support
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                  <div>
-
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-bold text-gray-700 mb-2"
-                    >
-                      Message
-                    </label>
-
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={5}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-all"
-                      placeholder="Tell us how we can help you..."
+                    <input
+                      id="dealer-partnership"
+                      name="dealer-partnership"
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 accent-brand-green cursor-pointer"
                     />
 
+                    <label
+                      htmlFor="dealer-partnership"
+                      className="cursor-pointer text-sm font-bold text-gray-700"
+                    >
+                      I am interested in Dealer Partnership
+
+                      <span className="block text-xs font-normal text-gray-500 mt-1">
+                        Tick this only if you want to enquire about becoming a dealer partner.
+                      </span>
+                    </label>
+
                   </div>
 
+                  {/* Form Buttons */}
                   <div className="pt-3 md:pt-4 flex flex-col sm:flex-row gap-3 md:gap-4">
 
                     <button
@@ -691,14 +661,14 @@ export default function Contact() {
                 </p>
 
                 <a
-  href="https://wa.me/919457002000?text=Hello%20New%20Bharat%20Electricals,%20I%20am%20interested%20in%20becoming%20a%20dealer%20partner.%20Please%20share%20the%20dealer%20partnership%20details%20and%20requirements."
-  target="_blank"
-  rel="noopener noreferrer"
-  className="inline-flex items-center justify-center bg-brand-green text-white font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-xl hover:bg-brand-green-dark transition-colors shadow-md"
->
-  Dealer Partnership
-  <MessageCircle size={16} className="ml-2" />
-</a>
+                  href="https://wa.me/919457002000?text=Hello%20New%20Bharat%20Electricals,%20I%20am%20interested%20in%20becoming%20a%20dealer%20partner.%20Please%20share%20the%20dealer%20partnership%20details%20and%20requirements."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center bg-brand-green text-white font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-xl hover:bg-brand-green-dark transition-colors shadow-md"
+                >
+                  Dealer Partnership
+                  <MessageCircle size={16} className="ml-2" />
+                </a>
 
               </div>
 
