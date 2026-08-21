@@ -86,6 +86,12 @@ function escapeHtml(value: any): string {
 
 async function startServer() {
   const app = express();
+  console.log("SMTP DEBUG:", {
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  user: process.env.SMTP_USER,
+  passConfigured: Boolean(process.env.SMTP_PASS),
+});
   const PORT = 3000;
 
   app.use(express.json({ limit: "1mb" }));
