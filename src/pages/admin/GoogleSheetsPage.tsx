@@ -186,9 +186,7 @@ export default function GoogleSheetsPage() {
   // ============================================================
 
   const [spreadsheetIdSetting, setSpreadsheetIdSetting] = useState('');
-  const [appScriptUrlSetting, setAppScriptUrlSetting] = useState(
-  'https://script.google.com/macros/s/AKfycbx6_l24clgdc1QEN-gOKlFXCv-OHXIyW_xcK_6LRHF112oUAg8X9Pd8p9piepBT2-jyuQ/exec'
-);
+  const [appScriptUrlSetting, setAppScriptUrlSetting] = useState('');
   const [inquirySheetNameSetting, setInquirySheetNameSetting] =
     useState('Inquiries');
   const [orderSheetNameSetting, setOrderSheetNameSetting] =
@@ -230,10 +228,9 @@ export default function GoogleSheetsPage() {
       if (settingsData) {
         const socialLinks = settingsData.social_links || {};
 
-        setAppScriptUrlSetting(
-  socialLinks.google_sheets_app_script_url ||
-    'https://script.google.com/macros/s/AKfycbx6_l24clgdc1QEN-gOKlFXCv-OHXIyW_xcK_6LRHF112oUAg8X9Pd8p9piepBT2-jyuQ/exec'
-);
+        setSpreadsheetIdSetting(
+          socialLinks.google_sheets_spreadsheet_id || ''
+        );
 
         setAppScriptUrlSetting(
           socialLinks.google_sheets_app_script_url || ''
