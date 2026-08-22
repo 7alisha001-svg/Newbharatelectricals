@@ -13,7 +13,7 @@ export default function Leads() {
     setLoading(true);
     try {
       let query = supabase
-        .from('inquiries')
+        .from('leads')
         .select('*')
         .in('inquiry_type', ['Lead Capture', 'Product Enquiry'])
         .order('created_at', { ascending: false });
