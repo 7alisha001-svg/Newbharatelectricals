@@ -29,7 +29,7 @@ export const DEFAULT_WEBSITE_MEDIA: WebsiteMedia[] = [
     image_key: 'hero_banner_1',
     title: 'Homepage Hero Slide 1 (Solar Solutions)',
     category: 'Hero Banners',
-    image_url: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?q=80&w=1600&auto=format&fit=crop',
+    image_url: '/images/amaze-an-star-1475-1.jpg',
     alt_text: 'Solar Energy Installation',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

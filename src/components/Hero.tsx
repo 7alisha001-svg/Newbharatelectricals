@@ -7,7 +7,7 @@ export default function Hero() {
 
   const fallbackSrc = '/images/amaze-an-star-1475-1.jpg';
   const dbSrc = getMediaUrl('hero_banner_1', fallbackSrc);
-  const src = hasError ? fallbackSrc : dbSrc;
+  const src = hasError ? fallbackSrc : (dbSrc || fallbackSrc);
   const alt = getMediaAlt('hero_banner_1', 'New Bharat Electricals - Solar & Power Solutions');
 
   const handleError = () => {
