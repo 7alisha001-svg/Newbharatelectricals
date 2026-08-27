@@ -46,6 +46,7 @@ const Navigation = React.lazy(() => import('./pages/admin/Navigation'));
 const CategoryProductManager = React.lazy(() => import('./pages/admin/CategoryProductManager'));
 const GoogleSheetsPage = React.lazy(() => import('./pages/admin/GoogleSheetsPage'));
 const MediaLibrary = React.lazy(() => import('./pages/admin/MediaLibrary'));
+const HomepageBanner = React.lazy(() => import('./pages/admin/HomepageBanner'));
 
 import { useStore, StoreProvider } from './context/StoreContext';
 import { MediaProvider, useMedia } from './context/MediaContext';
@@ -166,6 +167,8 @@ export default function App() {
                   <Route path="settings" element={<Settings />} />
                   <Route path="locations" element={<Locations />} />
                   <Route path="sheets" element={<GoogleSheetsPage />} />
+                  <Route path="media-library" element={<MediaLibrary />} />
+                  <Route path="homepage-banner" element={<HomepageBanner />} />
                   <Route path="power-solutions/:subcategory" element={<CategoryProductManager />} />
                   <Route path="solar-solutions/:subcategory" element={<CategoryProductManager />} />
                 </Route>
