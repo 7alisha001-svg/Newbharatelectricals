@@ -88,6 +88,8 @@ export default function ProductPage() {
         ? 'In Stock'
         : 'Out of Stock',
 
+    shortDescription: rawProduct.short_description || '',
+
     description: rawProduct.description,
 
     features: Array.isArray(rawProduct.features)
@@ -304,35 +306,7 @@ export default function ProductPage() {
 
               </div>
 
-              {/* Description */}
-              <p className="text-gray-900 font-medium mb-5 md:mb-8 leading-relaxed text-sm md:text-base">
-                {product.description}
-              </p>
-
-              {/* Features */}
-              <div className="space-y-2.5 mb-6 md:mb-10">
-
-                {product.features.map((feature, idx) => (
-
-                  <div
-                    key={idx}
-                    className="flex items-start"
-                  >
-                    <CheckCircle2
-                      size={18}
-                      className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
-                    />
-
-                    <span className="text-gray-700 text-sm md:text-base">
-                      {feature}
-                    </span>
-                  </div>
-
-                ))}
-
-              </div>
-
-              {/* Enquiry Area */}
+              {/* Existing Price / Actions */}
               <div className="border-t border-gray-200 pt-6 md:pt-8">
 
                 {/* Price */}
@@ -394,7 +368,48 @@ export default function ProductPage() {
 
               </div>
 
+              {/* Short Description */}
+              <p className="text-gray-900 font-medium mb-5 md:mb-8 leading-relaxed text-sm md:text-base">
+                {product.shortDescription}
+              </p>
+
+              {/* Key Features */}
+              <div className="space-y-2.5 mb-6 md:mb-10">
+
+                {product.features.map((feature, idx) => (
+
+                  <div
+                    key={idx}
+                    className="flex items-start"
+                  >
+                    <CheckCircle2
+                      size={18}
+                      className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
+                    />
+
+                    <span className="text-gray-700 text-sm md:text-base">
+                      {feature}
+                    </span>
+                  </div>
+
+                ))}
+
+              </div>
             </div>
+
+          </div>
+
+          {/* Full Description */}
+          <div className="mt-6 sm:mt-12 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-5 sm:p-8 lg:p-12">
+
+            <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">
+              Full Description
+            </h2>
+
+            <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
+              {product.description ||
+                'No detailed description available for this product.'}
+            </p>
 
           </div>
 
