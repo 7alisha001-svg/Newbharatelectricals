@@ -92,7 +92,7 @@ async function startServer() {
   user: process.env.SMTP_USER,
   passConfigured: Boolean(process.env.SMTP_PASS),
 });
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json({ limit: "1mb" }));
 
@@ -1520,6 +1520,7 @@ async function startServer() {
               </tr>
 
             </table>
+
 
             <h3>
               Cart Summary
