@@ -1,4 +1,4 @@
-import "dotenv/config";
+
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
@@ -1171,6 +1171,78 @@ async function startServer() {
   }
 
   // ====================================================
+  // PABBLY WEBHOOK - LEAD NOTIFICATION
+  // ====================================================
+
+  async function sendLeadToPabbly(payload: {
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    companyName?: string;
+    subject?: string;
+    message?: string;
+    pageUrl?: string;
+    dateTime?: string;
+    source?: string;
+    productName?: string;
+    productSku?: string;
+    productId?: string;
+  }) {
+    const webhookUrl = process.env.PABBLY_WEBHOOK_URL;
+
+    if (!webhookUrl) {
+      console.log(
+        "[PABBLY] PABBLY_WEBHOOK_URL is not configured. Skipping webhook."
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: payload.fullName,
+          fullName: payload.fullName,
+          email: payload.emailAddress,
+          emailAddress: payload.emailAddress,
+          phone: payload.phoneNumber,
+          phoneNumber: payload.phoneNumber,
+          companyName: payload.companyName || "",
+          subject: payload.subject || "",
+          message: payload.message || "",
+          pageUrl: payload.pageUrl || "",
+          dateTime: payload.dateTime || "",
+          source: payload.source || "",
+          productName: payload.productName || "",
+          productSku: payload.productSku || "",
+          productId: payload.productId || "",
+        }),
+      });
+
+      const responseText = await response.text();
+
+      if (!response.ok) {
+        console.error(
+          `[PABBLY] Webhook failed. HTTP ${response.status}: ${responseText}`
+        );
+        return;
+      }
+
+      console.log(
+        `[PABBLY] Lead sent successfully. HTTP ${response.status}`
+      );
+    } catch (error: any) {
+      console.error(
+        "[PABBLY] Webhook request failed:",
+        error?.message || String(error)
+      );
+    }
+  }
+
+  // ====================================================
   // ORDER EMAIL
   // ====================================================
 
@@ -1810,6 +1882,34 @@ async function startServer() {
 
           productId:
             productId || undefined,
+        });
+
+        // ====================================================
+        // PABBLY LEAD NOTIFICATION
+        // ====================================================
+
+        await sendLeadToPabbly({
+          fullName: fullName.trim(),
+          emailAddress: (emailAddress || "").trim() || "N/A",
+          phoneNumber: phoneNumber.trim(),
+          companyName: (companyName || "").trim(),
+          subject: (subject || "General Enquiry").trim(),
+          message: (message || "").trim(),
+          pageUrl:
+            pageUrl ||
+            req.headers.referer ||
+            "https://newbharatelectricals.com/",
+          dateTime,
+          source:
+            source ||
+            (productName
+              ? "Product Enquiry"
+              : pageUrl?.includes("contact")
+                ? "Contact Page"
+                : "Popup"),
+          productName: productName || undefined,
+          productSku: productSku || undefined,
+          productId: productId || undefined,
         });
 
         // Google Sheets sync
