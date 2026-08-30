@@ -247,12 +247,12 @@ export default function Navbar(props: HeaderProps = {}) {
           ? '-translate-y-full shadow-none pointer-events-none' 
           : 'translate-y-0 ' + (isScrolled ? 'shadow-md' : '')
       }`}>
-        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-0.5 md:py-2">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-1.5 sm:py-2 md:py-2">
           {/* Main Header / Logo / Search / Icons */}
           <div className="flex items-center justify-between gap-2 md:gap-4 mb-0">
             {/* Logo */}
-            <div className="flex items-center flex-shrink-0 p-0 m-0">
-              <Link to="/" className="flex items-center group p-0 m-0">
+            <div className="flex items-center flex-shrink-0 p-0 m-0 min-w-0">
+              <Link to="/" className="flex items-center group p-0 m-0 min-w-0">
                 <MediaImage 
                   imageKey="header_logo"
                   defaultSrc={settings?.logo_url || "/header-logo-dark.png"} 
@@ -264,9 +264,10 @@ export default function Navbar(props: HeaderProps = {}) {
                     height: settings?.social_links?.header_logo_size 
                       ? `${Math.round(Number(settings.social_links.header_logo_size) * 0.82)}px` 
                       : undefined,
-                    maxHeight: '72px'
+                    maxHeight: '72px',
+                    width: 'auto'
                   }}
-                  className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0"
+                  className="h-11 sm:h-12 md:h-14 lg:h-16 w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0 max-w-[55vw] sm:max-w-none"
                 />
               </Link>
             </div>
@@ -288,8 +289,8 @@ export default function Navbar(props: HeaderProps = {}) {
 
             {/* Right Side Icons (Retail Style) */}
             <div className="hidden lg:flex flex-shrink-0 items-center space-x-6 text-gray-900 ml-4">
-              
-                
+               
+                 
                 
             
               
@@ -313,16 +314,16 @@ export default function Navbar(props: HeaderProps = {}) {
             </div>
 
             {/* Mobile Actions */}
-            <div className="flex items-center lg:hidden space-x-1 sm:space-x-2">
-              <button className="text-gray-900 hover:text-brand-green p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Search">
+            <div className="flex items-center lg:hidden space-x-0.5 sm:space-x-1">
+              <button className="text-gray-900 hover:text-brand-green p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Search">
                 <Search size={20} className="sm:w-6 sm:h-6" />
               </button>
-              <Link to="/cart" className="text-gray-900 hover:text-brand-green relative p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Cart">
+              <Link to="/cart" className="text-gray-900 hover:text-brand-green relative p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Cart">
                 <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
                 {cartCount > 0 && <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-brand-green text-white text-[9px] sm:text-[10px] font-black rounded-full flex items-center justify-center shadow-sm">{cartCount}</span>}
               </Link>
               <button 
-                className="text-gray-900 hover:text-brand-green transition-colors p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px] focus:outline-none"
+                className="text-gray-900 hover:text-brand-green transition-colors p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px] focus:outline-none"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle Menu"
               >
@@ -371,7 +372,7 @@ export default function Navbar(props: HeaderProps = {}) {
         </div>
 
         {/* Mobile Nav Drawer */}
-        <div className={`lg:hidden bg-white border-t border-gray-100 absolute w-full transition-all duration-300 ease-in-out origin-top ${mobileMenuOpen ? 'scale-y-100 opacity-100 shadow-xl' : 'scale-y-0 opacity-0'} max-h-[85vh] overflow-y-auto`}>
+        <div className={`lg:hidden bg-white border-t border-gray-100 absolute w-full transition-all duration-300 ease-in-out origin-top ${mobileMenuOpen ? 'scale-y-100 opacity-100 shadow-xl' : 'scale-y-0 opacity-0'} max-h-[85vh] overflow-y-auto overflow-x-hidden`}>
           <div className="flex flex-col p-4 sm:p-6 space-y-1.5">
             {navLinks.map((link) => (
               <div key={link.name} className="border-none last:border-0">

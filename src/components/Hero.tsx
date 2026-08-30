@@ -18,11 +18,11 @@ export default function Hero() {
 
   return (
     <section className="relative w-full overflow-hidden bg-[#f4f4f4] border-none">
-      <div className="relative w-full h-auto min-h-[320px] sm:min-h-[420px] md:h-[550px] lg:h-[600px]">
+      <div className="relative w-full h-auto min-h-[280px] sm:min-h-[360px] md:h-[500px] lg:h-[550px]">
         <img
           src={src}
           alt={alt}
-          className="w-full h-full object-cover block"
+          className="w-full h-full object-cover object-center block"
           loading="eager"
           onError={handleError}
         />

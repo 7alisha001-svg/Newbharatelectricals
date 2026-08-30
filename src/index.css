@@ -78,3 +78,89 @@
   scrollbar-width: none;
   /* Firefox */
 }
+
+@layer utilities {
+  .safe-px {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .safe-py {
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #f4f4f4;
+    color: #0f172a;
+
+    /* Deeper, clearer contrast */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    min-width: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    color: #0f172a;
+
+    /* Premium bold visibility */
+  }
+
+  img,
+  video,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  * {
+    min-width: 0;
+  }
+
+  /* Prevent horizontal scroll on all elements */
+  div,
+  section,
+  article,
+  aside,
+  nav,
+  header,
+  footer,
+  main,
+  span,
+  p,
+  ul,
+  ol,
+  li,
+  form,
+  input,
+  button,
+  a,
+  table,
+  td,
+  th,
+  tr {
+    min-width: 0;
+  }
+}

@@ -137,15 +137,15 @@ export default function Footer() {
         </div>
 
         {/* Main Footer Columns */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-x-4 gap-y-6 md:gap-8 mb-6 md:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 mb-6 md:mb-8">
 
           {/* Column 1: Quick Links */}
           <div className="col-span-1">
-            <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">
+            <h4 className="text-white font-black mb-3 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
               Quick Links
             </h4>
 
-            <ul className="space-y-4 md:space-y-2.5 text-sm">
+            <ul className="space-y-2 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
               {mainNavLinks.map((link: any) => (
                 <li key={link.name}>
                   <Link
@@ -179,11 +179,11 @@ export default function Footer() {
 
           {/* Column 2: Categories */}
           <div className="col-span-1">
-            <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">
+            <h4 className="text-white font-black mb-3 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
               Categories
             </h4>
 
-            <ul className="space-y-4 md:space-y-2.5 text-sm">
+            <ul className="space-y-2 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
               {mainNavLinks
                 .filter(
                   (link: any) => link.hasDropdown && link.dropdownItems
@@ -206,9 +206,9 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Contact Info */}
-          <div className="col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-8 mt-4 md:border-t-0 md:pt-0 md:mt-0">
+          <div className="col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-6 sm:pt-8 mt-2 md:border-t-0 md:pt-0 md:mt-0">
 
-            <h4 className="text-white font-black mb-4 font-heading tracking-widest uppercase text-sm md:border-b md:border-gray-800/60 pb-2 w-full block text-left">
+            <h4 className="text-white font-black mb-3 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
               Contact Info
             </h4>
 
@@ -233,10 +233,10 @@ export default function Footer() {
             </div>
 
             {/* Office + Warehouse */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-2 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mt-2 w-full">
 
               {/* Corporate Office */}
-              <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
+              <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
                 <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
                   <MapPin
                     className="text-brand-green md:text-white"
@@ -245,11 +245,11 @@ export default function Footer() {
                 </div>
 
                 <div className="text-left">
-                  <p className="font-bold text-sm mb-1 text-white">
+                  <p className="font-bold text-xs sm:text-sm mb-1 text-white">
                     Corporate Office
                   </p>
 
-                  <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
+                  <p className="leading-relaxed font-semibold text-xs sm:text-sm whitespace-pre-line text-neutral-100">
                     {(Array.isArray(settings?.social_links?.locations) &&
                       settings.social_links.locations.find(
                         (l: any) => l.type === 'office'
@@ -261,7 +261,7 @@ export default function Footer() {
               </div>
 
               {/* Warehouse */}
-              <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
+              <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
                 <div className="bg-brand-green/20 md:bg-brand-green p-1.5 rounded-full mt-0.5 flex-shrink-0">
                   <MapPin
                     className="text-brand-green md:text-white"
@@ -270,11 +270,11 @@ export default function Footer() {
                 </div>
 
                 <div className="text-left">
-                  <p className="font-bold text-sm mb-1 text-white">
+                  <p className="font-bold text-xs sm:text-sm mb-1 text-white">
                     Warehouse
                   </p>
 
-                  <p className="leading-relaxed font-semibold text-sm whitespace-pre-line text-neutral-100">
+                  <p className="leading-relaxed font-semibold text-xs sm:text-sm whitespace-pre-line text-neutral-100">
                     {(Array.isArray(settings?.social_links?.locations) &&
                       settings.social_links.locations.find(
                         (l: any) => l.type === 'warehouse'
@@ -288,9 +288,9 @@ export default function Footer() {
             </div>
 
             {/* Mobile Extra Contact Info */}
-            <div className="flex md:hidden flex-col w-full mt-4 space-y-4">
+            <div className="flex md:hidden flex-col w-full mt-4 space-y-3">
 
-              <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
+              <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
                 <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
                   <Phone className="text-brand-green" size={16} />
                 </div>
@@ -303,7 +303,7 @@ export default function Footer() {
                 </a>
               </div>
 
-              <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
+              <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
                 <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
                   <Mail className="text-brand-green" size={16} />
                 </div>
@@ -316,7 +316,7 @@ export default function Footer() {
                 </a>
               </div>
 
-              <div className="flex items-start text-neutral-100 justify-start w-full gap-3">
+              <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
                 <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
                   <Clock className="text-brand-green" size={16} />
                 </div>
