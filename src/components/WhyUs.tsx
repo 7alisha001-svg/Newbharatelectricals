@@ -36,10 +36,10 @@ const reasons = [
 
 export default function WhyUs() {
   return (
-    <section className="py-8 md:py-16 lg:py-20 bg-gradient-to-b from-gray-50 to-white border-t border-gray-100">
+    <section className="py-5 md:py-16 lg:py-20 bg-gradient-to-b from-gray-50 to-white border-t border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="text-center max-w-3xl mx-auto mb-6 md:mb-14">
+         <div className="text-center max-w-3xl mx-auto mb-4 md:mb-14">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -67,9 +67,9 @@ export default function WhyUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="group bg-white p-5 md:p-8 rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-brand-green hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full"
+               className="group bg-white p-4 md:p-8 rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-brand-green hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full"
             >
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center mb-4 md:mb-6 group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
+               <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center mb-3 md:mb-6 group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
                 {reason.icon}
               </div>
               <h3 className="font-heading font-bold text-gray-900 text-lg md:text-xl lg:text-2xl mb-2 md:mb-3 tracking-tight group-hover:text-brand-green transition-colors duration-300">

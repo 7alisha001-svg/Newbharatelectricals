@@ -34,10 +34,10 @@ const stats = [
 
 export default function CompanyStats() {
   return (
-    <section className="py-8 md:py-16 lg:py-20 bg-gray-50/50 border-none">
+    <section className="py-5 md:py-16 lg:py-20 bg-gray-50/50 border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="text-center max-w-3xl mx-auto mb-6 md:mb-14">
+         <div className="text-center max-w-3xl mx-auto mb-4 md:mb-14">
           <h2 className="text-2xl md:text-4xl lg:text-5xl font-heading font-black text-gray-900 mb-3 md:mb-4 uppercase tracking-tight">
             Our Achievements
           </h2>

@@ -4,7 +4,7 @@ import MediaImage from './MediaImage';
 
 export default function About() {
   return (
-    <section id="about" className="py-8 md:py-16 lg:py-20 bg-brand-gray border-none">
+    <section id="about" className="py-5 md:py-16 lg:py-20 bg-brand-gray border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="bg-white rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col md:flex-row border-none">
           
@@ -12,7 +12,7 @@ export default function About() {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="md:w-1/2 p-5 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center"
+             className="md:w-1/2 p-4 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center"
           >
             <div className="inline-flex items-center space-x-2 bg-brand-green-light text-brand-green px-3 py-1.5 rounded-full mb-3 text-[9px] font-bold uppercase tracking-widest w-max">
               <Award size={12} />

@@ -14,9 +14,9 @@ export default function FeaturedProducts() {
   if (featuredProducts.length === 0) return null;
 
   return (
-    <section className="py-6 sm:py-8 md:py-16 lg:py-20 bg-[#f4f4f4] border-none">
+    <section className="py-4 sm:py-8 md:py-16 lg:py-20 bg-[#f4f4f4] border-none">
       <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
-        <div className="flex items-center justify-between mb-3 sm:mb-3 md:mb-6">
+        <div className="flex items-center justify-between mb-2 sm:mb-3 md:mb-6">
           <h2 className="text-base sm:text-lg md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-2 sm:pl-3">
             Featured Products
           </h2>
@@ -60,7 +60,7 @@ export default function FeaturedProducts() {
                 </Link>
               </div>
               <div className="p-2 sm:p-3 md:p-6 pt-0 flex flex-col flex-grow">
-                <div className="flex items-center text-[8px] sm:text-[10px] md:text-xs mt-1 sm:mt-2 md:mt-4 mb-1 sm:mb-1.5 md:mb-3 text-yellow-400">
+                 <div className="flex items-center text-[8px] sm:text-[10px] md:text-xs mt-0.5 sm:mt-2 md:mt-4 mb-1 sm:mb-1.5 md:mb-3 text-yellow-400">
                   <Star fill="currentColor" size={10} className="mr-0.5 sm:w-3 sm:h-3 md:w-4 md:h-4" />
                   <Star fill="currentColor" size={10} className="mr-0.5 sm:w-3 sm:h-3 md:w-4 md:h-4" />
                   <Star fill="currentColor" size={10} className="mr-0.5 sm:w-3 sm:h-3 md:w-4 md:h-4" />
@@ -73,7 +73,7 @@ export default function FeaturedProducts() {
                   </h3>
                 </Link>
                 <div className="mt-auto pt-1.5 sm:pt-2 md:pt-4 border-t border-gray-100">
-                  <div className="flex flex-row items-center justify-between gap-1 mb-1.5 sm:mb-2 md:mb-3 md:mb-5">
+                   <div className="flex flex-row items-center justify-between gap-1 mb-1 sm:mb-2 md:mb-3 md:mb-5">
                     <span className="text-[9px] sm:text-[10px] md:text-sm text-gray-900 line-through">₹{regPrice}</span>
                     <span className="text-xs sm:text-sm md:text-xl font-bold text-gray-900">₹{salePrice || regPrice}</span>
                   </div>

@@ -3,7 +3,7 @@ import MediaImage from './MediaImage';
 
 export default function PromoBanners() {
   return (
-    <section className="py-8 md:py-16 lg:py-20 bg-white border-none">
+    <section className="py-4 md:py-16 lg:py-20 bg-white border-none">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
           <Link to="/solar-solutions" className="block relative rounded-xl md:rounded-2xl overflow-hidden group shadow-sm hover:shadow-md transition-shadow">

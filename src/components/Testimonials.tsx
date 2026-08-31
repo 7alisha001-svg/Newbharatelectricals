@@ -30,10 +30,10 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="py-8 md:py-16 lg:py-20 bg-brand-gray border-t border-gray-100">
+    <section className="py-5 md:py-16 lg:py-20 bg-brand-gray border-t border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
         
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-8 gap-1 md:gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 md:mb-8 gap-1 md:gap-4">
           <h2 className="text-lg md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Customer Reviews
           </h2>
@@ -50,21 +50,21 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white p-5 md:p-6 rounded-xl shadow-sm border border-gray-100 hover:border-brand-green transition-all duration-300 relative group"
+               className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100 hover:border-brand-green transition-all duration-300 relative group"
             >
               <Quote className="absolute top-5 right-5 md:top-6 md:right-6 text-brand-green/5 group-hover:text-brand-green/10 transition-colors" size={36} />
               
-              <div className="flex items-center space-x-1 mb-3 md:mb-4 text-yellow-500">
+               <div className="flex items-center space-x-1 mb-2 md:mb-4 text-yellow-500">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} size={12} fill="currentColor" />
                 ))}
               </div>
               
-              <p className="text-gray-900 mb-4 md:mb-6 leading-relaxed relative z-10 text-sm md:text-base font-medium tracking-wide">
+               <p className="text-gray-900 mb-3 md:mb-6 leading-relaxed relative z-10 text-sm md:text-base font-medium tracking-wide">
                 "{testimonial.content}"
               </p>
               
-              <div className="flex items-center mt-auto border-t border-gray-50 pt-3 md:pt-4">
+               <div className="flex items-center mt-auto border-t border-gray-50 pt-2 md:pt-4">
                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-brand-gray flex items-center justify-center text-brand-green font-bold text-sm mr-3 flex-shrink-0">
                   {testimonial.name.charAt(0)}
                 </div>
