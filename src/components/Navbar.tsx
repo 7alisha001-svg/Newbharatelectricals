@@ -265,7 +265,7 @@ export default function Navbar(props: HeaderProps = {}) {
                     maxHeight: '72px',
                     width: 'auto'
                   }}
-                  className="h-11 sm:h-12 md:h-14 lg:h-16 w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0 max-w-[55vw] sm:max-w-none"
+                  className="h-12 sm:h-12 md:h-14 lg:h-16 w-auto object-contain block group-hover:-translate-y-0.5 transition-transform p-0 m-0 max-w-[55vw] sm:max-w-none"
                 />
               </Link>
             </div>
