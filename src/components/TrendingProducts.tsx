@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Heart, ShoppingCart, Star } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { Heart, Star } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
 export default function TrendingProducts() {
-  const { addToCart } = useCart();
   const { products, loading } = useStore();
 
   const trendingProducts = products.slice(0, 4);
@@ -84,18 +82,12 @@ export default function TrendingProducts() {
                       <span className="text-xs sm:text-sm md:text-xl font-bold text-brand-dark leading-none">₹{salePrice || regPrice}</span>
                     </div>
                   </div>
-                  <button 
-                    onClick={() => addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: (salePrice || regPrice).toString(),
-                      imageUrl: product.image_url,
-                      quantity: 1
-                    })}
-                    className="w-full bg-gray-900 hover:bg-brand-orange text-white transition-colors py-1.5 sm:py-2 md:py-2.5 md:py-3.5 rounded-lg sm:rounded-xl md:rounded-xl font-bold tracking-wide text-[9px] sm:text-[10px] md:text-sm uppercase flex items-center justify-center shadow-md hover:shadow-lg"
-                  >
-                    <ShoppingCart size={12} className="mr-0.5 sm:mr-1 md:mr-2" /> Add to Cart
-                  </button>
+                   <button 
+                     onClick={() => {}}
+                     className="w-full bg-gray-900 hover:bg-brand-orange text-white transition-colors py-1.5 sm:py-2 md:py-2.5 md:py-3.5 rounded-lg sm:rounded-xl md:rounded-xl font-bold tracking-wide text-[9px] sm:text-[10px] md:text-sm uppercase flex items-center justify-center shadow-md hover:shadow-lg"
+                   >
+                     Enquiry
+                   </button>
                 </div>
               </div>
             </motion.div>

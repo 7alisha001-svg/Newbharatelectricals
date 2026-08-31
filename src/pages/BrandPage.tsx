@@ -1,14 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ChevronRight, Home, ShoppingCart, Star } from 'lucide-react';
+import { ChevronRight, Home, Package, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useStore } from '../context/StoreContext';
-import { useCart } from '../context/CartContext';
 
 export default function BrandPage() {
   const { brandSlug } = useParams<{ brandSlug: string }>();
   const { brands, products, loading } = useStore();
-  const { addToCart } = useCart();
 
   if (loading) return <div className="p-20 text-center">Loading...</div>;
 console.log("Brand URL:", brandSlug);
@@ -107,7 +105,7 @@ if (!currentBrand) {
 
         {brandProducts.length === 0 ? (
           <div className="bg-gray-50 rounded-2xl border border-gray-100 p-12 text-center flex flex-col items-center">
-            <ShoppingCart className="w-16 h-16 text-gray-300 mb-4" strokeWidth={1.5} />
+            <Package className="w-16 h-16 text-gray-300 mb-4" strokeWidth={1.5} />
             <h3 className="text-xl font-bold text-gray-900 mb-2">No Products Available</h3>
             <p className="text-gray-700 font-medium max-w-md">We are currently updating our catalogue for {title}. Please check back later or explore our other premium brands.</p>
             <Link to="/catalogue" className="mt-6 bg-brand-green hover:bg-brand-green-dark text-white px-6 py-2.5 rounded-xl font-medium transition-colors">
@@ -169,18 +167,13 @@ if (!currentBrand) {
                       <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{salePrice || regPrice}</span>
                       {regPrice > salePrice && <span className="text-[10px] sm:text-sm text-gray-900 line-through">₹{regPrice}</span>}
                     </div>
-                    <button 
-                      onClick={() => addToCart({
-                        id: product.id,
-                        name: product.name,
-                        price: (salePrice || regPrice).toString(),
-                        imageUrl: product.image_url,
-                        quantity: 1
-                      })}
-                      className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-xl sm:rounded-2xl font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
-                    >
-                      <ShoppingCart size={12} className="mr-1.5 sm:mr-2" /> Add to Cart
-                    </button>
+                     <Link to={`/${catSlug}/all/${product.id}`} className="block w-full">
+                      <button 
+                        className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2 rounded-xl sm:rounded-2xl font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
+                      >
+                        Enquiry
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>

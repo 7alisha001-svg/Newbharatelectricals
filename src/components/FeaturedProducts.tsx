@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Heart, ShoppingCart, Star } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { Heart, Star } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
 export default function FeaturedProducts() {
-  const { addToCart } = useCart();
   const { products, loading } = useStore();
 
   const featuredProducts = products.filter(p => p.is_featured).slice(0, 4);
@@ -77,18 +75,12 @@ export default function FeaturedProducts() {
                     <span className="text-[9px] sm:text-[10px] md:text-sm text-gray-900 line-through">₹{regPrice}</span>
                     <span className="text-xs sm:text-sm md:text-xl font-bold text-gray-900">₹{salePrice || regPrice}</span>
                   </div>
-                  <button 
-                    onClick={() => addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: (salePrice || regPrice).toString(),
-                      imageUrl: product.image_url,
-                      quantity: 1
-                    })}
-                    className="w-full bg-brand-green hover:bg-brand-orange text-white border-none transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg py-1.5 sm:py-2 md:py-2.5 md:py-3.5 rounded-lg sm:rounded-xl md:rounded-xl font-bold tracking-wide text-[9px] sm:text-[10px] md:text-sm uppercase flex items-center justify-center shadow-sm hover:shadow-md"
-                  >
-                    <ShoppingCart size={12} className="mr-0.5 sm:mr-1 md:mr-2" /> Add to Cart
-                  </button>
+                   <button 
+                     onClick={() => {}}
+                     className="w-full bg-brand-green text-white border-none transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg py-1.5 sm:py-2 md:py-2.5 md:py-3.5 rounded-lg sm:rounded-xl md:rounded-xl font-bold tracking-wide text-[9px] sm:text-[10px] md:text-sm uppercase flex items-center justify-center shadow-sm hover:shadow-md"
+                   >
+                     Enquiry
+                   </button>
                 </div>
               </div>
             </motion.div>
