@@ -165,12 +165,11 @@ export default function GenericCategoryPage() {
                       <Star fill="currentColor" size={11} className="mr-0.5" />
                       <Star fill="currentColor" size={11} className="text-gray-200" />
                     </div>
-                  <Link to={`/${currentCategory.slug}/all/${product.id}`}>
+                   <Link to={`/${currentCategory.slug}/all/${product.id}`}>
                     <h3 className="font-bold text-gray-900 text-sm sm:text-base leading-snug mb-1.5 sm:mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-xs text-gray-700 font-medium line-clamp-2 mb-3 text-[11px] sm:text-xs">{product.short_description || product.description}</p>
                   
                   <div className="mt-auto">
                     <div className="flex flex-col sm:flex-row sm:items-end mb-2 sm:mb-4">
