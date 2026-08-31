@@ -261,7 +261,7 @@ export default function GenericSubCategoryPage() {
 
                         {/* Specs List Style */}
                         <div className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-6">
-                          {(product.features || []).slice(0,2).map((feat, i) => (
+                           {(Array.isArray(product.features) ? product.features : []).slice(0,2).map((feat, i) => (
                             <p key={i} className="text-[10px] sm:text-sm text-gray-700 font-medium flex items-center truncate">
                                <span className="w-1.5 h-1.5 bg-brand-green rounded-full mr-2 flex-shrink-0"></span>
                                {feat}
