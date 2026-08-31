@@ -124,7 +124,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Categories */}
-          <div className="col-span-1">
+          <div className="col-span-1 hidden md:block">
             <h4 className="text-white font-black mb-2 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
               Categories
             </h4>
