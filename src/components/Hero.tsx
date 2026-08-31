@@ -22,7 +22,7 @@ export default function Hero() {
         <img
           src={src}
           alt={alt}
-          className="w-full h-full object-cover block"
+          className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
           onError={handleError}
         />
