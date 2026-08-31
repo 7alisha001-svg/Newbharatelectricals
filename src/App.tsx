@@ -2,7 +2,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, BrowserRouter, Outlet, useLocation, Navigate } from 'react-router-dom';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
-import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import WhatsAppFab from './components/WhatsAppFab';
@@ -13,8 +12,6 @@ const GenericSubCategoryPage = React.lazy(() => import('./pages/GenericSubCatego
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const Catalogue = React.lazy(() => import('./pages/Catalogue'));
 const Contact = React.lazy(() => import('./pages/Contact'));
-const CartPage = React.lazy(() => import('./pages/CartPage'));
-const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const OrderSuccessPage = React.lazy(() => import('./pages/OrderSuccessPage'));
 const AboutUsPage = React.lazy(() => import('./pages/AboutUsPage'));
 const PrivacyPolicyPage = React.lazy(() => import('./pages/PrivacyPolicyPage'));
@@ -50,7 +47,6 @@ const HomepageBanner = React.lazy(() => import('./pages/admin/HomepageBanner'));
 
 import { useStore, StoreProvider } from './context/StoreContext';
 import { MediaProvider, useMedia } from './context/MediaContext';
-import { useCart } from './context/CartContext';
 
 
 const GlobalHead = () => {
@@ -99,12 +95,10 @@ const AnalyticsTracker = () => {
 const AppStartupCheck = () => {
   const media = useMedia();
   const store = useStore();
-  const cart = useCart();
   
   useEffect(() => {
     console.log('[Startup] MediaContext initialized:', !!media);
     console.log('[Startup] StoreContext initialized:', !!store);
-    console.log('[Startup] CartContext initialized:', !!cart);
   }, []);
   
   return null;
@@ -136,8 +130,7 @@ export default function App() {
         <MediaProvider>
           <StoreProvider>
             <GlobalHead />
-            <CartProvider>
-              <BrowserRouter>
+            <BrowserRouter>
               <AppStartupCheck />
               <AnalyticsTracker />
               <ScrollToTop />
@@ -179,8 +172,6 @@ export default function App() {
                 <Route path="/catalogue" element={<Catalogue />} />
                  
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/order-success" element={<OrderSuccessPage />} />
                 <Route path="/about-us" element={<AboutUsPage />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
@@ -197,7 +188,6 @@ export default function App() {
             </Routes>
             </Suspense>
           </BrowserRouter>
-          </CartProvider>
         </StoreProvider>
         </MediaProvider>
       </HelmetProvider>

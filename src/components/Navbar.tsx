@@ -1,8 +1,7 @@
-import {Phone,MessageCircle,ChevronDown,Menu,X,Heart,User,MapPin,Search,ShoppingCart,Store,Headset,} from 'lucide-react';
+import {Phone,MessageCircle,ChevronDown,Menu,X,Heart,User,MapPin,Search,Store,Headset,} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
-import { useCart } from '../context/CartContext';
 import { useMedia } from '../context/MediaContext';
 import MediaImage from './MediaImage';
 import { mainNavLinks } from '../data/navigation';
@@ -105,7 +104,6 @@ export default function Navbar(props: HeaderProps = {}) {
 
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
-  const { cartCount } = useCart();
 
   useEffect(() => {
     setIsHydrated(true);
@@ -306,11 +304,6 @@ export default function Navbar(props: HeaderProps = {}) {
               <Link to="/contact" className="hover:text-brand-green transition-colors flex items-center group">
                 <User size={24} strokeWidth={1.5} />
               </Link>
-
-              <Link to="/cart" className="hover:text-brand-green transition-colors flex items-center group relative mt-1">
-                <ShoppingCart size={24} strokeWidth={1.5} />
-                {cartCount > 0 && <span className="absolute top-0 right-0 w-4 h-4 bg-brand-green text-white text-[9px] font-bold rounded-full flex items-center justify-center -mt-2 -mr-2">{cartCount}</span>}
-              </Link>
             </div>
 
             {/* Mobile Actions */}
@@ -318,10 +311,6 @@ export default function Navbar(props: HeaderProps = {}) {
               <button className="text-gray-900 hover:text-brand-green p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Search">
                 <Search size={20} className="sm:w-6 sm:h-6" />
               </button>
-              <Link to="/cart" className="text-gray-900 hover:text-brand-green relative p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Cart">
-                <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
-                {cartCount > 0 && <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-brand-green text-white text-[9px] sm:text-[10px] font-black rounded-full flex items-center justify-center shadow-sm">{cartCount}</span>}
-              </Link>
               <button 
                 className="text-gray-900 hover:text-brand-green transition-colors p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px] focus:outline-none"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

@@ -82,6 +82,17 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Mobile Logo */}
+        <div className="flex md:hidden justify-center items-center border-b border-gray-800/60 pb-4 mb-4">
+          <MediaImage
+            imageKey="footer_logo"
+            defaultSrc={settings?.social_links?.footer_logo || '/footer-logo-light.png'}
+            fallbackSrc="/footer-logo-light.png"
+            alt={settings?.business_name || 'New Bharat Electricals Footer Logo'}
+            className="h-10 max-w-[200px] w-auto object-contain"
+          />
+        </div>
+
         {/* Main Footer Columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-6 md:gap-8 mb-4 md:mb-8">
 
