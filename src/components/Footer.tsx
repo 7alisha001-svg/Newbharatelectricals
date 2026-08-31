@@ -82,60 +82,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Mobile Section 1: Logo, Description, Socials */}
-        <div className="flex md:hidden flex-col items-center text-center border-b border-gray-800/60 pb-5 mb-4">
-          <MediaImage
-            imageKey="footer_logo"
-            defaultSrc={settings?.social_links?.footer_logo || '/footer-logo-light.png'}
-            fallbackSrc="/footer-logo-light.png"
-            alt={settings?.business_name || 'New Bharat Electricals Footer Logo'}
-             className="h-12 sm:h-20 max-w-[300px] w-auto object-contain mb-3"
-          />
-
-          <p className="text-gray-200 text-sm mb-4 max-w-[280px] leading-relaxed">
-            Powering Every Home & Business with premium electrical and solar solutions.
-          </p>
-
-          <div className="flex gap-4 mb-4">
-            <a
-              href="https://www.facebook.com/newbharatelectricalsbdn?mibextid="
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white/5 hover:bg-brand-green text-white p-3 rounded-full transition-colors"
-            >
-              <Facebook size={20} />
-            </a>
-
-            <a
-              href="#"
-              className="bg-white/5 hover:bg-brand-green text-white p-3 rounded-full transition-colors"
-            >
-              <Twitter size={20} />
-            </a>
-
-            <a
-              href="#"
-              className="bg-white/5 hover:bg-brand-green text-white p-3 rounded-full transition-colors"
-            >
-              <Instagram size={20} />
-            </a>
-
-            <a
-              href="#"
-              className="bg-white/5 hover:bg-brand-green text-white p-3 rounded-full transition-colors"
-            >
-              <Linkedin size={20} />
-            </a>
-          </div>
-
-          <Link
-            to="/contact"
-             className="bg-brand-green text-white font-extrabold py-2 px-6 rounded-full transition-colors text-[10px] uppercase tracking-widest shadow-md"
-          >
-            Partner Program
-          </Link>
-        </div>
-
         {/* Main Footer Columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-6 md:gap-8 mb-4 md:mb-8">
 
@@ -183,7 +129,28 @@ export default function Footer() {
               Categories
             </h4>
 
-            <ul className="space-y-1.5 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
+            <ul className="space-y-1.5 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm md:hidden">
+              {mainNavLinks
+                .filter(
+                  (link: any) => link.hasDropdown && link.dropdownItems
+                )
+                .flatMap(
+                  (link: any) => link.dropdownItems || []
+                )
+                .slice(7)
+                .map((item: any) => (
+                  <li key={item.name}>
+                    <Link
+                      to={item.href}
+                      className="text-neutral-100 font-semibold hover:text-brand-green transition-colors duration-200 block py-1"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+
+            <ul className="hidden md:block space-y-1.5 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
               {mainNavLinks
                 .filter(
                   (link: any) => link.hasDropdown && link.dropdownItems
@@ -232,8 +199,8 @@ export default function Footer() {
               />
             </div>
 
-            {/* Office + Warehouse */}
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 mt-1 w-full">
+             {/* Office + Warehouse */}
+              <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 mt-1 w-full">
 
               {/* Corporate Office */}
               <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
