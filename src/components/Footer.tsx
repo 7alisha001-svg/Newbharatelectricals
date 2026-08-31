@@ -83,20 +83,20 @@ export default function Footer() {
         </div>
 
         {/* Mobile Section 1: Logo, Description, Socials */}
-        <div className="flex md:hidden flex-col items-center text-center border-b border-gray-800/60 pb-8 mb-6">
+        <div className="flex md:hidden flex-col items-center text-center border-b border-gray-800/60 pb-5 mb-4">
           <MediaImage
             imageKey="footer_logo"
             defaultSrc={settings?.social_links?.footer_logo || '/footer-logo-light.png'}
             fallbackSrc="/footer-logo-light.png"
             alt={settings?.business_name || 'New Bharat Electricals Footer Logo'}
-            className="h-16 sm:h-20 max-w-[300px] w-auto object-contain mb-4"
+             className="h-12 sm:h-20 max-w-[300px] w-auto object-contain mb-3"
           />
 
-          <p className="text-gray-200 text-sm mb-6 max-w-[280px] leading-relaxed">
+          <p className="text-gray-200 text-sm mb-4 max-w-[280px] leading-relaxed">
             Powering Every Home & Business with premium electrical and solar solutions.
           </p>
 
-          <div className="flex gap-4 mb-6">
+          <div className="flex gap-4 mb-4">
             <a
               href="https://www.facebook.com/newbharatelectricalsbdn?mibextid="
               target="_blank"
@@ -130,22 +130,22 @@ export default function Footer() {
 
           <Link
             to="/contact"
-            className="bg-brand-green text-white font-extrabold py-3 px-8 rounded-full transition-colors text-xs uppercase tracking-widest shadow-md"
+             className="bg-brand-green text-white font-extrabold py-2 px-6 rounded-full transition-colors text-[10px] uppercase tracking-widest shadow-md"
           >
             Partner Program
           </Link>
         </div>
 
         {/* Main Footer Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 mb-6 md:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-6 md:gap-8 mb-4 md:mb-8">
 
           {/* Column 1: Quick Links */}
           <div className="col-span-1">
-            <h4 className="text-white font-black mb-3 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
+            <h4 className="text-white font-black mb-2 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
               Quick Links
             </h4>
 
-            <ul className="space-y-2 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
+            <ul className="space-y-1.5 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
               {mainNavLinks.map((link: any) => (
                 <li key={link.name}>
                   <Link
@@ -179,11 +179,11 @@ export default function Footer() {
 
           {/* Column 2: Categories */}
           <div className="col-span-1">
-            <h4 className="text-white font-black mb-3 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
+            <h4 className="text-white font-black mb-2 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
               Categories
             </h4>
 
-            <ul className="space-y-2 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
+            <ul className="space-y-1.5 sm:space-y-2.5 md:space-y-2.5 text-xs sm:text-sm">
               {mainNavLinks
                 .filter(
                   (link: any) => link.hasDropdown && link.dropdownItems
@@ -206,11 +206,11 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Contact Info */}
-          <div className="col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-6 sm:pt-8 mt-2 md:border-t-0 md:pt-0 md:mt-0">
+             <div className="col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col items-start text-left border-t border-gray-800/60 pt-4 sm:pt-8 mt-1 md:border-t-0 md:pt-0 md:mt-0">
 
-            <h4 className="text-white font-black mb-3 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
-              Contact Info
-            </h4>
+             <h4 className="text-white font-black mb-2 sm:mb-4 font-heading tracking-widest uppercase text-xs sm:text-sm md:border-b md:border-gray-800/60 md:pb-2 w-full block text-left">
+               Contact Info
+             </h4>
 
             {/* Desktop Footer Logo */}
             <div className="hidden md:flex justify-center lg:justify-start items-center p-0 w-full mb-3">
@@ -233,7 +233,7 @@ export default function Footer() {
             </div>
 
             {/* Office + Warehouse */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mt-2 w-full">
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 mt-1 w-full">
 
               {/* Corporate Office */}
               <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
@@ -287,18 +287,18 @@ export default function Footer() {
 
             </div>
 
-            {/* Mobile Extra Contact Info */}
-            <div className="flex md:hidden flex-col w-full mt-4 space-y-3">
+             {/* Mobile Extra Contact Info */}
+            <div className="flex md:hidden flex-col w-full mt-3 space-y-2">
 
               <div className="flex items-start text-neutral-100 justify-start w-full gap-2 sm:gap-3">
                 <div className="bg-brand-green/20 p-1.5 rounded-full mt-0.5 flex-shrink-0">
                   <Phone className="text-brand-green" size={16} />
                 </div>
 
-                <a
-                  href="tel:+919457002000"
-                  className="leading-relaxed font-semibold text-sm hover:text-brand-green block py-1"
-                >
+                 <a
+                   href="tel:+919457002000"
+                   className="leading-relaxed font-semibold text-sm hover:text-brand-green block text-xs sm:text-sm"
+                 >
                   +91 94570 02000
                 </a>
               </div>
@@ -308,10 +308,10 @@ export default function Footer() {
                   <Mail className="text-brand-green" size={16} />
                 </div>
 
-                <a
-                  href="mailto:Info@newbharatelectricals.com"
-                  className="leading-relaxed font-semibold text-sm hover:text-brand-green break-all block py-1"
-                >
+                 <a
+                   href="mailto:Info@newbharatelectricals.com"
+                   className="leading-relaxed font-semibold text-sm hover:text-brand-green break-all block text-xs sm:text-sm"
+                 >
                   Info@newbharatelectricals.com
                 </a>
               </div>
@@ -321,7 +321,7 @@ export default function Footer() {
                   <Clock className="text-brand-green" size={16} />
                 </div>
 
-                <p className="leading-relaxed font-semibold text-sm block py-1">
+                 <p className="leading-relaxed font-semibold text-sm block text-xs sm:text-sm">
                   Mon - Sat: 10:00 AM - 7:00 PM
                 </p>
               </div>
@@ -404,9 +404,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright */}
-        <div className="border-t border-gray-800 py-6 md:py-4 flex flex-col lg:flex-row justify-between items-center text-xs text-neutral-100 font-semibold gap-4 md:gap-3">
+        <div className="border-t border-gray-800 py-4 md:py-4 flex flex-col lg:flex-row justify-between items-center text-xs text-neutral-100 font-semibold gap-3 md:gap-3">
 
-          <div className="text-center lg:text-left leading-relaxed flex flex-col md:flex-row md:flex-wrap justify-center lg:justify-start items-center space-y-3 md:space-y-0">
+          <div className="text-center lg:text-left leading-relaxed flex flex-col md:flex-row md:flex-wrap justify-center lg:justify-start items-center space-y-2 md:space-y-0">
 
             <span className="text-gray-200">
               Copyright © {new Date().getFullYear()} New Bharat Electricals. All Rights Reserved.
@@ -451,7 +451,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="text-center lg:text-right mt-2 md:mt-0 leading-relaxed text-gray-200">
+          <div className="text-center lg:text-right mt-1 md:mt-0 leading-relaxed text-gray-200">
             Powered by advanced renewable engineering.
             <br className="lg:hidden" />
             <span className="text-gray-300 font-medium">
@@ -462,7 +462,7 @@ export default function Footer() {
         </div>
 
         {/* Developer Credit */}
-        <div className="border-t border-gray-800/40 pt-4 pb-2 flex flex-col sm:flex-row justify-center items-center text-[11px] sm:text-xs text-neutral-400 font-medium gap-1 sm:gap-2 text-center">
+        <div className="border-t border-gray-800/40 pt-3 pb-2 flex flex-col sm:flex-row justify-center items-center text-[11px] sm:text-xs text-neutral-400 font-medium gap-1 sm:gap-2 text-center">
           <span>
             Designed & Developed by{' '}
             <span className="text-gray-300 font-semibold">

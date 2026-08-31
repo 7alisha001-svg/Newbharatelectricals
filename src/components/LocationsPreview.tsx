@@ -24,27 +24,27 @@ function LocationCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: 0.2 }}
-      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-4 shadow-md sm:p-6"
+      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-sm sm:p-5"
     >
       {/* Icon */}
-      <div className="mb-3 flex h-12 w-12 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-brand-green/10">
+      <div className="mb-2 flex h-10 w-10 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-brand-green/10">
         {icon}
       </div>
 
        {/* Location Information */}
       <div className="flex flex-1 flex-col">
         {/* Fixed title area for consistent alignment */}
-        <h3 className="mb-1.5 min-h-[24px] text-xl sm:min-h-[36px] sm:text-2xl font-black text-gray-900">
+        <h3 className="mb-1 min-h-[20px] text-lg sm:min-h-[36px] sm:text-2xl font-black text-gray-900">
           {title}
         </h3>
 
         {/* Fixed company name area */}
-        <p className="mb-1.5 min-h-[18px] text-sm sm:min-h-[24px] sm:text-base font-semibold tracking-wide text-brand-green">
+        <p className="mb-1 min-h-[16px] text-xs sm:min-h-[24px] sm:text-base font-semibold tracking-wide text-brand-green">
           {companyName}
         </p>
 
         {/* Fixed address area */}
-        <p className="mb-2 min-h-[60px] text-sm sm:mb-4 sm:min-h-[128px] sm:text-lg font-medium leading-relaxed tracking-wide text-gray-900 whitespace-pre-line">
+        <p className="mb-1.5 min-h-[40px] text-xs sm:mb-4 sm:min-h-[128px] sm:text-lg font-medium leading-relaxed tracking-wide text-gray-900 whitespace-pre-line">
           {address}
         </p>
 
@@ -56,7 +56,7 @@ function LocationCard({
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
-            className="h-40 sm:h-48 w-full border-0"
+            className="h-32 sm:h-48 w-full border-0"
           />
         </div>
 
@@ -65,7 +65,7 @@ function LocationCard({
           href={openMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 sm:mt-4 inline-flex h-12 sm:h-14 items-center justify-center rounded-full border border-brand-green/20 bg-brand-green/10 px-4 py-2.5 font-bold text-brand-green transition-colors hover:bg-brand-green hover:text-white"
+          className="mt-2 sm:mt-4 inline-flex h-10 sm:h-14 items-center justify-center rounded-full border border-brand-green/20 bg-brand-green/10 px-3 sm:px-4 py-2.5 font-bold text-brand-green transition-colors hover:bg-brand-green hover:text-white"
         >
           Open in Maps
           <MapPin size={16} className="ml-2" />
