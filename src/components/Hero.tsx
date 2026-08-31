@@ -18,7 +18,7 @@ export default function Hero() {
 
   return (
     <section className="relative w-full overflow-hidden bg-[#f4f4f4] border-none">
-      <div className="relative w-full h-[190px] sm:h-[420px] md:h-[550px] lg:h-[600px]">
+      <div className="relative w-full h-auto min-h-[320px] sm:min-h-[420px] md:h-[550px] lg:h-[600px]">
         <img
           src={src}
           alt={alt}
