@@ -322,99 +322,99 @@ export default function ProductPage() {
 
               </div>
 
-              {/* Short Description */}
-              <p className="text-gray-900 font-medium mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
-                {product.shortDescription}
-              </p>
+               {/* Short Description */}
+               <p className="text-gray-900 font-medium mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
+                 {product.shortDescription}
+               </p>
 
-              {/* Key Features */}
-              <div className="space-y-2.5 mb-6 md:mb-10">
+               {/* Existing Price / Actions */}
+               <div className="border-t border-gray-200 pt-6 md:pt-8">
 
-                {product.features.map((feature, idx) => (
+                 {/* Price */}
+                 <div className="flex flex-wrap items-baseline text-2xl md:text-4xl font-bold text-gray-900 mb-5 md:mb-6">
 
-                  <div
-                    key={idx}
-                    className="flex items-start"
-                  >
-                    <CheckCircle2
-                      size={18}
-                      className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
-                    />
+                   MRP: ₹{product.price}
 
-                    <span className="text-gray-700 text-sm md:text-base">
-                      {feature}
-                    </span>
+                   <span className="text-xs md:text-sm text-brand-green font-normal ml-2 tracking-tight">
+                     Inclusive of all taxes
+                   </span>
+
+                 </div>
+
+                 {/* Lead Buttons */}
+                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+
+                   {/* Enquiry Now */}
+                   <button
+                     type="button"
+                     onClick={() => setIsEnquiryOpen(true)}
+                     className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm cursor-pointer"
+                   >
+                     <Send
+                       size={18}
+                       className="mr-2"
+                     />
+                     Enquiry Now
+                   </button>
+
+                   {/* WhatsApp */}
+                   <a
+                     href={`https://wa.me/919457002000?text=${whatsappMessage}`}
+                     target="_blank"
+                     rel="noreferrer"
+                     className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
+                   >
+                     <MessageCircle
+                       size={18}
+                       className="mr-2"
+                     />
+
+                     Query on WhatsApp
+                   </a>
+
+                 </div>
+
+                 {/* Lead Message */}
+                 <div className="mt-5 bg-gray-50 p-4 md:p-6 rounded-xl border border-gray-100">
+
+                   <p className="text-sm text-gray-700 leading-relaxed">
+                     <span className="text-brand-green font-bold">
+                       Need more information?
+                     </span>{' '}
+                     Contact our team for product availability,
+                     pricing, specifications and expert assistance.
+                   </p>
+
                   </div>
 
-                ))}
+                 </div>
 
-              </div>
+                 {/* Key Features */}
+                 <div className="space-y-2.5 mb-6 md:mb-10">
 
-              {/* Existing Price / Actions */}
-              <div className="border-t border-gray-200 pt-6 md:pt-8">
+                   {product.features.map((feature, idx) => (
 
-                {/* Price */}
-                <div className="flex flex-wrap items-baseline text-2xl md:text-4xl font-bold text-gray-900 mb-5 md:mb-6">
+                     <div
+                       key={idx}
+                       className="flex items-start"
+                     >
+                       <CheckCircle2
+                         size={18}
+                         className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
+                       />
 
-                  MRP: ₹{product.price}
+                       <span className="text-gray-700 text-sm md:text-base">
+                         {feature}
+                       </span>
+                     </div>
 
-                  <span className="text-xs md:text-sm text-brand-green font-normal ml-2 tracking-tight">
-                    Inclusive of all taxes
-                  </span>
+                   ))}
 
-                </div>
-
-                {/* Lead Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-
-                  {/* Enquiry Now */}
-                  <button
-                    type="button"
-                    onClick={() => setIsEnquiryOpen(true)}
-                    className="flex-1 flex items-center justify-center bg-brand-green text-white hover:bg-brand-orange font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg uppercase tracking-wide text-sm cursor-pointer"
-                  >
-                    <Send
-                      size={18}
-                      className="mr-2"
-                    />
-                    Enquiry Now
-                  </button>
-
-                  {/* WhatsApp */}
-                  <a
-                    href={`https://wa.me/919457002000?text=${whatsappMessage}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] font-bold py-3.5 sm:py-3 px-6 rounded-xl md:rounded-2xl transition-colors uppercase tracking-wide text-sm shadow-md"
-                  >
-                    <MessageCircle
-                      size={18}
-                      className="mr-2"
-                    />
-
-                    Query on WhatsApp
-                  </a>
-
-                </div>
-
-                {/* Lead Message */}
-                <div className="mt-5 bg-gray-50 p-4 md:p-6 rounded-xl border border-gray-100">
-
-                  <p className="text-sm text-gray-700 leading-relaxed">
-                    <span className="text-brand-green font-bold">
-                      Need more information?
-                    </span>{' '}
-                    Contact our team for product availability,
-                    pricing, specifications and expert assistance.
-                  </p>
-
-                </div>
+                 </div>
 
               </div>
 
             </div>
-
-          </div>
 
           {/* Full Description */}
           <div className="mt-6 sm:mt-12 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-5 sm:p-8 lg:p-12">
