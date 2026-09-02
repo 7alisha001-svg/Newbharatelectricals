@@ -6,6 +6,7 @@ import {
   Share2,
   MessageCircle,
   ChevronRight,
+  ChevronLeft,
   Home,
   Send
 } from 'lucide-react';
@@ -28,7 +29,7 @@ export default function ProductPage() {
     productId: string;
   }>();
 
-  const [selectedImg, setSelectedImg] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   if (loading) {
     return (
@@ -106,14 +107,12 @@ export default function ProductPage() {
         : null,
 
     images:
-      Array.isArray(rawProduct.gallery_images) &&
-      rawProduct.gallery_images.length > 0
-        ? rawProduct.gallery_images
-        : rawProduct.image_url
-          ? [rawProduct.image_url]
-          : [
-              'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'
-            ],
+      [
+        ...(rawProduct.image_url ? [rawProduct.image_url] : []),
+        ...(Array.isArray(rawProduct.gallery_images)
+          ? rawProduct.gallery_images
+          : [])
+      ].filter(Boolean),
 
     specifications: Array.isArray(rawProduct.specs)
       ? rawProduct.specs
@@ -212,14 +211,10 @@ export default function ProductPage() {
             {/* Left - Image Gallery */}
             <div className="w-full md:w-1/2 p-4 sm:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
 
-              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-4 min-h-[250px] sm:min-h-[400px]">
+              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-4 min-h-[250px] sm:min-h-[400px] relative">
 
                 <img
-                  src={
-                    selectedImg ||
-                    product.images[0] ||
-                    'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'
-                  }
+                  src={product.images[currentIndex] || product.images[0] || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'}
                   alt={product.name}
                   className="max-w-full max-h-full object-contain"
                   onError={(e) => {
@@ -236,18 +231,39 @@ export default function ProductPage() {
                   }}
                 />
 
+                {product.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentIndex(prev => (prev > 0 ? prev - 1 : product.images.length - 1))}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-900 p-2 rounded-full shadow-md transition-colors"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentIndex(prev => (prev < product.images.length - 1 ? prev + 1 : 0))}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-900 p-2 rounded-full shadow-md transition-colors"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                  </>
+                )}
+
               </div>
 
               {/* Image Thumbnails */}
               <div className="flex gap-3 overflow-x-auto pb-2">
 
-                {(product.images || []).map((thumb, idx) => (
+                {product.images.map((thumb, idx) => (
 
                   <button
                     key={idx}
-                    onClick={() => setSelectedImg(thumb)}
+                    onClick={() => setCurrentIndex(idx)}
                     className={`w-20 h-20 sm:w-24 sm:h-24 border-2 rounded-xl sm:rounded-2xl overflow-hidden bg-white p-1.5 sm:p-2 transition-all flex-shrink-0 ${
-                      (selectedImg || product.images[0]) === thumb
+                      currentIndex === idx
                         ? 'border-brand-orange shadow-md'
                         : 'border-gray-200 hover:border-brand-orange/50'
                     }`}
@@ -303,6 +319,34 @@ export default function ProductPage() {
                   />
                   {product.stockStatus}
                 </span>
+
+              </div>
+
+              {/* Short Description */}
+              <p className="text-gray-900 font-medium mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
+                {product.shortDescription}
+              </p>
+
+              {/* Key Features */}
+              <div className="space-y-2.5 mb-6 md:mb-10">
+
+                {product.features.map((feature, idx) => (
+
+                  <div
+                    key={idx}
+                    className="flex items-start"
+                  >
+                    <CheckCircle2
+                      size={18}
+                      className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
+                    />
+
+                    <span className="text-gray-700 text-sm md:text-base">
+                      {feature}
+                    </span>
+                  </div>
+
+                ))}
 
               </div>
 
@@ -368,33 +412,6 @@ export default function ProductPage() {
 
               </div>
 
-              {/* Short Description */}
-              <p className="text-gray-900 font-medium mb-5 md:mb-8 leading-relaxed text-sm md:text-base">
-                {product.shortDescription}
-              </p>
-
-              {/* Key Features */}
-              <div className="space-y-2.5 mb-6 md:mb-10">
-
-                {product.features.map((feature, idx) => (
-
-                  <div
-                    key={idx}
-                    className="flex items-start"
-                  >
-                    <CheckCircle2
-                      size={18}
-                      className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
-                    />
-
-                    <span className="text-gray-700 text-sm md:text-base">
-                      {feature}
-                    </span>
-                  </div>
-
-                ))}
-
-              </div>
             </div>
 
           </div>
