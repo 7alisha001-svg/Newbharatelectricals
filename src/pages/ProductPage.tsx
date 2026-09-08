@@ -389,10 +389,10 @@ export default function ProductPage() {
 
                  </div>
 
-                 {/* Key Features */}
-                 <div className="space-y-2.5 mb-6 md:mb-10">
+                  {/* Key Features */}
+                  <div className="space-y-2.5 mb-6 md:mb-10">
 
-                   {product.features.map((feature, idx) => (
+                    {(product.features || []).map((feature, idx) => (
 
                      <div
                        key={idx}
@@ -439,7 +439,7 @@ export default function ProductPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
 
-              {product.specifications.map((spec, idx) => (
+              {(product.specifications || []).map((spec, idx) => (
 
                 <div
                   key={idx}
