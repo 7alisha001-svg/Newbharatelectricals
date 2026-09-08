@@ -437,28 +437,28 @@ export default function ProductPage() {
               Product Specifications
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+             <div className="space-y-0.5">
 
-              {(product.specifications || []).map((spec, idx) => (
+               {(product.specifications || []).map((spec, idx) => (
 
-                <div
-                  key={idx}
-                  className="flex justify-between py-3 border-b border-gray-100 last:border-0 md:last:border-b gap-4"
-                >
+                 <div
+                   key={idx}
+                   className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-x-4 md:gap-x-8 gap-y-1 sm:gap-y-0 py-3 sm:py-2.5 border-b border-gray-100 last:border-0"
+                 >
 
-                  <span className="text-gray-700 font-medium text-sm md:text-base">
-                    {spec.label}
-                  </span>
+                   <span className="text-gray-700 font-medium text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
+                     {spec.label}
+                   </span>
 
-                  <span className="text-gray-900 font-bold text-sm md:text-base text-right">
-                    {spec.value}
-                  </span>
+                   <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
+                     {spec.value}
+                   </span>
 
-                </div>
+                 </div>
 
-              ))}
+               ))}
 
-            </div>
+             </div>
 
           </div>
 
