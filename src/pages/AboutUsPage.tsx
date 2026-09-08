@@ -249,7 +249,7 @@ export default function AboutUsPage() {
                   imageKey="about_leader_founder"
                   defaultSrc="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=800&auto=format&fit=crop" 
                   alt="Mazhar Hussain - Founder & Owner"
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
               <div className="p-8 md:p-10 flex-1 flex flex-col">
@@ -274,7 +274,7 @@ export default function AboutUsPage() {
                   imageKey="about_leader_manager"
                   defaultSrc="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" 
                   alt="Sahib Mazhar - Manager"
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
               <div className="p-8 md:p-10 flex-1 flex flex-col">
