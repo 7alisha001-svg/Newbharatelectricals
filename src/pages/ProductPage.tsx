@@ -416,22 +416,22 @@ export default function ProductPage() {
 
             </div>
 
-          {/* Full Description */}
-          <div className="mt-6 sm:mt-12 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-5 sm:p-8 lg:p-12">
+           {/* Full Description */}
+           <div className="mt-4 sm:mt-6 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-6 lg:p-8">
 
-            <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">
-              Full Description
-            </h2>
+             <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-3 sm:mb-4">
+               Full Description
+             </h2>
 
-            <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
-              {product.description ||
-                'No detailed description available for this product.'}
-            </p>
+             <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
+               {product.description ||
+                 'No detailed description available for this product.'}
+             </p>
 
-          </div>
+           </div>
 
-          {/* Product Specifications */}
-          <div className="mt-6 sm:mt-12 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-5 sm:p-8 lg:p-12">
+           {/* Product Specifications */}
+           <div className="mt-4 sm:mt-6 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-6 lg:p-8">
 
             <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">
               Product Specifications
