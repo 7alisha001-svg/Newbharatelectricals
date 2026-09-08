@@ -6,10 +6,12 @@ import { formatSlugToTitle } from '../utils/formatters';
 import { useStore } from '../context/StoreContext';
 import { categoryNav, mainNavLinks } from '../data/navigation';
 import { useState } from 'react';
+import ProductEnquiryModal from '../components/ProductEnquiryModal';
 
 export default function GenericSubCategoryPage() {
   const { category, subcategory } = useParams<{ category: string, subcategory: string }>();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [enquiryProduct, setEnquiryProduct] = useState<{ id: string; name: string; sku: string } | null>(null);
   const { products: storeProducts, categories: storeCategories, settings } = useStore();
   
   const categoryTitle = formatSlugToTitle(category);
@@ -283,9 +285,12 @@ export default function GenericSubCategoryPage() {
                              <a href={`https://wa.me/919457002000?text=${whatsappMessage} - ${encodeURIComponent(product.name)}`} target="_blank" rel="noreferrer" className="flex items-center justify-center text-brand-green border-2 border-brand-green font-bold py-1.5 sm:py-3 px-1 sm:px-2 rounded-lg sm:rounded-xl hover:bg-brand-green-light transition-colors text-[9px] sm:text-xs uppercase tracking-wide">
                                 WhatsApp
                              </a>
-                             <Link to={`/${category}/${subcategory}/${product.id}`} className="flex items-center justify-center bg-brand-green text-white font-bold py-1.5 sm:py-3 px-1 sm:px-2 rounded-lg sm:rounded-xl hover:bg-brand-green-dark transition-colors text-[9px] sm:text-xs uppercase tracking-wide shadow-md shadow-brand-green/20 hover:shadow-lg">
+                             <button 
+                                onClick={() => setEnquiryProduct({ id: product.id, name: product.name, sku: product.sku || '' })}
+                                className="flex items-center justify-center bg-brand-green text-white font-bold py-1.5 sm:py-3 px-1 sm:px-2 rounded-lg sm:rounded-xl hover:bg-brand-green-dark transition-colors text-[9px] sm:text-xs uppercase tracking-wide shadow-md shadow-brand-green/20 hover:shadow-lg"
+                              >
                                 Enquiry
-                             </Link>
+                             </button>
                            </div>
                         </div>
                       </div>
@@ -330,6 +335,14 @@ export default function GenericSubCategoryPage() {
         </div>
       </section>
     </div>
+
+    {enquiryProduct && (
+      <ProductEnquiryModal
+        isOpen={!!enquiryProduct}
+        onClose={() => setEnquiryProduct(null)}
+        product={enquiryProduct}
+      />
+    )}
     </>
   );
 }

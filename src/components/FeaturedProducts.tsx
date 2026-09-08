@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Heart, Star } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
+import ProductEnquiryModal from './ProductEnquiryModal';
 
 export default function FeaturedProducts() {
   const { products, loading } = useStore();
+  const [enquiryProduct, setEnquiryProduct] = useState<{ id: string; name: string; sku: string } | null>(null);
 
   const featuredProducts = products.filter(p => p.is_featured).slice(0, 4);
 
@@ -12,6 +15,7 @@ export default function FeaturedProducts() {
   if (featuredProducts.length === 0) return null;
 
   return (
+    <>
     <section className="py-4 sm:py-8 md:py-16 lg:py-20 bg-[#f4f4f4] border-none">
       <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
         <div className="flex items-center justify-between mb-2 sm:mb-3 md:mb-6">
@@ -76,8 +80,8 @@ export default function FeaturedProducts() {
                     <span className="text-xs sm:text-sm md:text-xl font-bold text-gray-900">₹{salePrice || regPrice}</span>
                   </div>
                    <button 
-                     onClick={() => {}}
-                     className="w-full bg-brand-green text-white border-none transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg py-1.5 sm:py-2 md:py-2.5 md:py-3.5 rounded-lg sm:rounded-xl md:rounded-xl font-bold tracking-wide text-[9px] sm:text-[10px] md:text-sm uppercase flex items-center justify-center shadow-sm hover:shadow-md"
+                      onClick={() => setEnquiryProduct({ id: product.id, name: product.name, sku: product.sku || '' })}
+                      className="w-full bg-brand-green text-white border-none transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg py-1.5 sm:py-2 md:py-2.5 md:py-3.5 rounded-lg sm:rounded-xl md:rounded-xl font-bold tracking-wide text-[9px] sm:text-[10px] md:text-sm uppercase flex items-center justify-center shadow-sm hover:shadow-md"
                    >
                      Enquiry
                    </button>
@@ -85,8 +89,17 @@ export default function FeaturedProducts() {
               </div>
             </motion.div>
           )})}
-        </div>
-      </div>
-    </section>
+         </div>
+       </div>
+      </section>
+
+      {enquiryProduct && (
+        <ProductEnquiryModal
+          isOpen={!!enquiryProduct}
+          onClose={() => setEnquiryProduct(null)}
+          product={enquiryProduct}
+        />
+      )}
+    </>
   );
 }

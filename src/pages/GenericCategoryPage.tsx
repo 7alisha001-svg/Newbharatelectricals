@@ -2,11 +2,14 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ChevronRight, Home, Star } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { useStore } from '../context/StoreContext';
+import ProductEnquiryModal from '../components/ProductEnquiryModal';
 
 export default function GenericCategoryPage() {
   const { category: categorySlug } = useParams<{ category: string }>();
   const { categories, products, loading } = useStore();
+  const [enquiryProduct, setEnquiryProduct] = useState<{ id: string; name: string; sku: string } | null>(null);
 
   if (loading) return <div className="p-20 text-center">Loading...</div>;
 
@@ -176,13 +179,12 @@ export default function GenericCategoryPage() {
                       <span className="text-sm sm:text-lg font-bold text-gray-900 mr-2">₹{salePrice || regPrice}</span>
                       {regPrice > salePrice && <span className="text-[10px] sm:text-sm text-gray-900 line-through">₹{regPrice}</span>}
                     </div>
-                      <Link to={`/${currentCategory.slug}/all/${product.id}`} className="block w-full">
-                        <button 
+                       <button 
+                          onClick={() => setEnquiryProduct({ id: product.id, name: product.name, sku: product.sku || '' })}
                           className="w-full bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-white border border-brand-green/20 transition-colors py-2.5 sm:py-2 rounded-xl sm:rounded-2xl font-bold tracking-wide text-[10px] sm:text-xs uppercase flex items-center justify-center"
                         >
                           Enquiry
                         </button>
-                      </Link>
                   </div>
                 </div>
               </motion.div>
@@ -192,6 +194,14 @@ export default function GenericCategoryPage() {
         )}
       </section>
     </div>
+
+    {enquiryProduct && (
+      <ProductEnquiryModal
+        isOpen={!!enquiryProduct}
+        onClose={() => setEnquiryProduct(null)}
+        product={enquiryProduct}
+      />
+    )}
     </>
   );
 }
