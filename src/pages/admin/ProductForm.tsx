@@ -67,9 +67,17 @@ export default function ProductForm() {
 
   const fetchProduct = async () => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('[ProductForm] Fetch - Current session:', session ? 'exists' : 'null', session?.user?.id);
+      
       const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
       if (error) throw error;
       if (data) {
+        console.log('[ProductForm] Fetched product data:', data);
+        console.log('[ProductForm] Features from DB:', data.features);
+        console.log('[ProductForm] Specs from DB:', data.specs);
+        console.log('[ProductForm] Tags from DB:', data.tags);
+        
         // Directly read from the correct columns - features, tags, specs are separate JSONB columns
         const features = Array.isArray(data.features) ? data.features : [];
         const tags = Array.isArray(data.tags) ? data.tags : [];
@@ -189,23 +197,39 @@ export default function ProductForm() {
         tags: sanitizedTags
       };
 
+      console.log('[ProductForm] Save payload:', JSON.stringify(payload, null, 2));
+      console.log('[ProductForm] Features in payload:', sanitizedFeatures);
+
+      // Check current auth session
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('[ProductForm] Current session:', session ? 'exists' : 'null', session?.user?.id);
+
       let error;
+      let res;
       if (isEdit) {
-        const res = await supabase.from('products').update(payload).eq('id', id);
+        res = await supabase.from('products').update(payload).eq('id', id);
         error = res.error;
       } else {
-        const res = await supabase.from('products').insert([payload]);
+        res = await supabase.from('products').insert([payload]);
         error = res.error;
       }
 
-      if (error) throw error;
+      console.log('[ProductForm] Supabase response:', res);
+      console.log('[ProductForm] Supabase error:', error);
+
+      if (error) {
+        console.error('[ProductForm] Save failed:', error);
+        throw error;
+      }
+
+      console.log('[ProductForm] Save successful, refreshing store...');
       await refreshStore();
       setMessage({ text: `Product ${isEdit ? 'updated' : 'created'} successfully!`, type: 'success' });
       if (!isEdit) {
         setTimeout(() => navigate('/admin/products'), 1500);
       }
     } catch (err: any) {
-      console.error("Error saving product:", err);
+      console.error("[ProductForm] Error saving product:", err);
       setMessage({ text: err.message || 'Failed to save product', type: 'error' });
     } finally {
       setLoading(false);

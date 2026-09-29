@@ -96,6 +96,13 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         supabase.from('settings').select('*').eq('id', 'global').single(),
       ]);
 
+      console.log('[StoreContext] Products fetch response:', prodRes);
+      if (prodRes.data && prodRes.data.length > 0) {
+        console.log('[StoreContext] First product features:', prodRes.data[0].features);
+        console.log('[StoreContext] First product specs:', prodRes.data[0].specs);
+        console.log('[StoreContext] First product tags:', prodRes.data[0].tags);
+      }
+
       if (catRes.data) setCategories(catRes.data);
       if (brandRes.data) setBrands(brandRes.data);
       if (prodRes.data) setProducts(prodRes.data);
