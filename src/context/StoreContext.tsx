@@ -46,7 +46,7 @@ interface Product {
   image_url: string;
   gallery_images: string[];
   features: string[];
-  tags?: any;
+  tags: string[];
   specs: {label: string, value: string}[];
   stock_status: string;
   is_featured: boolean;

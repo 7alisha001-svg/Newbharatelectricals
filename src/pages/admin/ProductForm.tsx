@@ -70,40 +70,10 @@ export default function ProductForm() {
       const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
       if (error) throw error;
       if (data) {
-        let meta: any = { tags: [], features: [], meta_title: '', meta_description: '', specs: [] };
-        
-        // Try features column first (new), then fallback to tags column (legacy)
-        if (Array.isArray(data.features) && data.features.length > 0) {
-          meta.features = data.features;
-        }
-        
-        // Handle tags column parsing (legacy fallback)
-        if (data.tags && meta.features.length === 0) {
-          try {
-            if (typeof data.tags === 'string') {
-              const p = JSON.parse(data.tags);
-              if (p.list) meta = { ...meta, ...p };
-            } else if (typeof data.tags === 'object') {
-              if (data.tags.list || data.tags.features) {
-                meta = { ...meta, ...data.tags };
-              } else if (Array.isArray(data.tags)) {
-                meta.tags = data.tags;
-              }
-            }
-          } catch(e) {}
-        }
-
-        // Handle specs from specs column or tags column (legacy)
-        if (Array.isArray(data.specs) && data.specs.length > 0) {
-          meta.specs = data.specs;
-        } else if (data.tags && meta.specs.length === 0) {
-          try {
-            const tagsData = typeof data.tags === 'string' ? JSON.parse(data.tags) : data.tags;
-            if (Array.isArray(tagsData.specs)) {
-              meta.specs = tagsData.specs;
-            }
-          } catch(e) {}
-        }
+        // Directly read from the correct columns - features, tags, specs are separate JSONB columns
+        const features = Array.isArray(data.features) ? data.features : [];
+        const tags = Array.isArray(data.tags) ? data.tags : [];
+        const specs = Array.isArray(data.specs) ? data.specs : [];
 
         setFormData({
           name: data.name || '',
@@ -119,11 +89,11 @@ export default function ProductForm() {
           short_description: data.short_description || '',
           image_url: data.image_url || '',
           gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
-          tags: meta.tags || [],
-          features: meta.features || [],
-          meta_title: meta.meta_title || '',
-          meta_description: meta.meta_description || '',
-          specs: meta.specs || []
+          tags: tags,
+          features: features,
+          meta_title: data.meta_title || '',
+          meta_description: data.meta_description || '',
+          specs: specs
         });
       }
     } catch (err: any) {

@@ -93,26 +93,7 @@ export default function ProductPage() {
 
     description: rawProduct.description,
 
-    features: (() => {
-      // Try features column first, then fallback to tags column (legacy)
-      if (Array.isArray(rawProduct.features) && rawProduct.features.length > 0) {
-        return rawProduct.features;
-      }
-      if (rawProduct.tags) {
-        try {
-          const tagsData = typeof rawProduct.tags === 'string' 
-            ? JSON.parse(rawProduct.tags) 
-            : rawProduct.tags;
-          if (Array.isArray(tagsData.features)) {
-            return tagsData.features;
-          }
-          if (Array.isArray(tagsData)) {
-            return tagsData;
-          }
-        } catch (e) {}
-      }
-      return [];
-    })(),
+    features: Array.isArray(rawProduct.features) ? rawProduct.features : [],
 
     originalPrice: regPrice.toLocaleString('en-IN'),
 
@@ -131,21 +112,7 @@ export default function ProductPage() {
           : [])
       ].filter(Boolean),
 
-    specifications: Array.isArray(rawProduct.specs)
-      ? rawProduct.specs
-      : (() => {
-          if (rawProduct.tags) {
-            try {
-              const tagsData = typeof rawProduct.tags === 'string' 
-                ? JSON.parse(rawProduct.tags) 
-                : rawProduct.tags;
-              if (Array.isArray(tagsData.specs)) {
-                return tagsData.specs;
-              }
-            } catch (e) {}
-          }
-          return [];
-        })()
+    specifications: Array.isArray(rawProduct.specs) ? rawProduct.specs : []
   };
 
   const categoryTitle = formatSlugToTitle(
@@ -470,24 +437,24 @@ export default function ProductPage() {
 
              <div className="space-y-0.5">
 
-               {(product.specifications || []).map((spec, idx) => (
+{(product.specifications || []).map((spec, idx) => (
 
-                 <div
-                   key={idx}
-                   className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-x-4 md:gap-x-8 gap-y-1 sm:gap-y-0 py-3 sm:py-2.5 border-b border-gray-100 last:border-0"
-                 >
+                  <div
+                    key={idx}
+                    className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-x-4 md:gap-x-8 gap-y-1 sm:gap-y-0 py-3 sm:py-2.5 border-b border-gray-100 last:border-0"
+                  >
 
-                   <span className="text-gray-700 font-medium text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
-                     {spec.label}
-                   </span>
+                    <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
+                      {spec.label}
+                    </span>
 
-                   <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
-                     {spec.value}
-                   </span>
+                    <span className="text-gray-700 font-medium text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
+                      {spec.value}
+                    </span>
 
-                 </div>
+                  </div>
 
-               ))}
+                ))}
 
              </div>
 
