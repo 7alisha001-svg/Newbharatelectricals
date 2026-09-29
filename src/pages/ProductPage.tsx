@@ -93,9 +93,26 @@ export default function ProductPage() {
 
     description: rawProduct.description,
 
-    features: Array.isArray(rawProduct.features)
-      ? rawProduct.features
-      : [],
+    features: (() => {
+      // Try features column first, then fallback to tags column (legacy)
+      if (Array.isArray(rawProduct.features) && rawProduct.features.length > 0) {
+        return rawProduct.features;
+      }
+      if (rawProduct.tags) {
+        try {
+          const tagsData = typeof rawProduct.tags === 'string' 
+            ? JSON.parse(rawProduct.tags) 
+            : rawProduct.tags;
+          if (Array.isArray(tagsData.features)) {
+            return tagsData.features;
+          }
+          if (Array.isArray(tagsData)) {
+            return tagsData;
+          }
+        } catch (e) {}
+      }
+      return [];
+    })(),
 
     originalPrice: regPrice.toLocaleString('en-IN'),
 
@@ -116,7 +133,19 @@ export default function ProductPage() {
 
     specifications: Array.isArray(rawProduct.specs)
       ? rawProduct.specs
-      : []
+      : (() => {
+          if (rawProduct.tags) {
+            try {
+              const tagsData = typeof rawProduct.tags === 'string' 
+                ? JSON.parse(rawProduct.tags) 
+                : rawProduct.tags;
+              if (Array.isArray(tagsData.specs)) {
+                return tagsData.specs;
+              }
+            } catch (e) {}
+          }
+          return [];
+        })()
   };
 
   const categoryTitle = formatSlugToTitle(
@@ -387,40 +416,42 @@ export default function ProductPage() {
 
                   </div>
 
-                 </div>
+</div>
 
                   {/* Key Features */}
-                  <div className="space-y-2.5 mb-6 md:mb-10">
+                  {(product.features && product.features.length > 0) && (
+                    <div className="space-y-2.5 mb-6 md:mb-10">
 
-                    {(product.features || []).map((feature, idx) => (
+                      {(product.features || []).map((feature, idx) => (
 
-                     <div
-                       key={idx}
-                       className="flex items-start"
-                     >
-                       <CheckCircle2
-                         size={18}
-                         className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
-                       />
+                       <div
+                         key={idx}
+                         className="flex items-start"
+                       >
+                         <CheckCircle2
+                           size={18}
+                           className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
+                         />
 
-                       <span className="text-gray-700 text-sm md:text-base">
-                         {feature}
-                       </span>
-                     </div>
+                         <span className="text-gray-700 text-sm md:text-base">
+                           {feature}
+                         </span>
+                       </div>
 
-                   ))}
+                      ))}
 
-                 </div>
+                    </div>
+                  )}
 
-              </div>
+               </div>
 
             </div>
 
-           {/* Full Description */}
+           {/* Description */}
            <div className="mt-4 sm:mt-6 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-6 lg:p-8">
 
              <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-3 sm:mb-4">
-               Full Description
+               Description
              </h2>
 
              <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">

@@ -72,19 +72,35 @@ export default function ProductForm() {
       if (data) {
         let meta: any = { tags: [], features: [], meta_title: '', meta_description: '', specs: [] };
         
-        // Handle tags column parsing
-        if (data.tags) {
+        // Try features column first (new), then fallback to tags column (legacy)
+        if (Array.isArray(data.features) && data.features.length > 0) {
+          meta.features = data.features;
+        }
+        
+        // Handle tags column parsing (legacy fallback)
+        if (data.tags && meta.features.length === 0) {
           try {
             if (typeof data.tags === 'string') {
-              // Try parsing if string
               const p = JSON.parse(data.tags);
-              if(p.list) meta = { ...meta, ...p };
+              if (p.list) meta = { ...meta, ...p };
             } else if (typeof data.tags === 'object') {
               if (data.tags.list || data.tags.features) {
                 meta = { ...meta, ...data.tags };
               } else if (Array.isArray(data.tags)) {
                 meta.tags = data.tags;
               }
+            }
+          } catch(e) {}
+        }
+
+        // Handle specs from specs column or tags column (legacy)
+        if (Array.isArray(data.specs) && data.specs.length > 0) {
+          meta.specs = data.specs;
+        } else if (data.tags && meta.specs.length === 0) {
+          try {
+            const tagsData = typeof data.tags === 'string' ? JSON.parse(data.tags) : data.tags;
+            if (Array.isArray(tagsData.specs)) {
+              meta.specs = tagsData.specs;
             }
           } catch(e) {}
         }
