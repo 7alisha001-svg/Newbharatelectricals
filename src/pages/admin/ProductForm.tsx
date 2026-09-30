@@ -5,6 +5,7 @@ import { Save, ArrowLeft, X, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';import { useStore } from '../../context/StoreContext';
 
 import ImageUploader from '../../components/admin/ImageUploader';
+import { normalizeFeatures, normalizeSpecs, normalizeStringList, sameStringList } from '../../lib/productFields';
 
 export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
@@ -67,21 +68,14 @@ export default function ProductForm() {
 
   const fetchProduct = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log('[ProductForm] Fetch - Current session:', session ? 'exists' : 'null', session?.user?.id);
-      
       const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
       if (error) throw error;
       if (data) {
-        console.log('[ProductForm] Fetched product data:', data);
-        console.log('[ProductForm] Features from DB:', data.features);
-        console.log('[ProductForm] Specs from DB:', data.specs);
-        console.log('[ProductForm] Tags from DB:', data.tags);
-        
-        // Directly read from the correct columns - features, tags, specs are separate JSONB columns
-        const features = Array.isArray(data.features) ? data.features : [];
-        const tags = Array.isArray(data.tags) ? data.tags : [];
-        const specs = Array.isArray(data.specs) ? data.specs : [];
+        // features / tags / gallery_images / specs are JSON arrays. The features
+        // column may still hand back a JSON encoded string, so normalise it.
+        const features = normalizeFeatures(data.features);
+        const tags = normalizeStringList(data.tags);
+        const specs = normalizeSpecs(data.specs);
 
         setFormData({
           name: data.name || '',
@@ -96,7 +90,7 @@ export default function ProductForm() {
           description: data.description || '',
           short_description: data.short_description || '',
           image_url: data.image_url || '',
-          gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
+          gallery_images: normalizeStringList(data.gallery_images),
           tags: tags,
           features: features,
           meta_title: data.meta_title || '',
@@ -138,43 +132,12 @@ export default function ProductForm() {
     setMessage({ text: '', type: '' });
 
     try {
-      // Robust sanitization and validation for JSON/array fields
-      const sanitizeFeatures = (feats: any): string[] => {
-        if (!Array.isArray(feats)) return [];
-        return feats
-          .map(f => typeof f === 'string' ? f.trim() : String(f).trim())
-          .filter(f => f.length > 0);
-      };
-
-      const sanitizeSpecs = (specifications: any): { label: string; value: string }[] => {
-        if (!Array.isArray(specifications)) return [];
-        return specifications
-          .filter(s => s && typeof s === 'object')
-          .map(s => ({
-            label: typeof s.label === 'string' ? s.label.trim() : String(s.label || '').trim(),
-            value: typeof s.value === 'string' ? s.value.trim() : String(s.value || '').trim()
-          }))
-          .filter(s => s.label.length > 0 || s.value.length > 0);
-      };
-
-      const sanitizeTags = (tagList: any): string[] => {
-        if (!Array.isArray(tagList)) return [];
-        return tagList
-          .map(t => typeof t === 'string' ? t.trim() : String(t).trim())
-          .filter(t => t.length > 0);
-      };
-
-      const sanitizeGalleryImages = (images: any): string[] => {
-        if (!Array.isArray(images)) return [];
-        return images
-          .map(img => typeof img === 'string' ? img.trim() : String(img).trim())
-          .filter(img => img.length > 0);
-      };
-
-      const sanitizedFeatures = sanitizeFeatures(formData.features);
-      const sanitizedSpecs = sanitizeSpecs(formData.specs);
-      const sanitizedTags = sanitizeTags(formData.tags);
-      const sanitizedGallery = sanitizeGalleryImages(formData.gallery_images);
+      // The JSON list fields are normalised so a value stored as JSON text is
+      // understood as an array, and blank entries never reach the database.
+      const sanitizedFeatures = normalizeFeatures(formData.features);
+      const sanitizedSpecs = normalizeSpecs(formData.specs);
+      const sanitizedTags = normalizeStringList(formData.tags);
+      const sanitizedGallery = normalizeStringList(formData.gallery_images);
 
       const payload = {
         name: formData.name,
@@ -197,33 +160,52 @@ export default function ProductForm() {
         tags: sanitizedTags
       };
 
-      console.log('[ProductForm] Save payload:', JSON.stringify(payload, null, 2));
-      console.log('[ProductForm] Features in payload:', sanitizedFeatures);
-
-      // Check current auth session
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log('[ProductForm] Current session:', session ? 'exists' : 'null', session?.user?.id);
-
-      let error;
-      let res;
+      // .select() makes the write verifiable: without it Supabase returns no
+      // rows and a rejected-by-RLS update looks exactly like a successful one.
+      let savedId: string | undefined;
       if (isEdit) {
-        res = await supabase.from('products').update(payload).eq('id', id);
-        error = res.error;
+        const { data: updatedRows, error: updateError } = await supabase
+          .from('products')
+          .update(payload)
+          .eq('id', id)
+          .select('id');
+        if (updateError) throw updateError;
+        if (!updatedRows || updatedRows.length === 0) {
+          throw new Error(
+            'Nothing was written to the database. The save was rejected by the database permissions layer (check the products update policy for your admin account).'
+          );
+        }
+        savedId = updatedRows[0].id;
       } else {
-        res = await supabase.from('products').insert([payload]);
-        error = res.error;
+        const { data: insertedRows, error: insertError } = await supabase
+          .from('products')
+          .insert([payload])
+          .select('id');
+        if (insertError) throw insertError;
+        savedId = insertedRows?.[0]?.id;
       }
 
-      console.log('[ProductForm] Supabase response:', res);
-      console.log('[ProductForm] Supabase error:', error);
+      // Read the row back straight from the database and confirm the features
+      // actually landed there, instead of trusting local form state.
+      if (savedId) {
+        const { data: savedRow, error: verifyError } = await supabase
+          .from('products')
+          .select('features')
+          .eq('id', savedId)
+          .single();
 
-      if (error) {
-        console.error('[ProductForm] Save failed:', error);
-        throw error;
+        if (verifyError) throw verifyError;
+
+        const persisted = normalizeFeatures(savedRow.features);
+        if (!sameStringList(persisted, sanitizedFeatures)) {
+          throw new Error(
+            'Key Features were not stored in the database. Please run fix_features_column.sql in the Supabase SQL editor so products.features is a real JSONB column.'
+          );
+        }
       }
 
-      console.log('[ProductForm] Save successful, refreshing store...');
       await refreshStore();
+      setFormData(prev => ({ ...prev, features: sanitizedFeatures, specs: sanitizedSpecs, tags: sanitizedTags, gallery_images: sanitizedGallery }));
       setMessage({ text: `Product ${isEdit ? 'updated' : 'created'} successfully!`, type: 'success' });
       if (!isEdit) {
         setTimeout(() => navigate('/admin/products'), 1500);

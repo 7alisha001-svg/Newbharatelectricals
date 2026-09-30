@@ -7,6 +7,7 @@ import {
   X, Save, CheckCircle2, AlertCircle, RefreshCw 
 } from 'lucide-react';
 import ImageUploader from '../../components/admin/ImageUploader';
+import { normalizeFeatures, normalizeSpecs, normalizeStringList, sameStringList } from '../../lib/productFields';
 
 const categorySlugToName: Record<string, string> = {
   // Power Solutions
@@ -145,25 +146,19 @@ export default function CategoryProductManager() {
     setEditProductId(product.id);
     
     // Parse specs and features safely
-    let specList: { label: string; value: string }[] = [];
-    if (Array.isArray(product.specs)) {
-      specList = product.specs;
-    } else if (product.tags?.specs && Array.isArray(product.tags.specs)) {
-      specList = product.tags.specs;
+    let specList: { label: string; value: string }[] = normalizeSpecs(product.specs);
+    if (specList.length === 0 && product.tags?.specs) {
+      specList = normalizeSpecs(product.tags.specs);
     }
 
-    let featureList: string[] = [];
-    if (Array.isArray(product.features)) {
-      featureList = product.features;
-    } else if (product.tags?.features && Array.isArray(product.tags.features)) {
-      featureList = product.tags.features;
+    let featureList: string[] = normalizeFeatures(product.features);
+    if (featureList.length === 0 && product.tags?.features) {
+      featureList = normalizeStringList(product.tags.features);
     }
 
-    let tagList: string[] = [];
-    if (Array.isArray(product.tags)) {
-      tagList = product.tags;
-    } else if (product.tags?.list && Array.isArray(product.tags.list)) {
-      tagList = product.tags.list;
+    let tagList: string[] = normalizeStringList(product.tags);
+    if (tagList.length === 0 && product.tags?.list) {
+      tagList = normalizeStringList(product.tags.list);
     }
 
     setFormData({
@@ -176,7 +171,7 @@ export default function CategoryProductManager() {
       status: product.status || 'publish',
       brand: product.brand || '',
       image_url: product.image_url || '',
-      gallery_images: Array.isArray(product.gallery_images) ? product.gallery_images : [],
+      gallery_images: normalizeStringList(product.gallery_images),
       features: featureList,
       specs: specList,
       tags: tagList
@@ -280,43 +275,12 @@ export default function CategoryProductManager() {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
 
-      // Robust sanitization and validation for JSON/array fields
-      const sanitizeFeatures = (feats: any): string[] => {
-        if (!Array.isArray(feats)) return [];
-        return feats
-          .map(f => typeof f === 'string' ? f.trim() : String(f).trim())
-          .filter(f => f.length > 0);
-      };
-
-      const sanitizeSpecs = (specifications: any): { label: string; value: string }[] => {
-        if (!Array.isArray(specifications)) return [];
-        return specifications
-          .filter(s => s && typeof s === 'object')
-          .map(s => ({
-            label: typeof s.label === 'string' ? s.label.trim() : String(s.label || '').trim(),
-            value: typeof s.value === 'string' ? s.value.trim() : String(s.value || '').trim()
-          }))
-          .filter(s => s.label.length > 0 || s.value.length > 0);
-      };
-
-      const sanitizeTags = (tagList: any): string[] => {
-        if (!Array.isArray(tagList)) return [];
-        return tagList
-          .map(t => typeof t === 'string' ? t.trim() : String(t).trim())
-          .filter(t => t.length > 0);
-      };
-
-      const sanitizeGalleryImages = (images: any): string[] => {
-        if (!Array.isArray(images)) return [];
-        return images
-          .map(img => typeof img === 'string' ? img.trim() : String(img).trim())
-          .filter(img => img.length > 0);
-      };
-
-      const sanitizedFeatures = sanitizeFeatures(formData.features);
-      const sanitizedSpecs = sanitizeSpecs(formData.specs);
-      const sanitizedTags = sanitizeTags(formData.tags);
-      const sanitizedGallery = sanitizeGalleryImages(formData.gallery_images);
+      // The JSON list fields are normalised so a value stored as JSON text is
+      // understood as an array, and blank entries never reach the database.
+      const sanitizedFeatures = normalizeFeatures(formData.features);
+      const sanitizedSpecs = normalizeSpecs(formData.specs);
+      const sanitizedTags = normalizeStringList(formData.tags);
+      const sanitizedGallery = normalizeStringList(formData.gallery_images);
 
       const payload = {
         name: formData.name,
@@ -338,16 +302,33 @@ export default function CategoryProductManager() {
         tags: sanitizedTags
       };
 
-      let error;
+      let savedId: string | undefined;
       if (editProductId) {
-        const res = await supabase.from('products').update(payload).eq('id', editProductId);
-        error = res.error;
+        const res = await supabase.from('products').update(payload).eq('id', editProductId).select('id');
+        if (res.error) throw res.error;
+        if (!res.data || res.data.length === 0) {
+          throw new Error('Nothing was written to the database. Check the products update policy for your admin account.');
+        }
+        savedId = res.data[0].id;
       } else {
-        const res = await supabase.from('products').insert([payload]);
-        error = res.error;
+        const res = await supabase.from('products').insert([payload]).select('id');
+        if (res.error) throw res.error;
+        savedId = res.data?.[0]?.id;
       }
 
-      if (error) throw error;
+      if (savedId) {
+        const { data: savedRow, error: verifyError } = await supabase
+          .from('products')
+          .select('features')
+          .eq('id', savedId)
+          .single();
+        if (verifyError) throw verifyError;
+        if (!sameStringList(normalizeFeatures(savedRow.features), sanitizedFeatures)) {
+          throw new Error(
+            'Key Features were not stored in the database. Please run fix_features_column.sql in the Supabase SQL editor so products.features is a real JSONB column.'
+          );
+        }
+      }
 
       await refreshStore();
       setMessage({ text: `Product successfully ${editProductId ? 'updated' : 'added'}!`, type: 'success' });

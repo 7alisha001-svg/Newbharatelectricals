@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { normalizeFeatures, normalizeSpecs } from '../../lib/productFields';
 import { useStore } from '../../context/StoreContext';
 import {
   connectGoogleAccount,
@@ -860,15 +861,13 @@ export default function GoogleSheetsPage() {
       ];
 
       const rows = dbProducts.map((p) => {
-        const featuresStr =
-          Array.isArray(p.features)
-            ? p.features.join(', ')
-            : '';
+        const featuresStr = normalizeFeatures(p.features).join(', ');
 
         let specsStr = '';
 
-        if (Array.isArray(p.specs)) {
-          specsStr = p.specs
+        const specsList = normalizeSpecs(p.specs);
+        if (specsList.length > 0) {
+          specsStr = specsList
             .map(
               (s: any) =>
                 `${s.label || ''}:${s.value || ''}`

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { normalizeFeatures, normalizeSpecs, normalizeStringList } from '../lib/productFields';
 
 interface Settings {
   id: string;
@@ -96,16 +97,22 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         supabase.from('settings').select('*').eq('id', 'global').single(),
       ]);
 
-      console.log('[StoreContext] Products fetch response:', prodRes);
-      if (prodRes.data && prodRes.data.length > 0) {
-        console.log('[StoreContext] First product features:', prodRes.data[0].features);
-        console.log('[StoreContext] First product specs:', prodRes.data[0].specs);
-        console.log('[StoreContext] First product tags:', prodRes.data[0].tags);
-      }
-
+      // products.features can come back as a JSON encoded string while the
+      // column is still text, so every list field is normalised here. This is
+      // the single place the public site reads product data from.
       if (catRes.data) setCategories(catRes.data);
       if (brandRes.data) setBrands(brandRes.data);
-      if (prodRes.data) setProducts(prodRes.data);
+      if (prodRes.data) {
+        setProducts(
+          prodRes.data.map((row: any) => ({
+            ...row,
+            features: normalizeFeatures(row.features),
+            tags: normalizeStringList(row.tags),
+            gallery_images: normalizeStringList(row.gallery_images),
+            specs: normalizeSpecs(row.specs)
+          }))
+        );
+      }
       if (settingsRes.data) {
         setSettings(settingsRes.data);
       } else if (!settings) {

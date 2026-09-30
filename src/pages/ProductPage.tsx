@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 import { formatSlugToTitle } from '../utils/formatters';
+import { normalizeFeatures, normalizeSpecs } from '../lib/productFields';
 import { useStore } from '../context/StoreContext';
 import ProductEnquiryModal from '../components/ProductEnquiryModal';
 
@@ -93,7 +94,7 @@ export default function ProductPage() {
 
     description: rawProduct.description,
 
-    features: Array.isArray(rawProduct.features) ? rawProduct.features : [],
+    features: normalizeFeatures(rawProduct.features),
 
     originalPrice: regPrice.toLocaleString('en-IN'),
 
@@ -112,7 +113,7 @@ export default function ProductPage() {
           : [])
       ].filter(Boolean),
 
-    specifications: Array.isArray(rawProduct.specs) ? rawProduct.specs : []
+    specifications: normalizeSpecs(rawProduct.specs)
   };
 
   const categoryTitle = formatSlugToTitle(
