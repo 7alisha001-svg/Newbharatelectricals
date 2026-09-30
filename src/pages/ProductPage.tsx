@@ -324,6 +324,31 @@ export default function ProductPage() {
                  {product.shortDescription}
                </p>
 
+                 {/* Key Features */}
+                 {(product.features && product.features.length > 0) && (
+                   <div className="space-y-2.5 mb-6 md:mb-10">
+
+                      {(product.features || []).map((feature, idx) => (
+
+                       <div
+                         key={idx}
+                         className="flex items-start"
+                       >
+                         <CheckCircle2
+                           size={18}
+                           className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
+                         />
+
+                         <span className="text-gray-700 text-sm md:text-base">
+                           {feature}
+                         </span>
+                       </div>
+
+                      ))}
+
+                   </div>
+                 )}
+
                {/* Existing Price / Actions */}
                <div className="border-t border-gray-200 pt-6 md:pt-8">
 
@@ -382,36 +407,11 @@ export default function ProductPage() {
                      pricing, specifications and expert assistance.
                    </p>
 
-                  </div>
+</div>
 
 </div>
 
-                  {/* Key Features */}
-                  {(product.features && product.features.length > 0) && (
-                    <div className="space-y-2.5 mb-6 md:mb-10">
-
-                      {(product.features || []).map((feature, idx) => (
-
-                       <div
-                         key={idx}
-                         className="flex items-start"
-                       >
-                         <CheckCircle2
-                           size={18}
-                           className="text-brand-green mr-3 mt-0.5 flex-shrink-0"
-                         />
-
-                         <span className="text-gray-700 text-sm md:text-base">
-                           {feature}
-                         </span>
-                       </div>
-
-                      ))}
-
-                    </div>
-                  )}
-
-               </div>
+            </div>
 
             </div>
 
