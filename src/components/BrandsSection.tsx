@@ -11,8 +11,6 @@ export default function BrandsSection() {
   const [cardWidth, setCardWidth] = useState(200);
   const cardWidthRef = useRef(cardWidth);
   const x = useMotionValue(0);
-  const autoAnimationRef = useRef<{ cancel: boolean } | null>(null);
-  const isManualNavRef = useRef(false);
   const sliderTrackRef = useRef<HTMLDivElement>(null);
   const itemsCountRef = useRef(0);
 
@@ -146,113 +144,137 @@ const repeatedItems = Array(loopMultiplier).fill(items).flat();
       return () => window.removeEventListener('resize', updateCardWidth);
     }, []);
 
-    // Auto-animation loop
-    const startAutoAnimation = useCallback(() => {
-      if (autoAnimationRef.current) return;
-      
-      const totalWidth = itemsCountRef.current * cardWidthRef.current;
-      const halfWidth = totalWidth / 2; // -50% position in pixels
-      
-      autoAnimationRef.current = { cancel: false };
-      
-      const runAnimation = async () => {
-        const controller = autoAnimationRef.current;
-        if (!controller || controller.cancel) return;
-        
-        // Animate from current position to -halfWidth
-        const currentX = x.get();
-        const remainingDistance = Math.abs(currentX + halfWidth);
-        const remainingDuration = (remainingDistance / halfWidth) * animationDuration * 1000; // ms
-        
-        try {
-          await animate(x, -halfWidth, {
-            duration: Math.max(remainingDuration, 100),
-            ease: 'linear'
-          });
-        } catch (e) {
-          return; // Animation was cancelled
-        }
-        
-        // Check if cancelled during animation
-        if (!controller || controller.cancel) return;
-        
-        // Seamless loop: jump back to 0
+    // Auto-animation loop.
+    // A single run id identifies the active loop. Any interruption bumps the id,
+    // so an outdated loop stops itself instead of fighting the new one.
+    const autoRunIdRef = useRef(0);
+    const autoControlsRef = useRef<{ stop?: () => void; cancel?: () => void } | null>(null);
+    const resumeTimerRef = useRef<number | null>(null);
+    const navSeqRef = useRef(0);
+
+    const runAutoLoop = useCallback((runId: number) => {
+      if (autoRunIdRef.current !== runId) return;
+
+      const halfWidth = (itemsCountRef.current * cardWidthRef.current) / 2;
+      if (halfWidth <= 0) return;
+
+      const currentX = x.get();
+      // Distance still to travel before the wrap point, always forward.
+      const remaining = Math.max(currentX + halfWidth, 1);
+      const duration = Math.max((remaining / halfWidth) * animationDuration, 1);
+
+      let controls: any;
+      try {
+        controls = animate(x, -halfWidth, { duration, ease: 'linear' });
+      } catch (e) {
+        return;
+      }
+      autoControlsRef.current = controls;
+
+      const continueLoop = () => {
+        if (autoRunIdRef.current !== runId) return;
+        // Seamless loop: snap back to the start of the duplicated track.
         x.set(0);
-        
-        // Continue the loop
-        if (!controller.cancel) {
-          runAnimation();
-        }
+        runAutoLoop(runId);
       };
-      
-      runAnimation();
+
+      if (controls && typeof controls.then === 'function') {
+        controls.then(continueLoop).catch(continueLoop);
+      } else if (controls && typeof controls.finished?.then === 'function') {
+        controls.finished.then(continueLoop).catch(continueLoop);
+      }
     }, [animationDuration, x]);
 
-    // Stop auto animation
+    // Always (re)starts the autoplay loop, replacing any previous one.
+    const startAutoAnimation = useCallback(() => {
+      if (resumeTimerRef.current) {
+        window.clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = null;
+      }
+      autoRunIdRef.current += 1;
+      runAutoLoop(autoRunIdRef.current);
+    }, [runAutoLoop]);
+
+    // Halts the autoplay loop and invalidates it so it cannot restart itself.
     const stopAutoAnimation = useCallback(() => {
-      if (autoAnimationRef.current) {
-        autoAnimationRef.current.cancel = true;
-        autoAnimationRef.current = null;
+      autoRunIdRef.current += 1;
+      const controls: any = autoControlsRef.current;
+      autoControlsRef.current = null;
+      if (controls) {
+        if (typeof controls.stop === 'function') controls.stop();
+        else if (typeof controls.cancel === 'function') controls.cancel();
       }
     }, []);
 
-    // Manual navigation
+    // Manual navigation. Autoplay is paused only for the duration of the
+    // single-step move and always resumes afterwards.
     const navigate = useCallback((direction: 'prev' | 'next') => {
-      if (isManualNavRef.current) return;
-      isManualNavRef.current = true;
-      
       stopAutoAnimation();
-      
-      const currentX = x.get();
+
+      if (resumeTimerRef.current) {
+        window.clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = null;
+      }
+
+      const navId = ++navSeqRef.current;
       const step = direction === 'next' ? -cardWidthRef.current : cardWidthRef.current;
-      const targetX = currentX + step;
-      
-      // Animate to the new position
-      animate(x, targetX, {
-        duration: 0.5,
-        ease: 'easeOut'
-      }).then(() => {
-        // Handle boundary conditions for seamless loop
-        const totalWidth = itemsCountRef.current * cardWidthRef.current;
-        const halfWidth = totalWidth / 2;
-        
+      const targetX = x.get() + step;
+
+      let controls: any;
+      try {
+        controls = animate(x, targetX, { duration: 0.5, ease: 'easeOut' });
+      } catch (e) {
+        startAutoAnimation();
+        return;
+      }
+
+      const finishManualNav = () => {
+        // A newer arrow click already took over.
+        if (navSeqRef.current !== navId) return;
+
+        const halfWidth = (itemsCountRef.current * cardWidthRef.current) / 2;
+
+        // Wrap by one track half: identical pixels, so the loop stays seamless.
         let newX = targetX;
         if (newX <= -halfWidth) {
-          newX += halfWidth; // Wrap to beginning
+          newX += halfWidth;
         } else if (newX > 0) {
-          newX -= halfWidth; // Wrap to end
+          newX -= halfWidth;
         }
-        
-        if (newX !== targetX) {
+        if (newX !== x.get()) {
           x.set(newX);
         }
-        
-        isManualNavRef.current = false;
-        // Resume auto animation after a brief delay
-        setTimeout(() => {
-          if (!isManualNavRef.current) {
-            startAutoAnimation();
-          }
-        }, 100);
-      });
+
+        // Manual navigation must never disable autoplay.
+        resumeTimerRef.current = window.setTimeout(() => {
+          resumeTimerRef.current = null;
+          startAutoAnimation();
+        }, 400);
+      };
+
+      if (controls && typeof controls.then === 'function') {
+        controls.then(finishManualNav).catch(finishManualNav);
+      } else if (controls && typeof controls.finished?.then === 'function') {
+        controls.finished.then(finishManualNav).catch(finishManualNav);
+      } else {
+        finishManualNav();
+      }
     }, [x, startAutoAnimation, stopAutoAnimation]);
 
-    // Start auto animation on mount
+    // Keep autoplay running continuously: it starts on mount, survives every
+    // manual step, and is stopped only when the section unmounts.
     useEffect(() => {
       startAutoAnimation();
-      return () => stopAutoAnimation();
+
+      return () => {
+        navSeqRef.current += 1;
+        stopAutoAnimation();
+        if (resumeTimerRef.current) {
+          window.clearTimeout(resumeTimerRef.current);
+          resumeTimerRef.current = null;
+        }
+      };
     }, [startAutoAnimation, stopAutoAnimation]);
-
-    // Pause on hover
-    const handleMouseEnter = useCallback(() => {
-      stopAutoAnimation();
-    }, [stopAutoAnimation]);
-
-    const handleMouseLeave = useCallback(() => {
-      if (!isManualNavRef.current) {
-        startAutoAnimation();
-      }
-    }, [startAutoAnimation]);
 
     return (
       <section id="brands" className="py-8 md:py-16 lg:py-20 bg-white border-none overflow-hidden">
@@ -264,11 +286,9 @@ const repeatedItems = Array(loopMultiplier).fill(items).flat();
             </h2>
           </div>
 
-          <div 
-            className="w-full relative overflow-hidden group" 
+          <div
+            className="w-full relative overflow-hidden group"
             ref={sliderTrackRef}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
           >
             {/* Fading edges for a premium look */}
             <div className="absolute top-0 left-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
@@ -277,14 +297,14 @@ const repeatedItems = Array(loopMultiplier).fill(items).flat();
             {/* Navigation Arrows */}
             <button
               onClick={() => navigate('prev')}
-              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md text-gray-700 hover:bg-brand-green hover:text-white hover:border-brand-green transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2"
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md text-gray-700 hover:bg-brand-green hover:text-white hover:border-brand-green transition-all duration-300 flex items-center justify-center opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2"
               aria-label="Previous brand"
             >
               <ChevronLeft size={20} className="ml-1" />
             </button>
             <button
               onClick={() => navigate('next')}
-              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md text-gray-700 hover:bg-brand-green hover:text-white hover:border-brand-green transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2"
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md text-gray-700 hover:bg-brand-green hover:text-white hover:border-brand-green transition-all duration-300 flex items-center justify-center opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2"
               aria-label="Next brand"
             >
               <ChevronRight size={20} className="mr-1" />
