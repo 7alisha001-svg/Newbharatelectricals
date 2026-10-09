@@ -442,10 +442,10 @@ export default function ProductPage() {
 
                   <div
                     key={idx}
-                    className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-x-4 md:gap-x-8 gap-y-1 sm:gap-y-0 py-3 sm:py-2.5 border-b border-gray-100 last:border-0"
+                    className="grid grid-cols-1 sm:grid-cols-[170px_1fr] md:grid-cols-[200px_1fr] gap-x-4 md:gap-x-8 gap-y-1 sm:gap-y-0 py-3 sm:py-2.5 border-b border-gray-100 last:border-0"
                   >
 
-                    <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
+                    <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left line-clamp-2">
                       {spec.label}
                     </span>
 
