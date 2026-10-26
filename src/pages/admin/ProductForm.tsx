@@ -17,6 +17,7 @@ export default function ProductForm() {
   const [fetching, setFetching] = useState(isEdit);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [brands, setBrands] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -62,8 +63,12 @@ export default function ProductForm() {
   };
 
   const fetchCategories = async () => {
-    await supabase.from('categories').select('name').eq('is_active', true);
-     
+    try {
+      const { data } = await supabase.from('categories').select('id, name').order('name', { ascending: true });
+      setCategories(data || []);
+    } catch (err) {
+      console.error("Error fetching categories", err);
+    }
   };
 
   const fetchProduct = async () => {
@@ -293,6 +298,16 @@ export default function ProductForm() {
                 <option value="">Select a brand</option>
                 {brands.map(brand => (
                   <option key={brand.id} value={brand.name}>{brand.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+              <select name="category" value={formData.category} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-1 focus:ring-brand-green outline-none">
+                <option value="">Select a category</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
                 ))}
               </select>
             </div>
