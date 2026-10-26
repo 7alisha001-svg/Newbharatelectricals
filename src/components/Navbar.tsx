@@ -1,6 +1,6 @@
 import {Phone,MessageCircle,ChevronDown,Menu,X,Heart,User,MapPin,Search,Store,Headset,} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { useMedia } from '../context/MediaContext';
 import MediaImage from './MediaImage';
@@ -104,6 +104,14 @@ export default function Navbar(props: HeaderProps = {}) {
 
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = () => {
+    const q = searchTerm.trim();
+    navigate(`/search?q=${encodeURIComponent(q)}`);
+  };
 
   useEffect(() => {
     setIsHydrated(true);
@@ -274,11 +282,19 @@ export default function Navbar(props: HeaderProps = {}) {
             {/* Search Bar - Center */}
             <div className="hidden lg:flex flex-grow max-w-[700px] relative">
               <div className="relative w-full">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search size={20} className="text-gray-700 font-medium" />
-                </div>
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-700 font-medium hover:text-brand-green transition-colors"
+                  aria-label="Search"
+                >
+                  <Search size={20} />
+                </button>
                 <input 
                   type="text" 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   placeholder="Search for Inverters, Batteries, Solar Panels..." 
                   className="w-full bg-[#f1f1f1] border-none text-gray-900 text-sm rounded-full pl-12 pr-4 py-3 outline-none focus:bg-[#e5e5e5] transition-colors"
                 />
@@ -308,7 +324,7 @@ export default function Navbar(props: HeaderProps = {}) {
 
             {/* Mobile Actions */}
             <div className="flex items-center lg:hidden space-x-0.5 sm:space-x-1">
-              <button className="text-gray-900 hover:text-brand-green p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Search">
+              <button className="text-gray-900 hover:text-brand-green p-2 sm:p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center min-w-[40px] min-h-[40px]" aria-label="Search" onClick={handleSearch}>
                 <Search size={20} className="sm:w-6 sm:h-6" />
               </button>
               <button 

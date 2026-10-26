@@ -19,6 +19,7 @@ const TermsConditionsPage = React.lazy(() => import('./pages/TermsConditionsPage
 const BrandPage = React.lazy(() => import('./pages/BrandPage'));
 const BlogPage = React.lazy(() => import('./pages/BlogPage'));
 const SEOReportPage = React.lazy(() => import('./pages/SEOReportPage'));
+const SearchResults = React.lazy(() => import('./pages/SearchResults'));
 import ScrollToTop from './components/ScrollToTop';
 import LeadCapturePopup from './components/LeadCapturePopup';
 
@@ -180,6 +181,7 @@ export default function App() {
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/blog/:slug" element={<BlogPage />} />
                 <Route path="/seo-report" element={<SEOReportPage />} />
+                <Route path="/search" element={<SearchResults />} />
                 <Route path="/:category" element={<GenericCategoryPage />} />
                 <Route path="/:category/:subcategory" element={<GenericSubCategoryPage />} />
                 <Route path="/:category/:subcategory/:productId" element={<ProductPage />} />
