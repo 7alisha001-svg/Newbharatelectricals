@@ -68,7 +68,7 @@ export default function SearchResults() {
               <button
                 type="button"
                 onClick={handleSearch}
-                className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-700 font-medium hover:text-brand-green transition-colors"
                 aria-label="Search"
               >
                 <Search size={20} className="text-gray-700 font-medium" />

@@ -124,6 +124,7 @@ if (!currentBrand) {
                 ? Math.round(((regPrice - salePrice) / regPrice) * 100)
                 : 0;
               const catSlug = product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'category';
+              const subcategorySlug = product.slug || product.id;
 
               return (
               <motion.div
@@ -140,7 +141,7 @@ if (!currentBrand) {
                       {discountPercent}% OFF
                     </span>
                   )}
-                  <Link to={`/${catSlug}/all/${product.id}`} className="block w-full h-full p-1 sm:p-2">
+                  <Link to={`/${catSlug}/${subcategorySlug}/${product.id}`} className="block w-full h-full p-1 sm:p-2">
                     <img 
                       src={product.image_url} 
                       alt={product.name} 
@@ -158,7 +159,7 @@ if (!currentBrand) {
                       <Star fill="currentColor" size={11} className="mr-0.5" />
                       <Star fill="currentColor" size={11} className="text-gray-200" />
                     </div>
-                  <Link to={`/${catSlug}/all/${product.id}`}>
+                  <Link to={`/${catSlug}/${subcategorySlug}/${product.id}`}>
                     <h3 className="font-bold text-gray-900 text-sm sm:text-base leading-snug mb-1.5 sm:mb-2 group-hover:text-brand-green transition-colors line-clamp-2">
                       {product.name}
                     </h3>

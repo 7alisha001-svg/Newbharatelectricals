@@ -240,7 +240,7 @@ export default function Navbar(props: HeaderProps = {}) {
             </a>
           </div>
           <div className="flex items-center space-x-6">
-            <Link to="/store-locator" className="flex items-center hover:opacity-80 transition-opacity">
+            <Link to="/contact" className="flex items-center hover:opacity-80 transition-opacity">
               <MapPin size={14} className="mr-1.5" /> Store Locator
             </Link>
             <Link to="/contact" className="hover:opacity-80 transition-opacity">Contact Us</Link>
