@@ -151,7 +151,7 @@ export default function ProductPage() {
 
         {/* Breadcrumb Header */}
         <div className="bg-brand-gray/50 py-4 border-b border-gray-100">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
 
             <div className="flex items-center text-sm font-medium text-gray-700 overflow-x-auto whitespace-nowrap hide-scrollbar">
 
@@ -201,14 +201,14 @@ export default function ProductPage() {
         </div>
 
         {/* Product Section */}
-        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <section className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
 
           <div className="bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col md:flex-row">
 
             {/* Left - Image Gallery */}
-            <div className="w-full md:w-1/2 p-4 sm:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
+            <div className="w-full md:w-1/2 p-3 sm:p-6 lg:p-10 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30 flex flex-col">
 
-              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-4 min-h-[250px] sm:min-h-[400px] relative">
+              <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-center mb-4 min-h-[300px] sm:min-h-[350px] relative">
 
                 <img
                   src={product.images[currentIndex] || product.images[0] || 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=800&auto=format&fit=crop'}
@@ -281,7 +281,7 @@ export default function ProductPage() {
             </div>
 
             {/* Right - Product Info */}
-            <div className="w-full md:w-1/2 p-5 sm:p-10 lg:p-14 relative">
+            <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-10 relative">
 
               {/* Share Button */}
               <button
@@ -298,7 +298,7 @@ export default function ProductPage() {
               </h1>
 
               {/* SKU / Stock */}
-              <div className="flex flex-wrap items-center gap-3 text-sm text-gray-700 font-medium mb-4 md:mb-6">
+              <div className="flex flex-wrap items-center gap-3 text-sm text-gray-700 font-medium mb-4 md:mb-5">
 
                 <span>
                   SKU:{' '}
@@ -320,13 +320,13 @@ export default function ProductPage() {
               </div>
 
                {/* Short Description */}
-               <p className="text-gray-900 font-medium mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
+               <p className="text-gray-900 font-medium mb-4 md:mb-5 leading-relaxed text-sm md:text-base">
                  {product.shortDescription}
                </p>
 
                  {/* Key Features */}
                  {(product.features && product.features.length > 0) && (
-                   <div className="space-y-2.5 mb-6 md:mb-10">
+                    <div className="space-y-2 mb-6 md:mb-8">
 
                       {(product.features || []).map((feature, idx) => (
 
@@ -350,10 +350,10 @@ export default function ProductPage() {
                  )}
 
                {/* Existing Price / Actions */}
-               <div className="border-t border-gray-200 pt-6 md:pt-8">
+                 <div className="border-t border-gray-200 pt-5 md:pt-6">
 
                  {/* Price */}
-                 <div className="flex flex-wrap items-baseline text-2xl md:text-4xl font-bold text-gray-900 mb-5 md:mb-6">
+                   <div className="flex flex-wrap items-baseline text-2xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-5">
 
                    MRP: ₹{product.price}
 
@@ -397,7 +397,7 @@ export default function ProductPage() {
                  </div>
 
                  {/* Lead Message */}
-                 <div className="mt-5 bg-gray-50 p-4 md:p-6 rounded-xl border border-gray-100">
+                  <div className="mt-4 bg-gray-50 p-4 md:p-5 rounded-xl border border-gray-100">
 
                    <p className="text-sm text-gray-700 leading-relaxed">
                      <span className="text-brand-green font-bold">
@@ -416,11 +416,11 @@ export default function ProductPage() {
             </div>
 
            {/* Description */}
-           <div className="mt-4 sm:mt-6 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-6 lg:p-8">
+           <div className="mt-4 sm:mt-5 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-5 lg:p-6">
 
-             <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-3 sm:mb-4">
-               Description
-             </h2>
+              <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-3 sm:mb-4">
+                Description
+              </h2>
 
              <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
                {product.description ||
@@ -430,33 +430,30 @@ export default function ProductPage() {
            </div>
 
            {/* Product Specifications */}
-           <div className="mt-4 sm:mt-6 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-6 lg:p-8">
+           <div className="mt-4 sm:mt-5 bg-white rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-5 lg:p-6">
 
-            <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-2xl font-bold font-heading text-gray-900 mb-4 sm:mb-5">
               Product Specifications
             </h2>
 
              <div className="space-y-0.5">
+ {(product.specifications || []).map((spec, idx) => (
+                   <div
+                     key={idx}
+                     className="grid grid-cols-1 sm:grid-cols-[180px_1fr] lg:grid-cols-[240px_1fr] gap-x-4 lg:gap-x-8 gap-y-1.5 sm:gap-y-2 py-2 sm:py-2 border-b border-gray-50 last:border-0 items-start"
+                   >
 
-{(product.specifications || []).map((spec, idx) => (
+                     <span className="text-gray-900 font-semibold text-sm text-left leading-relaxed break-words">
+                       {spec.label}
+                     </span>
 
-                  <div
-                    key={idx}
-                    className="grid grid-cols-1 sm:grid-cols-[170px_1fr] md:grid-cols-[200px_1fr] gap-x-4 md:gap-x-8 gap-y-1 sm:gap-y-0 py-3 sm:py-2.5 border-b border-gray-100 last:border-0"
-                  >
+                     <span className="text-gray-700 font-medium text-sm text-left leading-relaxed break-words">
+                       {spec.value}
+                     </span>
 
-                    <span className="text-gray-900 font-bold text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left line-clamp-2">
-                      {spec.label}
-                    </span>
+                   </div>
 
-                    <span className="text-gray-700 font-medium text-xs sm:text-sm md:text-base leading-relaxed break-words sm:text-left">
-                      {spec.value}
-                    </span>
-
-                  </div>
-
-                ))}
-
+                 ))}
              </div>
 
           </div>
