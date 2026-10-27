@@ -75,7 +75,7 @@ export default function GenericCategoryPage() {
         
         {/* Breadcrumb Header */}
         <div className="bg-brand-gray/50 py-3 md:py-4 border-b border-gray-100">
-          <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
+          <div className="max-w-[2000px] mx-auto px-4 lg:px-6 xl:px-8">
             <div className="flex items-center text-sm font-medium text-gray-700 font-medium overflow-x-auto whitespace-nowrap hide-scrollbar">
               <Link to="/" className="text-gray-900 hover:text-brand-green flex items-center"><Home size={14} className="mr-1" /> Home</Link>
               <ChevronRight size={14} className="mx-2 text-gray-900 flex-shrink-0" />
@@ -96,7 +96,7 @@ export default function GenericCategoryPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/70 to-transparent"></div>
         </motion.div>
         
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 lg:px-8">
+        <div className="relative z-10 w-full max-w-[2000px] mx-auto px-4 lg:px-6 xl:px-8">
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -117,7 +117,7 @@ export default function GenericCategoryPage() {
       </section>
 
       {/* Products Grid */}
-      <section className="max-w-[1600px] mx-auto px-4 lg:px-8">
+      <section className="max-w-[2000px] mx-auto px-4 lg:px-6 xl:px-8">
         <div className="flex items-center justify-between mb-4 md:mb-8">
           <h2 className="text-lg md:text-3xl font-heading font-bold text-gray-900 border-l-4 border-brand-green pl-3">
             Products
@@ -127,7 +127,7 @@ export default function GenericCategoryPage() {
         {categoryProducts.length === 0 ? (
           <div className="text-gray-700 font-medium py-8">No products found in this category.</div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-6">
             {categoryProducts.map((product, idx) => {
               const regPrice = Number(product.regular_price) || 0;
               const salePrice = Number(product.sale_price) || 0;

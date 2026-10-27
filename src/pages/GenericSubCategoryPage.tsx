@@ -116,7 +116,7 @@ export default function GenericSubCategoryPage() {
       <div className="w-full bg-brand-gray/30">
         {/* Search Header Banner */}
       <section className="bg-brand-gray py-4 md:py-6 border-b border-gray-200">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
+        <div className="max-w-[2000px] mx-auto px-4 lg:px-6 xl:px-8">
            <div className="text-base md:text-xl font-heading font-bold text-gray-900">{categoryTitle} {'>'} {title}</div>
            <div className="flex items-center text-sm font-medium text-gray-700 font-medium mt-1.5 md:mt-2">
             <Link to="/" className="hover:text-brand-green transition-colors">Home</Link>
@@ -138,7 +138,7 @@ export default function GenericSubCategoryPage() {
               transition={{ duration: 1.5, ease: 'easeOut' }}
               src={"https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=2500&auto=format&fit=crop"} alt={title} className="w-full h-full object-cover origin-center" />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent flex items-end">
-               <div className="max-w-[1600px] w-full mx-auto px-4 lg:px-8 pb-5 md:pb-8 z-20">
+               <div className="max-w-[2000px] w-full mx-auto px-4 lg:px-6 xl:px-8 pb-5 md:pb-8 z-20">
                   <motion.h1 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -160,7 +160,7 @@ export default function GenericSubCategoryPage() {
       </section>
 
       {/* Main Content Layout (Sidebar + Product Grid) */}
-      <section className="py-6 md:py-10 max-w-[1600px] mx-auto px-4 lg:px-8">
+      <section className="py-6 md:py-10 max-w-[2000px] mx-auto px-4 lg:px-6 xl:px-8">
         
         {/* Mobile Filter Toggle */}
         <div className="lg:hidden flex items-center justify-between mb-4 bg-white p-3 rounded-xl shadow-md border-none">
@@ -176,7 +176,7 @@ export default function GenericSubCategoryPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           
           {/* Left Sidebar - Filters & Categories */}
-          <div className={`w-full lg:w-1/4 flex-shrink-0 ${mobileFilterOpen ? 'block' : 'hidden lg:block'}`}>
+          <div className={`w-full lg:w-1/5 flex-shrink-0 ${mobileFilterOpen ? 'block' : 'hidden lg:block'}`}>
             <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm sticky top-24">
                {/* Filter Header */}
                <div className="bg-brand-gray px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -222,14 +222,14 @@ export default function GenericSubCategoryPage() {
           </div>
 
           {/* Right Area - Products Grid */}
-          <div className="w-full lg:w-3/4">
+          <div className="w-full lg:w-4/5">
              {/* SubHeader row for right side */}
              <div className="hidden lg:flex items-center justify-between mb-6 bg-white px-6 py-4 rounded-xl border border-gray-100 shadow-sm">
                 <p className="text-gray-700 font-medium text-sm">Showing all <span className="font-bold text-gray-900">{products.length}</span> products in {title}</p>
              </div>
 
              {products.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-2 sm:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-6">
                   {products.map((product, idx) => (
                     <motion.div 
                       key={product.id}
@@ -315,7 +315,7 @@ export default function GenericSubCategoryPage() {
 
       {/* SEO / Details Segment */}
       <section className="bg-white py-8 md:py-16 border-t border-gray-200">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
+        <div className="max-w-[2000px] mx-auto px-4 lg:px-6 xl:px-8">
            <div className="max-w-4xl">
               <h2 className="text-xl md:text-2xl font-heading font-bold text-gray-900 mb-3 md:mb-4">{title} - Detailed Overview</h2>
               <p className="text-gray-900 font-medium mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
