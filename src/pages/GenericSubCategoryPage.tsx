@@ -11,8 +11,9 @@ import ProductEnquiryModal from '../components/ProductEnquiryModal';
 export default function GenericSubCategoryPage() {
   const { category, subcategory } = useParams<{ category: string, subcategory: string }>();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [enquiryProduct, setEnquiryProduct] = useState<{ id: string; name: string; sku: string } | null>(null);
-  const { products: storeProducts, categories: storeCategories, settings } = useStore();
+  const { products: storeProducts, categories: storeCategories, brands: storeBrands, settings } = useStore();
   
   const categoryTitle = formatSlugToTitle(category);
   const defaultSubCategoryTitle = formatSlugToTitle(subcategory);
@@ -29,9 +30,34 @@ export default function GenericSubCategoryPage() {
     return s1 === s2 || s1.includes(s2) || s2.includes(s1);
   };
 
+  // Robustly filter products by brand name or slug
+  const matchBrand = (prodBrand: string, brandName: string, brandSlug: string) => {
+    if (!prodBrand) return false;
+    const pb = prodBrand.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const bn = brandName ? brandName.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+    const bs = brandSlug ? brandSlug.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+    if (bn && (pb === bn || pb.includes(bn) || bn.includes(pb))) return true;
+    if (bs && (pb === bs || pb.includes(bs) || bs.includes(pb))) return true;
+    return false;
+  };
+
   // Find products matching the current subcategory (slug matching)
-  const products = storeProducts.filter(p => 
+  const categoryProducts = storeProducts.filter(p => 
     subcategory && (p.slug === subcategory || (p.category && matchCategory(p.category, subcategory)))
+  );
+
+  // Apply brand filter on top of category-filtered products
+  let products = categoryProducts;
+  if (selectedBrand) {
+    const brand = storeBrands.find(b => b.id === selectedBrand);
+    if (brand) {
+      products = categoryProducts.filter(p => matchBrand(p.brand, brand.name, brand.slug));
+    }
+  }
+
+  // Brands that have products in the current category (before brand filter)
+  const brandsInCategory = storeBrands.filter(brand =>
+    categoryProducts.some(p => matchBrand(p.brand, brand.name, brand.slug))
   );
 
   
@@ -210,9 +236,41 @@ export default function GenericSubCategoryPage() {
                       })}
                     </div>
                   )}
-               </div>
+                </div>
 
-               {/* Quick Info Box */}
+                {/* Brands Filter */}
+                <div className="p-6 border-b border-gray-100">
+                  <h5 className="font-bold text-gray-900 mb-4">Brands</h5>
+                  {brandsInCategory.length === 0 ? (
+                    <div className="text-sm text-gray-700 font-medium italic">No brands available.</div>
+                  ) : (
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => setSelectedBrand(null)}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded border transition-colors ${!selectedBrand ? 'bg-brand-green/10 border-brand-green text-brand-green font-bold' : 'bg-white border-gray-100 text-gray-900 hover:bg-gray-50'}`}
+                      >
+                        <span>All Brands</span>
+                        <span className="text-xs font-medium">({categoryProducts.length})</span>
+                      </button>
+                      {brandsInCategory.map(brand => {
+                        const count = categoryProducts.filter(p => matchBrand(p.brand, brand.name, brand.slug)).length;
+                        const isActive = selectedBrand === brand.id;
+                        return (
+                          <button
+                            key={brand.id}
+                            onClick={() => setSelectedBrand(isActive ? null : brand.id)}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded border transition-colors ${isActive ? 'bg-brand-green/10 border-brand-green text-brand-green font-bold' : 'bg-white border-gray-100 text-gray-900 hover:bg-gray-50'}`}
+                          >
+                            <span>{brand.name}</span>
+                            <span className="text-xs font-medium">({count})</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Quick Info Box */}
                <div className="bg-brand-green text-white p-6 m-4 rounded-2xl hidden lg:block">
                   <h5 className="font-bold mb-2">Need Expert Help?</h5>
                   <p className="text-xs text-white/80 mb-4">Our specialized engineers can help you pick the exact model you need.</p>
@@ -229,7 +287,7 @@ export default function GenericSubCategoryPage() {
              </div>
 
              {products.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-6">
+                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-6">
                   {products.map((product, idx) => (
                     <motion.div 
                       key={product.id}
