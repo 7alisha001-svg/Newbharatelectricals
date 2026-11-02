@@ -55,10 +55,8 @@ export default function GenericSubCategoryPage() {
     }
   }
 
-  // Brands that have products in the current category (before brand filter)
-  const brandsInCategory = storeBrands.filter(brand =>
-    categoryProducts.some(p => matchBrand(p.brand, brand.name, brand.slug))
-  );
+  // All brands from the database, shown in the Brands filter
+  const brandsInCategory = storeBrands;
 
   
   const defaultFeatures = [
