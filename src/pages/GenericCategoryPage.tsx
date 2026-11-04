@@ -45,7 +45,11 @@ export default function GenericCategoryPage() {
     const pSlug = parentSlug.toLowerCase().trim();
 
     if (pSlug === 'power-solutions') {
-      const powerSubcats = ['inverter', 'batter', '3-phase', 'lift', 'combo'];
+      // Do not use broad partial matching that causes cross-contamination
+      // Only match if explicitly same category name or specific mappings
+      if (pCat === 'inverters') return false; // should be handled by specific subcategory page
+      if (pCat === '3-phase inverters') return false;
+      const powerSubcats = ['batter', 'lift', 'combo'];
       return powerSubcats.some(sub => pCat.includes(sub));
     }
     if (pSlug === 'solar-solutions') {
@@ -57,7 +61,9 @@ export default function GenericCategoryPage() {
 
   // Filter products by category name or matching subcategory
   const categoryProducts = products.filter(p => 
-    p.category === currentCategory.name || 
+    (p.category === currentCategory.name && 
+      !(currentCategory.name === 'Power Solutions' && (p.category?.toLowerCase() === 'inverters' || p.category?.toLowerCase() === '3-phase inverters')))
+    ) || 
     isProductInParentCategory(p.category || '', categorySlug || '')
   );
 

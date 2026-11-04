@@ -1,0 +1,17 @@
+﻿◇ injected env (8) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+categories: [ { name: 'Amaze', slug: 'amaze' } ]
+product categories: [
+  'Batteries',
+  '',
+  '3-Phase Inverters',
+  'Lift Inverters',
+  'Combo Products',
+  'Home inverters',
+  'Solar On-Grid Inverter',
+  'Solar Off-Grid Inverter',
+  'Solar Hybrid Inverter',
+  'Solar Panel',
+  'Solar Batteries',
+  'Solar Charge Controller',
+  'Inverters'
+]
